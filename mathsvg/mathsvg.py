@@ -3,6 +3,16 @@
 # Copyright (C) 2018, Alexandre De Zotti
 # License: MIT License
 
+
+"""
+.. module:: mathsvg
+
+.. moduleauthor:: Alexandre De Zotti <alexn11.gh@gmail.com>
+
+
+"""
+
+
 import math
 import cmath
 import random
@@ -20,7 +30,7 @@ the_tau = 2 * math . pi
 class SvgImage:
   """Class for creating SVG images
 
-  The way to create SVG images using mathsvg is to create an instance of SvgImage, call a few members functions of this object then call save () to save the result.
+  For building SVG graphics using mathsvg, you need first to create an instance of SvgImage, call a few members functions of this object then call save () to save the result.
 
   The constructor requires a path or file name for the SVG.
 
@@ -194,7 +204,7 @@ class SvgImage:
     Examples:
     To do some drawings in red, then restore back to the default options:
       image . set_svg_options (stroke_color = "red")
-      ....
+      (etc.)
       image . reset_svg_options ()
     """
 
