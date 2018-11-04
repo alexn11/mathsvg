@@ -10,13 +10,11 @@ Once the mathsvg package and all its dependencies are installed it can be used a
 
 Here is an example for the creation of a very simple image:
 
-
-import mathsvg
-image = mathsvg . SvgImage ("simple-example.svg", rescaling = 100, shift = [ 1, 1 ])
-image . set_view_box ((200, 200))
-image . draw_circle ([0, 0], 1.1)
-image . save ()
-
+    import mathsvg
+    image = mathsvg . SvgImage ("simple-example.svg", rescaling = 100, shift = [ 1, 1 ])
+    image . set_view_box ((200, 200))
+    image . draw_circle ([0, 0], 1.1)
+    image . save ()
 
 
 The above program does the following.
