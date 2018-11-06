@@ -30,11 +30,11 @@ the_tau = 2 * math . pi
 class SvgImage:
   """Class for creating SVG images
 
-  For building SVG graphics using mathsvg, you need first to create an instance of SvgImage, call a few members functions of this object then call save () to save the result.
+  For making SVG graphics using mathsvg, you need first to create an instance of SvgImage, call a few members functions of this object then call save () to save the result.
 
   The constructor requires a path or file name for the SVG.
 
-  The optional parameters of the constructor are $rescaling$ (nonzero floating point number), $shift$ (list of two floating point numbers) and $view_box$ (tuple of two integers). 
+  The optional parameters of the constructor are rescaling (nonzero floating point number), shift (list of two floating point numbers) and view_box (tuple of two integers). 
 
   """
 
@@ -44,7 +44,6 @@ class SvgImage:
 
     self . _set_view_box_no_reset (view_box)
     self . reset_svg_options ()
-    self . stroke_dash_mode = None
     self . point_size = 6 * self . stroke_width
 
     # old temporary back compatiblity hack (to remove) ----------------------
