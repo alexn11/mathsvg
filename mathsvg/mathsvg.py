@@ -31,7 +31,7 @@ class SvgImage:
   """
   Main class used for creating SVG images.
 
-  In order to make SVG graphics using mathsvg, you need first to create an instance of SvgImage. Then do your drawings by calling a few members functions of this object. Finally call **save ()** to save the result.
+  In order to make SVG graphics using mathsvg, you need first to create an instance of SvgImage. Then do your drawings by calling a few members functions of this object. Finally call ``save ()`` to save the result.
 
   The constructor requires a path or file name for the SVG.
 
