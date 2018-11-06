@@ -7,7 +7,7 @@
 import setuptools
 
 setuptools . setup (name = "mathsvg",
-                    version = "0.0.1",
+                    version = "0.0.2",
                     description = "Mathematics oriented SVG creation",
                     url = "http://github.com/alexn11/mathsvg",
                     author = "Alexandre De Zotti",

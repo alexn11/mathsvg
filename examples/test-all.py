@@ -11,7 +11,7 @@ test_scripts = [
   "arrows.py",
   "curved-arrows.py",
   "dashes.py",
-  "graph.py",
+  "graphs.py",
   "interpolated-curves.py",
   "lines.py",
   "more-curved-arrows.py",

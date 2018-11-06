@@ -28,15 +28,30 @@ the_tau = 2 * math . pi
 # note: not checking any of the parameters
 
 class SvgImage:
-  """Class for creating SVG images
+  """
+  Main class used for creating SVG images.
 
-  For making SVG graphics using mathsvg, you need first to create an instance of SvgImage, call a few members functions of this object then call save () to save the result.
+  In order to make SVG graphics using mathsvg, you need first to create an instance of SvgImage. Then do your drawings by calling a few members functions of this object. Finally call **save ()** to save the result.
 
   The constructor requires a path or file name for the SVG.
 
-  The optional parameters of the constructor are rescaling (nonzero floating point number), shift (list of two floating point numbers) and view_box (tuple of two integers). 
+  The optional parameters of the constructor are ``rescaling`` (nonzero floating point number), ``shift`` (list of two floating point numbers) and ``view_box`` (tuple of two integers).
 
-  """
+  Here is a simple example::
+
+    import mathsvg
+    image = mathsvg . SvgImage ("simple-example.svg", rescaling = 100, shift = [ 1, 1 ])
+    image . set_view_box ((200, 200))
+    image . draw_circle ([0, 0], 1.1)
+    image . save ()
+
+  The above example produces the following image:
+.. image:: simple-example.svg
+   :width: 200px
+   :height: 200px
+   :align: center
+   :alt: A cropped circle centered on a square canvas
+   """
 
   def __init__ (self, image_file_name, rescaling = 1, shift = [0, 0], view_box = (500, 500)):
 
@@ -68,9 +83,10 @@ class SvgImage:
     """Choose the type of stroke.
 
     Args:
-      mode (str): the type of stroke, should be either "none" (solid line), "dash", "dot" (or "dots") or "dasharray" (customized dash/dot, see SVG specifications for more details on dash arrays)
+      * ``mode`` (``str``): the type of stroke, should be either ``"none"`` (solid line), ``"dash"``, ``"dot"`` (or ``"dots"``) or ``"dasharray"`` (customized dash/dot, see SVG specifications for more details on dash arrays)
 
-    Examples:
+    Example (see also :ref:`lines.py`, :ref:`dashes.py`, :ref:`more-curved-arrows.py`, :ref:`torus.py`, :ref:`points-crosses-circles-ellipses.py`, :ref:`arrows.py`, :ref:`curved-arrows.py`, :ref:`potato-regions.py`)::
+
       image = mathsvg . SvgImage ("example.svg", rescaling = 20, shift = [ 4, 4 ])
 
       image . set_dash_mode ("dash")
@@ -100,7 +116,7 @@ class SvgImage:
     """Sets the size of the SVG canvas
 
     Args:
-      view_box (tuple): tuple of integers corresponding to the size in pixels of the SVG in the x and y directions
+      * ``view_box`` (``tuple``): tuple of integers corresponding to the size in pixels of the SVG in the x and y directions
     """
 
     self . svgwrite_object . viewbox (width = view_box [0], height = view_box [1])
@@ -115,8 +131,8 @@ class SvgImage:
     """Sets the size of the dashes and space for the dash mode
 
     Args:
-      black_len (int or float): length of the dash in pixels
-      white_len (int or float): length of the space between dashes in pixels
+      * ``black_len`` (``int`` or ``float``): length of the dash in pixels
+      * ``white_len`` (``int`` or ``float``): length of the space between dashes in pixels
     """
 
     self . dash_dasharray = (black_len, white_len)
@@ -126,14 +142,14 @@ class SvgImage:
     """Sets the separations between dots for dotted stroke
 
     Args:
-      dot_sep (int or float): separation between the dots in pixels
+      * ``dot_sep`` (``int`` or ``float``): separation between the dots in pixels
     """
 
     self . dot_dasharray = (self . stroke_width, dot_sep)
 
  
   def reset_svg_options (self):
-    """Sets the stroke color to "black", the stroke width to 1 pixel and the fill color to "none"."""
+    """Sets the stroke color to ``"black"``, the stroke width to ``1`` pixel and the fill color to ``"none"``."""
 
     self . set_svg_options (stroke_color = "black", stroke_width = 1, fill_color = "none")
 
@@ -162,11 +178,11 @@ class SvgImage:
     """Sets some values governing the shape and geometry of the arrows.
 
     Args:
-      width (float or None): width for the stroke of arrows
-      opening_angle (float or None): opening angle of the arrow tip
-      curvature (float or None): curving for the back of the tip of the arrow, 0 for a straight arrow tip
+      * ``width`` (``float`` or ``None``): width for the stroke of arrows
+      * ``opening_angle`` (``float`` or ``None``): opening angle of the arrow tip
+      * ``curvature`` (``float`` or ``None``): curving for the back of the tip of the arrow, ``0`` for a straight arrow tip
 
-    Examples (see also examples/arrows.py):
+    Examples (see also :ref:`arrows.py`)::
       
       image = mathsvg . SvgImage ("example.svg", rescaling = 20, shift = [ 4, 4 ])
 
@@ -195,13 +211,14 @@ class SvgImage:
     """Sets the stroke width, color, fill color and dash array options
 
     Args:
-      stroke_color (str or None): stroke color (default is "black")
-      stroke_width (float or None): stroke width in pixels
-      fill_color (str or None): fill color (default is "none")
-      dash_array (list or None): list of stroke/space lengths (in pixels) describing the customize dash stroke
+      * ``stroke_color`` (``str`` or ``None``): stroke color (default is ``"black"``)
+      * ``stroke_width`` (``float`` or ``None``): stroke width in pixels
+      * ``fill_color`` (``str`` or ``None``): fill color (default is ``"none"``)
+      * ``dash_array`` (``list`` or ``None``): list of stroke/space lengths (in pixels) describing the customize dash stroke
 
     Examples:
-    To do some drawings in red, then restore back to the default options:
+    To do some drawings in red, then restore back to the default options::
+
       image . set_svg_options (stroke_color = "red")
       (etc.)
       image . reset_svg_options ()
@@ -252,25 +269,25 @@ class SvgImage:
 
 
   def project_point_to_canvas (self, point):
-    """Compute the coordinate of a point on the SVG canvas."""
+    """Compute the coordinate of a point on the SVG canvas (first translates by ``shift`` then rescales by ``rescaling``)."""
     return self . _flip_point ( self . _rescale_vector (self . _shift_point (point)))
 
 
 
   def project_complex_point_to_canvas (self, z):
-    """Compute the coordinates of a complex number projected onto the SVG canvas (equivalent to "project_point_to_canvas ([ z . real, z . imag ])")"""
+    """Compute the coordinates of a complex number projected onto the SVG canvas (equivalent to ``project_point_to_canvas ([ z . real, z . imag ])``)."""
     return self . project_point_to_canvas ([ z . real, z . imag ])
 
 
 
   def project_vector_to_canvas (self, vector):
-    """Compute the coordinates of a vector attached at 0 on the SVG canvas (basically rescaling but no translation)."""
+    """Compute the coordinates of a vector attached at 0 on the SVG canvas (rescaling without translation)."""
     return self . _flip_vector (self . _rescale_vector (vector))
 
 
 
   def project_complex_vector_to_canvas (self, dz):
-    """Compute the coordinates of a complex vector attached at 0 on the SVG canvas (basically rescaling but no translation)."""
+    """Compute the coordinates of a complex vector attached at 0 on the SVG canvas (rescaling without translation)."""
     return self . project_vector_to_canvas ([ dz . real, dz . imag ])
 
 
@@ -368,8 +385,10 @@ class SvgImage:
     """Draw the tip of an arrow.
 
     Args:
-      tip (list): position of the tip
-      arrow_direction_angle (float): angle where the arrow is pointing in radians
+      * ``tip`` (``list``): position of the tip
+      * ``arrow_direction_angle`` (``float``): angle where the arrow is pointing in radians
+
+    Examples: see :ref:`arrows.py`
     """
 
     tip_position = self . project_point_to_canvas (tip)
@@ -409,9 +428,11 @@ class SvgImage:
   def draw_straight_arrow  (self, start_point, end_point):
     """Draws an arrow as a straight line segment between two points and an arrow tip at the last point.
 
+     Equivalent to ``self . draw_arrow (start_point, end_point)``.
+
     Args:
-      start_point (list): coordinates of where the arrow starts
-      end_point (list): coordinates of where the arrow ends
+      * ``start_point`` (``list``): coordinates of where the arrow starts
+      * ``end_point`` (``list``): coordinates of where the arrow ends
     """
 
     self . draw_line_segment (start_point, end_point)
@@ -433,12 +454,12 @@ class SvgImage:
     """Draws an arrow as a curved line joining two points with an arrow tip at the last point.
 
     Args:
-      start_point (list): coordinates of where the arrow starts
-      end_point (list): coordinates of where the arrow ends
-      curvedness (float or None): height of the bump making the arrow curve (0 for a straight arrow)
-      asymmetry (float or None): where the bump should be located: 0 is the middle, negative: towards the first point, positive: towards the last point. A value between -0.5 and 0.5 guarantees that the bump is between the two end points.
+      * ``start_point`` (``list``): coordinates of where the arrow starts
+      * ``end_point`` (``list``): coordinates of where the arrow ends
+      * ``curvedness`` (``float`` or ``None``): height of the bump making the arrow curve (0 for a straight arrow)
+      * ``asymmetry`` (``float`` or ``None``): where the bump should be located: 0 is the middle, negative: towards the first point, positive: towards the last point. A value between -0.5 and 0.5 guarantees that the bump is between the two end points.
 
-    Examples (see also: examples/curved-arrows.py and examples/more-curved-arrows.py):
+    Examples (see also: :ref:`curved-arrows.py` and :ref:`more-curved-arrows.py`)::
 
       image = mathsvg . SvgImage ("curved-arrows.svg", rescaling = 100, shift = [ 4, 4 ])
       image . set_view_box ((800, 800))
@@ -476,10 +497,12 @@ class SvgImage:
     """Draws either a straight or curved arrow.
 
     Args:
-      start_point (list): coordinates of where the arrow starts
-      end_point (list): coordinates of where the arrow ends
-      curvedness (float or None): height of the bump making the arrow curve, if is None then will draw a straight arrow (asymmetry will be ignored)
-      asymmetry (float or None): where the bump should be located: 0 is the middle, negative: towards the first point, positive: towards the last point. A value between -0.5 and 0.5 guarantees that the bump is between the two end points.
+      * ``start_point`` (``list``): coordinates of where the arrow starts
+      * ``end_point`` (``list``): coordinates of where the arrow ends
+      * ``curvedness`` (``float`` or ``None``): height of the bump making the arrow curve, if is ``None`` then will draw a straight arrow (``asymmetry`` will be ignored)
+      * ``asymmetry`` (``float`` or ``None``): where the bump should be located: ``0`` is the middle, negative: towards the first point, positive: towards the last point. A value between ``-0.5`` and ``0.5`` guarantees that the bump is between the two end points.
+
+    Examples: see :ref:`graphs.py`, :ref:`arrows.py`
     """
 
     if (curvedness == 0):
@@ -494,9 +517,9 @@ class SvgImage:
     """Draws a small circle.
 
     Args:
-      position (list): position of the center of the circle
+      * ``position`` (``list``): position of the center of the circle
 
-    Examples: see examples/points-crosses-circles-ellipses.py
+    Examples: see :ref:`points-crosses-circles-ellipses.py`
     """
 
     point = svgwrite . shapes . Circle (self . project_point_to_canvas (position),
@@ -509,9 +532,9 @@ class SvgImage:
     """Draws a small X cross.
 
     Args:
-      position (list): position of the center of the cross
+      * ``position`` (``list``): position of the center of the cross
 
-    Examples: see examples/points-crosses-circles-ellipses.py
+    Examples: see :ref:`points-crosses-circles-ellipses.py`
     """
 
     center = self . project_point_to_canvas (position)
@@ -530,9 +553,9 @@ class SvgImage:
     """Draws a small + cross.
 
     Args:
-      position (list): position of the center of the cross
+      * ``position`` (``list``): position of the center of the cross
 
-    Examples: see examples/points-crosses-circles-ellipses.py
+    Examples: see :ref:`points-crosses-circles-ellipses.py`
     """
 
     center = self . project_point_to_canvas (position)
@@ -552,8 +575,10 @@ class SvgImage:
     """Draws the line segment between two points.
 
     Args:
-      start_point (list): coordinates of the first end point of the line segment
-      end_point (list): coordinates of the second end point of the line segment
+      * ``start_point`` (``list``): coordinates of the first end point of the line segment
+      * ``end_point`` (``list``): coordinates of the second end point of the line segment
+
+    Examples: see :ref:`lines.py`, :ref:`dashes.py`, :ref:`interpolated-curves.py`
     """
 
     #line = self . svgwrite_object . shapes . Line (start_point, end_point)
@@ -595,10 +620,12 @@ class SvgImage:
     """Draws an arc of a circle (in anticlockwise direction).
 
     Args:
-      center (list): coordinates of the center of the circle
-      radius (float): radius of the circle
-      start_angle (float): angle where the arc starts in radians
-      end_angle (float): angle where the arc ends in radians
+      * ``center`` (``list``): coordinates of the center of the circle
+      * ``radius`` (``float``): radius of the circle
+      * ``start_angle`` (``float``): angle where the arc starts in radians
+      * ``end_angle`` (``float``): angle where the arc ends in radians
+
+    Examples: see :ref:`points-crosses-circles-ellipses.py`
     """
 
     arc_start_point = self . project_point_to_canvas ([ center [0] + radius * math . cos (start_angle),
@@ -616,15 +643,15 @@ class SvgImage:
     return [ self . _rescale_length (r) for r in ellipse_radiuses ]
 
   def draw_ellipse_arc (self, focuses, semi_minor_axis, start_angle, end_angle):
-    """Draws an arc of an ellipse (in anticlockwise direction) with axis parallel to the x and y axis. The ellipse is parametrised in the form "c + (a cos t, b sin t)" where t varies from start_angle to end_angle (a, b and c are the parameters of the ellipse computed from the coordinates of the focuses and the semi minor axis). 
+    """Draws an arc of an ellipse (in anticlockwise direction) with axis parallel to the x and y axis. The ellipse is parametrised in the form *"c + (a cos t, b sin t)"* where *t* varies from ``start_angle`` to ``end_angle`` (*a*, *b* and *c* are the parameters of the ellipse computed from the coordinates of the focuses and the semi minor axis). 
 
     Args:
-      focuses (list): list of two list of coordinates of the focuses of the ellipse
-      semi_minor_axis (float): semi minor axis
-      start_angle (float): angle where the arc starts in radians
-      end_angle (float): angle where the arc ends in radians
+      * ``focuses`` (``list``): list of two list of coordinates of the focuses of the ellipse
+      * ``semi_minor_axis`` (``float``): semi minor axis
+      * ``start_angle`` (``float``): angle where the arc starts in radians
+      * ``end_angle`` (``float``): angle where the arc ends in radians
 
-    Examples (see also examples/points-crosses-circles-ellipses.py and examples/torus.py):
+    Examples (see also :ref:`points-crosses-circles-ellipses.py` and :ref:`torus.py`)::
 
       import math
       #the_tau = 2. * math . pi
@@ -668,10 +695,10 @@ class SvgImage:
     """Draws an ellipse with axis parallel to the x and y axis.
 
     Args:
-      focuses (list): list of two list of coordinates of the focuses of the ellipse
-      semi_minor_axis (float): semi minor axis
+      * ``focuses`` (``list``): list of two list of coordinates of the focuses of the ellipse
+      * ``semi_minor_axis`` (``float``): semi minor axis
 
-    Examples (see also examples/points-crosses-circles-ellipses.py and examples/torus.py):
+    Examples (see also :ref:`points-crosses-circles-ellipses.py` and :ref:`torus.py`)::
 
       import math
       #the_tau = 2. * math . pi
@@ -712,8 +739,10 @@ class SvgImage:
     """Draws an arc of a circle.
 
     Args:
-      center (list): coordinates of the center of the circle
-      radius (float): radius of the circle
+      * ``center`` (``list``): coordinates of the center of the circle
+      * ``radius`` (``float``): radius of the circle
+
+    Examples: see :ref:`points-crosses-circles-ellipses.py`, :ref:`potato-regions.py`
     """
 
     center_on_canvas = self . project_point_to_canvas (center)
@@ -727,12 +756,13 @@ class SvgImage:
 
 
   def draw_polyline (self, point_list):
-    """Draw a sequence of connected lien segments.
+    """Draw a sequence of connected lins segments.
 
     Args:
-      point_list (list): ordered list of points (coordinates) to connect with line segment
+      * ``point_list`` (``list``): ordered list of points (coordinates) to connect with line segments
 
-    Example (see also examples/interpolated-curves.py):
+    Example (see also :ref:`interpolated-curves.py`)::
+
       image = mathsvg . SvgImage ("example.svg", rescaling = 100)
       image . set_view_box ((1000, 1000))
       point_list = [ [2.5,5], [4.5,7], [2.5,4], [0.5,3] ]
@@ -748,16 +778,17 @@ class SvgImage:
 
 
   def draw_function_graph (self, eval_function, x_start, x_end, nb_x, curve_type = "polyline"):
-    """Draws the graph of a function f, that is an interpolation of a set of nb_x points (x, y) with y = f (x) and with x between x_start and x_end. The default interpolation is by straight lines. It is also possible to have some type of smooth interpolation. The nb_x points have regularly spaced x coordinates starting from x_start and ending and end_x.
+    """Draws the graph of a function *f*, that is an interpolation of a set of ``nb_x points`` *(x, y)* with *y = f (x)* and with *x* between ``x_start`` and ``x_end``. The default interpolation is by straight lines. It is also possible to have some type of smooth interpolation. The ``nb_x`` points have regularly spaced *x* coordinates starting from ``x_start`` and ending at ``end_x``.
 
     Args:
-      eval_function: a function (or a lambda) that takes x as an argument and returns y = f (x)
-      x_start (float): start of the graph domain
-      x_end (float): end of the graph domain
-      nb_x (int): number of points x at which the function is computed
-      curve_type (str or None): if "polyline" then the point are interpolated by line segments, if "autosmooth" the interpolation is smoother
+      * ``eval_function``: a function (or a lambda) that takes x as an argument and returns y = f (x)
+      * ``x_start`` (``float``): start of the graph domain
+      * ``x_end`` (``float``): end of the graph domain
+      * ``nb_x`` (``int``): number of points x at which the function is computed
+      * ``curve_type`` (``str`` or ``None``): if ``"polyline"`` then the point are interpolated by line segments, if ``"autosmooth"`` the interpolation is smoother
 
-    Examples (see also examples/graph.py):
+    Examples (see also :ref:`graphs.py`)::
+
       image = mathsvg . SvgImage ("example.svg", rescaling = 100, shift = [ 0, 5 ])
       image . set_view_box ((1000, 1000))
 
@@ -860,9 +891,10 @@ class SvgImage:
     The coordinates of the endpoints of the curve are the first and last set of coordinates from the list given as argument.
 
     Args:
-      points (list): list of point coordinates to interpolate
+      * ``points`` (``list``): list of point coordinates to interpolate
 
-    Example (see also examples/interpolated-curves.py):
+    Example (see also :ref:`interpolated-curves.py`)::
+
       image = mathsvg . SvgImage ("example.svg", rescaling = 100)
       image . set_view_box ((1000, 1000))
       point_list = [ [7.4, 2], [5.6, 4], [7.3, 6], [ 4.3, 5.2], [ 8.3, 9.1 ] ]
@@ -880,9 +912,10 @@ class SvgImage:
     """Draws a smooth closed curve that interpolates the points given as parameter.
 
     Args:
-      points (list): list of point coordinates to interpolate
+      * ``points`` (``list``): list of point coordinates to interpolate
 
-    Example (see also examples/interpolated-curves.py):
+    Example (see also :ref:`interpolated-curves.py`)::
+
       image = mathsvg . SvgImage ("example.svg", rescaling = 100)
       image . set_view_box ((1000, 1000))
       point_list = [ [7.4, 2], [5.6, 4], [7.3, 6], [ 4.3, 5.2], [ 8.3, 9.1 ] ]
@@ -913,15 +946,16 @@ class SvgImage:
   def draw_planar_potato (self, center, inner_radius, outer_radius, nb_vertexes):
     """Draws some randomly generated smooth shape in the form of a smooth closed curve.
 
-    A set of radomly generated set of nb_vertexes points is generated. Both angles and distances with respect to center are generated according to a uniform law. The distance from the center is chosen uniformly between the values of inner_radius and outer_radius.
+    A set of radomly generated set of ``nb_vertexes`` points is generated. Both angles and distances with respect to center are generated according to a uniform law. The distance from the center is chosen uniformly between the values of ``inner_radius`` and ``outer_radius``.
 
     Args:
-      center (list): coordinates of the center of the potato
-      inner_radius (float): roughly the closest the curve comes from the center
-      outer_radius (float): roughly the farthest the curve comes from the center
-      nb_vertexes (int): number of points to generate (more points means that it is more likely that the curve will have selfintersections)
+      * ``center`` (``list``): coordinates of the center of the potato
+      * ``inner_radius`` (``float``): roughly the closest the curve comes from the center
+      * ``outer_radius`` (``float``): roughly the farthest the curve comes from the center
+      * ``nb_vertexes`` (``int``): number of points to generate (more points means that it is more likely that the curve will have selfintersections)
 
-    Example (see also: examples/potato.py, examples/potato-3v.py, examples/dashes.py, examples/wiggly-potato.py, examples/wigglier-potato.py, examples/potato-regions.py):
+    Example (see also: :ref:`potato.py`, :ref:`potato-3v.py`, :ref:`dashes.py`, :ref:`wiggly-potato.py`, :ref:`wigglier-potato.py`, :ref:`potato-regions.py`)::
+
       image = mathsvg . SvgImage ("example.svg", rescaling = 100, shift = [2, 2])
       image . set_view_box ((400, 400))
       image . draw_planar_potato ([0, 0], 0.5, 1.5, 3)
@@ -951,17 +985,20 @@ class SvgImage:
   def draw_random_wavy_line (self, start_point, end_point, wave_len, amplitude):
     """Draws a smooth line with randomly generated bumps perpendicularly to its direction.
 
-    Regularly separated points are computed along the straight line segment between the two end points. The distance between two consecutive points is equal to wave_len. Then for each of these points, a point is picked randomly on the corresponding perpendicular line according to a uniform law, symmetrically with respect to the directing line and with maximum distance equal to the value of amplitude. Finally a smooth interpolating curve is drawn. This curve goes from the first end point to the last and passes along the randomly generated points.
+    Regularly separated points are computed along the straight line segment between the two end points.  The distance between two consecutive points is equal to ``wave_len``.
+    Then for each of these points, a point is picked randomly on the corresponding perpendicular line according to a uniform law, symmetrically with respect to the directing line and with maximum distance equal to the value of ``amplitude``. Finally a smooth interpolating curve is drawn.
+    This curve goes from the first end point to the last and passes along the randomly generated points.
 
     Args:
-      start_point (list): coordinates of the first end point of the line
-      end_point (list): coordinates of the second end point of the line
-      wave_len (float): distance between two consecutive disturbances (smaller values yield more bumps)
-      amplitude (float): size of the bumps
+      * ``start_point`` (``list``): coordinates of the first end point of the line
+      * ``end_point`` (``list``): coordinates of the second end point of the line
+      * ``wave_len`` (``float``): distance between two consecutive disturbances (smaller values yield more bumps)
+      * ``amplitude`` (``float``): size of the bumps
 
-    Raises some error text exception when the value of wave_len is larger or equal to the distance between the two end points.
+    Raises some error text exception when the value of ``wave_len`` is larger or equal to the distance between the two end points.
 
-    Example (see also examples/lines.py and examples/scribble.py):
+    Example (see also :ref:`lines.py` and :ref:`scribble.py`)::
+
       image = mathsvg . SvgImage ("example.svg", rescaling = 100, shift = [ 4, 4 ])
       image . set_view_box ((800, 800))
 
@@ -1013,22 +1050,29 @@ class SvgImage:
 
 
   def insert_svg_path_command (self, svg_path_command):
-    """Insert a path command given in the form of a string into the SVG. The resulting SVG command will be of the form:
+    """Insert a path command given in the form of a string into the SVG.
 
-      <path d="..." style="..." />
-
-    where the first "..." stands for the content of the argument svg_path_command and the second "..." is an automatically generated style option string based on the current state of the SvgImage object (including: stroke color, width, filling color, dash array, etc.).
+    The resulting SVG command will be of the form ``<path d="..." style="..." />``,
+    where the first ``"..."`` stands for the content of the argument ``svg_path_command`` and the second ``"..."`` is an automatically generated style option string based on the current state of the ``SvgImage`` object (including: stroke color, width, filling color, dash array, etc.).
     The validity of the argument as a path command is not checked. Errors might or might not raise an exception, depending on the behavior of the module svgwrite.
 
     Args:
-      svg_path_command (str): the string to be inserted.
+      * ``svg_path_command`` (``str``): the string to be inserted.
 
-    Example:
+    Example::
+
       image = mathsvg . SvgImage ("example.svg", rescaling = 100, shift = [ 4, 4 ])
       image . set_view_box ((800, 800))
       image . insert_svg_path_command ("M 650, 650 C 650, 650 443, 693 275, 525 107, 357 150, 150 150, 150")
       image . save ()
-    """
+
+    The result is the following image:
+.. image:: svg-command-example.svg
+   :width: 200px
+   :height: 200px
+   :align: center
+   :alt: A portion of a Bezier curve
+   """
 
     # so that really anything can be added - no checking
     path = self . svgwrite_object . path (d = svg_path_command,
