@@ -1047,7 +1047,8 @@ class SvgImage:
 
     return
 
-
+    """
+    """
 
   def insert_svg_path_command (self, svg_path_command):
     """Insert a path command given in the form of a string into the SVG.
@@ -1065,6 +1066,8 @@ class SvgImage:
       image . set_view_box ((800, 800))
       image . insert_svg_path_command ("M 650, 650 C 650, 650 443, 693 275, 525 107, 357 150, 150 150, 150")
       image . save ()
+
+
 
     The result is the following image:
 .. image:: svg-command-example.svg
