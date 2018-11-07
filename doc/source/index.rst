@@ -50,13 +50,6 @@ The SvgImage class
 Examples
 --------
 
-.. image:: ../../examples/examples-images/torus.svg
-   :width: 300px
-   :height: 300px
-   :align: center
-   :alt: A collection of tori of different sizes and thicknesses.
-   :target: examples/torus.html
-
 .. toctree::
    :glob:
 
