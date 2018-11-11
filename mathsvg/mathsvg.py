@@ -35,23 +35,7 @@ class SvgImage:
 
   The constructor requires a path or file name for the SVG.
 
-  The optional parameters of the constructor are ``rescaling`` (nonzero floating point number), ``shift`` (list of two floating point numbers) and ``view_box`` (tuple of two integers).
-
-  Here is a simple example::
-
-    import mathsvg
-    image = mathsvg . SvgImage ("simple-example.svg", rescaling = 100, shift = [ 1, 1 ])
-    image . set_view_box ((200, 200))
-    image . draw_circle ([0, 0], 1.1)
-    image . save ()
-
-  The above example produces the following image:
-.. image:: simple-example.svg
-   :width: 200px
-   :height: 200px
-   :align: center
-   :alt: A cropped circle centered on a square canvas
-   """
+  The optional parameters of the constructor are ``rescaling`` (nonzero floating point number), ``shift`` (list of two floating point numbers) and ``view_box`` (tuple of two integers)."""
 
   def __init__ (self, image_file_name, rescaling = 1, shift = [0, 0], view_box = (500, 500)):
 
@@ -1062,10 +1046,10 @@ class SvgImage:
 
     Example::
 
-      image = mathsvg . SvgImage ("example.svg", rescaling = 100, shift = [ 4, 4 ])
-      image . set_view_box ((800, 800))
-      image . insert_svg_path_command ("M 650, 650 C 650, 650 443, 693 275, 525 107, 357 150, 150 150, 150")
-      image . save ()
+       image = mathsvg . SvgImage ("example.svg", rescaling = 100, shift = [ 4, 4 ])
+       image . set_view_box ((800, 800))
+       image . insert_svg_path_command ("M 650, 650 C 650, 650 443, 693 275, 525 107, 357 150, 150 150, 150")
+       image . save ()
 
 
 

@@ -16,6 +16,24 @@ The module defines the class ``SvgImage`` whose instances are used for creating 
 The source code is hosted on `GitHub <https://github.com/alexn11/mathsvg>`_.
 
 
+Here is a simple example::
+
+   import mathsvg
+   image = mathsvg . SvgImage ("simple-example.svg", rescaling = 100, shift = [ 1, 1 ])
+   image . set_view_box ((200, 200))
+   image . draw_circle ([0, 0], 1.1)
+   image . save ()
+
+The above example produces the following image:
+
+.. image:: simple-example.svg
+   :width: 200px
+   :height: 200px
+   :align: center
+   :alt: A cropped circle centered on a square canvas
+
+
+
 
 Example of how to use your SVG file
 -----------------------------------
