@@ -6,9 +6,18 @@
 
 import setuptools
 
+
+def get_content_of_readme_file ():
+    readme_file = open ("README.md")
+    content = readme_file . read ()
+    readme_file . close ()
+    return content
+
 setuptools . setup (name = "mathsvg",
                     version = "0.0.2",
                     description = "Mathematics oriented SVG creation",
+                    long_description = get_content_of_readme_file (),
+                    long_description_content_type = "text/markdown",
                     url = "http://github.com/alexn11/mathsvg",
                     author = "Alexandre De Zotti",
                     author_email = "alexn11.gh@gmail.com",
