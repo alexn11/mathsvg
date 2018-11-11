@@ -33,6 +33,10 @@ The above example produces the following image:
    :alt: A cropped circle centered on a square canvas
 
 
+You can install mathsvg with ``pip``::
+
+   pip install mathsvg
+
 
 
 Example of how to use your SVG file
