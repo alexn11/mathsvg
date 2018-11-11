@@ -1,6 +1,7 @@
 # mathsvg
 A  Python library to draw mathematical objects. Create SVG files for using as mathematical diagrams.
 
+The complete documentation is available at: https://mathsvg.readthedocs.io.
 
 Programs such as Inkscape are great for creating vector graphics. But Inkscape is made more for designer rather than for mathematicians. The process of doing mathematical diagrams and illustrations using Inkscape can sometimes be quite frustrating. Making a python script to produce the content of an SVG file can be a faster solution.
 
