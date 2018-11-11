@@ -53,7 +53,7 @@ Examples
 .. toctree::
    :glob:
 
-   examples/*
+   ../../examples/*
 
 
 Click on the image to see the sources.
