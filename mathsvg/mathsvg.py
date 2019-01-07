@@ -762,13 +762,13 @@ class SvgImage:
 
 
   def draw_function_graph (self, eval_function, x_start, x_end, nb_x, curve_type = "polyline"):
-    """Draws the graph of a function *f*, that is an interpolation of a set of ``nb_x points`` *(x, y)* with *y = f (x)* and with *x* between ``x_start`` and ``x_end``. The default interpolation is by straight lines. It is also possible to have some type of smooth interpolation. The ``nb_x`` points have regularly spaced *x* coordinates starting from ``x_start`` and ending at ``end_x``.
+    """Draws the graph of a function *f*, that is an interpolation of a set of ``nb_x`` points *(x, y)* with *y = f (x)* and with *x* between ``x_start`` and ``x_end``. The default interpolation is by straight lines. It is also possible to have some type of smooth interpolation. The ``nb_x`` points have regularly spaced *x* coordinates starting from ``x_start`` and ending at ``x_end``.
 
     Args:
-      * ``eval_function``: a function (or a lambda) that takes x as an argument and returns y = f (x)
+      * ``eval_function``: a function (or a lambda) that takes *x* as an argument and returns *y = f (x)*
       * ``x_start`` (``float``): start of the graph domain
       * ``x_end`` (``float``): end of the graph domain
-      * ``nb_x`` (``int``): number of points x at which the function is computed
+      * ``nb_x`` (``int``): number of points *x* at which the function is computed
       * ``curve_type`` (``str`` or ``None``): if ``"polyline"`` then the point are interpolated by line segments, if ``"autosmooth"`` the interpolation is smoother
 
     Examples (see also :ref:`graphs.py`)::
@@ -790,6 +790,57 @@ class SvgImage:
       self . draw_polyline (point_list)
     elif (curve_type == "autosmooth"):
       self . draw_smoothly_interpolated_open_curve (point_list)
+    else:
+      raise Exception ("curve_type not in ('polyline', 'autosmooth')")
+    return      
+
+ 
+
+
+  def draw_parametric_graph (self, eval_x, eval_y, t_start, t_end, nb_t, curve_type = "polyline", is_closed = False):
+    """Draws a parametric graph given by functions *x(t)* and *y(t)*, that is an interpolation of a set of ``nb_t`` points *(x, y)* with *x = x(t)* and *y = y(t)* and with *t* between ``t_start`` and ``t_end``. The default interpolation is by straight lines. It is also possible to have some type of smooth interpolation. The ``nb_t`` parameters are regularly spaced starting from ``t_start`` and ending at ``t_end``.
+
+If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joined according to the choice of interpolation.
+
+    Args:
+      * ``eval_x``: a function (or a lambda) that takes the parameter *t* as an argument and returns the coordinate *x* for the pameter *t*
+      * ``eval_y``: a function (or a lambda) that takes the parameter *t* as an argument and returns the coordinate *y* for the pameter *t*
+      * ``t_start`` (``float``): start of the parameter domain
+      * ``t_end`` (``float``): end of the parameter domain
+      * ``nb_t`` (``int``): number of parameters *t* at which the functions *x* and *y* are computed
+      * ``curve_type`` (``str`` or ``None``): if ``"polyline"`` then the point are interpolated by line segments, if ``"autosmooth"`` the interpolation is smoother
+      * ``is_closed`` : whether the parametric curve should be closed (``True``) or not (``False``)
+
+    Examples (see also :ref:`parametric-graphs.py`)::
+
+      import math
+
+      image = mathsvg . SvgImage ("example.svg", rescaling = 100, shift = [ 1.1, 1.5 ])
+      image . set_view_box ((400, 300))
+
+      x = lambda t : math . sin (10 * math . pi * t) + 0.1
+      y = lambda t : math . cos (6 * math . pi *  t)
+      image . set_svg_options (stroke_color = "blue")
+      image . draw_parametric_graph (x, y, 0, 1, 40, curve_type = "polyline", is_closed = False)
+
+      x = lambda t : math . sin (10 * math . pi * t) + 1.1
+      y = lambda t : math . cos (6 * math . pi * t)
+      image . set_svg_options (stroke_color = "black")
+      image . set_dash_mode ("dash")
+      image . draw_parametric_graph (x, y, 0, 1, 40, curve_type = "autosmooth", is_closed = True)
+    """
+
+    t_step = (t_end - t_start) / (nb_t - 1)
+    point_list = [ [ eval_x (t), eval_y (t) ] for t in [ t_start + ti * t_step for ti in range (nb_t) ] ]
+    if (curve_type == "polyline"):
+      self . draw_polyline (point_list)
+      if (is_closed):
+        self . draw_line_segment (point_list [-1], point_list [0])
+    elif (curve_type == "autosmooth"):
+      if (is_closed):
+        self . draw_smoothly_interpolated_closed_curve (point_list)
+      else:
+        self . draw_smoothly_interpolated_open_curve (point_list)
     else:
       raise Exception ("curve_type not in ('polyline', 'autosmooth')")
     return      
