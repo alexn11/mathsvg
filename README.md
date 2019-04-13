@@ -1,5 +1,5 @@
 # mathsvg
-A  Python library to draw mathematical objects. Create SVG files for using as mathematical diagrams.
+A  Python library to draw mathematical objects. Create figures and diagrams and save them as SVG files.
 
 The complete documentation is available at: https://mathsvg.readthedocs.io.
 The sources are hosted on GitHub: https://github.com/alexn11/mathsvg.
