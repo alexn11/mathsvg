@@ -14,7 +14,7 @@ rescaling = 100
 
 
 
-image = mathsvg . SvgImage ("lines.svg", rescaling = rescaling, shift = [ 4, 4 ])
+image = mathsvg . SvgImage (rescaling = rescaling, shift = [ 4, 4 ])
 
 image . set_view_box ((800, 800))
 
@@ -41,4 +41,4 @@ image . draw_random_wavy_line ([-3., -2.8], [3., 3.2], 0.1, 0.1)
 image . set_dash_mode ("dot")
 image . draw_line_segment ([-3., -2.7], [3., 3.3])
 
-image . save ()
+image . save ("lines.svg")

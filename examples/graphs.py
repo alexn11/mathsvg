@@ -11,7 +11,7 @@ import mathsvg
 
 rescaling = 100
 
-image = mathsvg . SvgImage ("graphs.svg", rescaling = rescaling, shift = [ 0, 5 ])
+image = mathsvg . SvgImage (rescaling = rescaling, shift = [ 0, 5 ])
 image . set_view_box ((1000, 1000))
 
 function = lambda x : math . sin (5 * x)
@@ -28,4 +28,4 @@ image . reset_svg_options ()
 image . draw_arrow ([ 0.5, -2.2 ], [ 9.5, -2.2 ])
 image . draw_arrow ([ 1.2, -4.5 ], [ 1.2, 4.5 ])
 
-image . save ()
+image . save ("graphs.svg")

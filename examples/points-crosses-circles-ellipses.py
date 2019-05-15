@@ -12,7 +12,7 @@ the_tau = 2 * math . pi
 
 rescaling = 100
 
-image = mathsvg . SvgImage ("points-crosses-circles-ellipses.svg", rescaling = rescaling, shift = [ 4, 4 ])
+image = mathsvg . SvgImage (rescaling = rescaling, shift = [ 4, 4 ])
 
 image . set_view_box ((800, 800))
 
@@ -38,4 +38,4 @@ image . draw_ellipse_arc (focuses, 0.412, the_tau * 0.1, the_tau * 0.8)
 image . set_dash_mode ("dot")
 image . draw_ellipse (focuses, 0.68)
 
-image . save ()
+image . save ("points-crosses-circles-ellipses.svg")

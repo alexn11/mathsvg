@@ -19,14 +19,14 @@ rescaling = 42
 
 
 
-image = mathsvg . SvgImage ("potato-3v.svg", rescaling = rescaling, shift = [- left, - bottom])
+image = mathsvg . SvgImage (rescaling = rescaling, shift = [- left, - bottom])
 image . set_view_box ((rescaling * (right - left), rescaling * (top - bottom)))
 
 
 image . draw_planar_potato ([0.25 * general_size, 0], 0.5 * general_size, general_size, 3)
 
 
-image . save ()
+image . save ("potato-3v.svg")
 
 
 

@@ -35,11 +35,16 @@ class SvgImage:
 
   The constructor requires a path or file name for the SVG.
 
-  The optional parameters of the constructor are ``rescaling`` (nonzero floating point number), ``shift`` (list of two floating point numbers) and ``view_box`` (tuple of two integers)."""
+  The optional parameters of the constructor are ``rescaling`` (nonzero floating point number), ``shift`` (list of two floating point numbers),d ``view_box`` (tuple of two integers) and ``image_file_name`` (string).
 
-  def __init__ (self, image_file_name, rescaling = 1, shift = [0, 0], view_box = (500, 500)):
+  The parameters ``rescaling`` and ``shift`` cannot be modified because they need to be consistent for all the drawings.
 
-    self . svgwrite_object = svgwrite . Drawing (filename = image_file_name, debug = True) #, size = (u'1000%', u'1000%'))
+  The parameters ``view_box`` can be modified with the method ``set_view_box`` and ``image_file_name`` can be passed as a parameter to the method ``save``."""
+
+  def __init__ (self, rescaling = 1., shift = [0, 0], file_name = None, view_box = (500, 500)):
+
+    self . image_file_name = file_name
+    self . svgwrite_object = svgwrite . Drawing (filename = "None" if (file_name is None) else file_name, debug = True) #, size = (u'1000%', u'1000%'))
 
     self . _set_view_box_no_reset (view_box)
     self . reset_svg_options ()
@@ -71,7 +76,7 @@ class SvgImage:
 
     Example (see also :ref:`lines.py`, :ref:`dashes.py`, :ref:`more-curved-arrows.py`, :ref:`torus.py`, :ref:`points-crosses-circles-ellipses.py`, :ref:`arrows.py`, :ref:`curved-arrows.py`, :ref:`potato-regions.py`)::
 
-      image = mathsvg . SvgImage ("example.svg", rescaling = 20, shift = [ 4, 4 ])
+      image = mathsvg . SvgImage (file_name = "example.svg", rescaling = 20, shift = [ 4, 4 ])
 
       image . set_dash_mode ("dash")
       image . draw_line_segment ([0, 0], [10, 10])
@@ -168,7 +173,7 @@ class SvgImage:
 
     Examples (see also :ref:`arrows.py`)::
       
-      image = mathsvg . SvgImage ("example.svg", rescaling = 20, shift = [ 4, 4 ])
+      image = mathsvg . SvgImage (file_name = "example.svg", rescaling = 20, shift = [ 4, 4 ])
 
       image . set_arrow_options (curvature = 0.55)
       image . draw_arrow ([ -2, -2 ], [ 2, 1.7 ])
@@ -219,10 +224,22 @@ class SvgImage:
 
 
 
-  def save (self):
-    """Save the drawings into a SVG file. The path/name of the file is the one given as a parameter to the constructor"""
+  def save (self, file_name = None):
+    """Save the drawings into a SVG file. 
 
-    self . svgwrite_object . save ()
+        If no path/name is given, the file name given as a parameter to the constructor will be used.
+        Meanwhile if no name was given to the constructor an exception is raised.
+
+        If a path/name is given will use this as the path/name of the file to save the drawings.
+
+        See an example in :ref:`multiple-save.py`"""
+
+    if (file_name is None):
+      if (self . image_file_name is None):
+        raise Exception ("Save: no file name given!")
+      self . svgwrite_object . save ()
+    else:
+      self . svgwrite_object . saveas (file_name)
 
 
 
@@ -445,7 +462,7 @@ class SvgImage:
 
     Examples (see also: :ref:`curved-arrows.py` and :ref:`more-curved-arrows.py`)::
 
-      image = mathsvg . SvgImage ("curved-arrows.svg", rescaling = 100, shift = [ 4, 4 ])
+      image = mathsvg . SvgImage (file_name = "curved-arrows.svg", rescaling = 100, shift = [ 4, 4 ])
       image . set_view_box ((800, 800))
 
       image . draw_curved_arrow ([ -2, -1 ], [ 2, -1 ], curvedness = -.2)
@@ -642,7 +659,7 @@ class SvgImage:
 
       import mathsvg
 
-      image = mathsvg . SvgImage ("example.svg", rescaling = 100, shift = [ 4, 4 ])
+      image = mathsvg . SvgImage (file_name = "example.svg", rescaling = 100, shift = [ 4, 4 ])
       image . set_view_box ((800, 800))
 
       focuses = [ [-1.33, 0.61], [1.33, -0.61] ]
@@ -689,7 +706,7 @@ class SvgImage:
 
       import mathsvg
 
-      image = mathsvg . SvgImage ("example.svg", rescaling = 100, shift = [ 4, 4 ])
+      image = mathsvg . SvgImage (file_name = "example.svg", rescaling = 100, shift = [ 4, 4 ])
       image . set_view_box ((800, 800))
 
       focuses = [ [-1.33, 0.61], [1.33, -0.61] ]
@@ -930,7 +947,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 
     Example (see also :ref:`interpolated-curves.py`)::
 
-      image = mathsvg . SvgImage ("example.svg", rescaling = 100)
+      image = mathsvg . SvgImage (file_name = "example.svg", rescaling = 100)
       image . set_view_box ((1000, 1000))
       point_list = [ [7.4, 2], [5.6, 4], [7.3, 6], [ 4.3, 5.2], [ 8.3, 9.1 ] ]
       image . draw_smoothly_interpolated_open_curve (point_list)
@@ -951,7 +968,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 
     Example (see also :ref:`interpolated-curves.py`)::
 
-      image = mathsvg . SvgImage ("example.svg", rescaling = 100)
+      image = mathsvg . SvgImage (file_name = "example.svg", rescaling = 100)
       image . set_view_box ((1000, 1000))
       point_list = [ [7.4, 2], [5.6, 4], [7.3, 6], [ 4.3, 5.2], [ 8.3, 9.1 ] ]
       image . draw_smoothly_interpolated_closed_curve (point_list)
@@ -991,7 +1008,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 
     Example (see also: :ref:`potato.py`, :ref:`potato-3v.py`, :ref:`dashes.py`, :ref:`wiggly-potato.py`, :ref:`wigglier-potato.py`, :ref:`potato-regions.py`)::
 
-      image = mathsvg . SvgImage ("example.svg", rescaling = 100, shift = [2, 2])
+      image = mathsvg . SvgImage (file_name = "example.svg", rescaling = 100, shift = [2, 2])
       image . set_view_box ((400, 400))
       image . draw_planar_potato ([0, 0], 0.5, 1.5, 3)
       image . save ()
@@ -1034,7 +1051,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 
     Example (see also :ref:`lines.py` and :ref:`scribble.py`)::
 
-      image = mathsvg . SvgImage ("example.svg", rescaling = 100, shift = [ 4, 4 ])
+      image = mathsvg . SvgImage (file_name = "example.svg", rescaling = 100, shift = [ 4, 4 ])
       image . set_view_box ((800, 800))
 
       image . set_dash_mode ("dot")
@@ -1097,10 +1114,10 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 
     Example::
 
-       image = mathsvg . SvgImage ("example.svg", rescaling = 100, shift = [ 4, 4 ])
+       image = mathsvg . SvgImage (rescaling = 100, shift = [ 4, 4 ])
        image . set_view_box ((800, 800))
        image . insert_svg_path_command ("M 650, 650 C 650, 650 443, 693 275, 525 107, 357 150, 150 150, 150")
-       image . save ()
+       image . save ("example.svg")
 
 
 

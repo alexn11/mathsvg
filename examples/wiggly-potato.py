@@ -20,7 +20,7 @@ rescaling = 42
 
 
 image_file_name = sys . argv [0] [ : -3] + ".svg"
-image = mathsvg . SvgImage (image_file_name, rescaling = rescaling, shift = [- left, - bottom])
+image = mathsvg . SvgImage (file_name = image_file_name, rescaling = rescaling, shift = [- left, - bottom])
 image . set_view_box ((rescaling * (right - left), rescaling * (top - bottom)))
 
 

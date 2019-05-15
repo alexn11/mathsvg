@@ -4,7 +4,7 @@ import mathsvg
 
 import math
 
-image = mathsvg . SvgImage ("parametric-graphs.svg", rescaling = 100, shift = [ 1.1, 1.5 ])
+image = mathsvg . SvgImage (rescaling = 100, shift = [ 1.1, 1.5 ])
 image . set_view_box ((360, 300))
 
 x = lambda t : math . sin (10 * math . pi * t) + 0.1
@@ -27,5 +27,5 @@ image . draw_parametric_graph (x, y, 0, 1, 40, curve_type = "autosmooth", is_clo
 
 
 
-image . save ()
+image . save ("parametric-graphs.svg")
 

@@ -1,6 +1,6 @@
 # Author:  alexn11 (alexn11.gh@gmail.com)
-# Created: 2018-10-21
-# Copyright (C) 2018, Alexandre De Zotti
+# Created: 2019-05-18
+# Copyright (C) 2019, Alexandre De Zotti
 # License: MIT License
 
 
@@ -9,7 +9,6 @@ import math
 import cmath
 
 import mathsvg
-
 
 
 general_size = 10
@@ -21,16 +20,15 @@ rescaling = 42
 
 
 
-
-image_file_name = sys . argv [0] [ : -3] + ".svg"
-image = mathsvg . SvgImage (file_name = image_file_name, rescaling = rescaling, shift = [- left, - bottom])
+image = mathsvg . SvgImage (file_name = "save-1.svg", rescaling = rescaling, shift = [- left, - bottom])
 image . set_view_box ((rescaling * (right - left), rescaling * (top - bottom)))
 
-
-image . draw_planar_potato ([0.25 * general_size, 0], 0.2 * general_size, general_size, 66)
-
+image . draw_planar_potato ([0.25 * general_size, 0], 0.3 * general_size, general_size, 10)
 
 image . save ()
+
+image . draw_point ([0.25 * general_size, 0])
+image . save ("save-2.svg")
 
 
 

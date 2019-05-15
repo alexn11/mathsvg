@@ -10,7 +10,7 @@ import mathsvg
 
 rescaling = 100
 
-image = mathsvg . SvgImage ("dashes.svg", rescaling = rescaling, shift = [ -2, 0 ])
+image = mathsvg . SvgImage (rescaling = rescaling, shift = [ -2, 0 ])
 
 image . set_view_box ((800, 800))
 
@@ -27,4 +27,4 @@ image . draw_planar_potato ([5, 5], 2, 4, 8)
 image . set_dash_mode ("none")
 image . draw_line_segment ([4, 2], [8, 2])
 
-image . save ()
+image . save ("dashes.svg")

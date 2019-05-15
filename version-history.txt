@@ -1,1 +1,2 @@
+0.1.0: new version, incompatible with the previous ones: save now accepts file name while file name become optional in the constructor
 0.0.3: added parametric curves

@@ -7,6 +7,7 @@ test_scripts = [
   "interpolated-curves.py",
   "lines.py",
   "more-curved-arrows.py",
+  "multiple-save.py",
   "parametric-graphs.py",
   "points-crosses-circles-ellipses.py",
   "potato.py",

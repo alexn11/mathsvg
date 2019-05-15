@@ -14,7 +14,7 @@ import mathsvg
 
 
 
-image = mathsvg . SvgImage ("potato-regions.svg", rescaling = 100, shift = [2, 2])
+image = mathsvg . SvgImage (rescaling = 100, shift = [2, 2])
 image . set_view_box ((400, 400))
 
 center = [0, 0]
@@ -28,7 +28,7 @@ image . set_dash_mode ("none")
 image . draw_planar_potato (center, inner_radius, outer_radius, 5)
 
 
-image . save ()
+image . save ("potato-regions.svg")
 
 
 

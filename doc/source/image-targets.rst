@@ -33,6 +33,11 @@
    :height:  250px
    :target: examples/more-curved-arrows.html
 
+.. image:: ../../examples/examples-images/multiple-save.svg
+   :width: 250px
+   :height:  250px
+   :target: examples/multiple-save.html
+
 .. image:: ../../examples/examples-images/parametric-graphs.svg
    :width: 250px
    :height:  250px

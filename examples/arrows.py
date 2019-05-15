@@ -14,7 +14,7 @@ rescaling = 100
 
 
 
-image = mathsvg . SvgImage ("arrows.svg", rescaling = rescaling, shift = [ 4, 4 ])
+image = mathsvg . SvgImage (rescaling = rescaling, shift = [ 4, 4 ])
 
 image . set_view_box ((800, 800))
 
@@ -56,7 +56,7 @@ image . reset_arrow_options ()
 image . set_arrow_options (curvature = -0.22, width = 2.4 * image . arrow_width)
 image . draw_arrow ([ 2, -2 ], [ -2, 2 ])
 
-image . save ()
+image . save ("arrows.svg")
 
 
 

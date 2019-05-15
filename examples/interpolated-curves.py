@@ -10,7 +10,7 @@ import mathsvg
 
 rescaling = 100
 
-image = mathsvg . SvgImage ("interpolated-curves.svg", rescaling = rescaling)
+image = mathsvg . SvgImage (rescaling = rescaling)
 image . set_view_box ((1000, 1000))
 
 open_curve_point_list = [ [2.5,5], [4.5,7], [2.5,4], [0.5,3] ]
@@ -26,4 +26,4 @@ image . set_svg_options (stroke_color = "black")
 image . draw_smoothly_interpolated_open_curve (open_curve_point_list)
 image . draw_smoothly_interpolated_closed_curve (closed_curve_point_list)
 
-image . save ()
+image . save ("interpolated-curves.svg")

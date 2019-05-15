@@ -14,7 +14,7 @@ rescaling = 100
 
 
 
-image = mathsvg . SvgImage ("more-curved-arrows.svg", rescaling = rescaling, shift = [ 4, 4 ])
+image = mathsvg . SvgImage (rescaling = rescaling, shift = [ 4, 4 ])
 
 image . set_view_box ((800, 800))
 
@@ -38,7 +38,7 @@ image . draw_curved_arrow ([ -2.7, -2 ], [ -0.3, -2 ], curvedness = -0.2, asymme
 
 
 
-image . save ()
+image . save ("more-curved-arrows.svg")
 
 
 

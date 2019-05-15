@@ -45,7 +45,7 @@ def draw_a_torus (image, torus_position, torus_size, thinness = 0.375):
 
 
 
-image = mathsvg . SvgImage ("torus.svg", rescaling = rescaling, shift = [ 4, 4 ])
+image = mathsvg . SvgImage (file_name = "torus.svg", rescaling = rescaling, shift = [ 4, 4 ])
 
 image . set_view_box ((800, 800))
 
