@@ -1,0 +1,137 @@
+
+
+TODO LIST:
+
+0.0
+- check latest version of the doc
+- modify the first sentence from pypi (how do you do that?)
+- add picture in github and pypi
+- add example selfsim-triforce.py
+- add circle arc with arrow heads
+- add example cantor bouquets
+- see todo in phone
+- Python 2
+- improve doc
+- doc compilation complaining about some block quote i dont understand why
+
+
+
+
+
+
+0. Remove all the bugs
+
+
+
+
+check duplicate in this file
+
+do a list of requirements : python3 and svgwrite
+
+https://python-packaging.readthedocs.io/en/latest/minimal.html
+https://packaging.python.org/tutorials/packaging-projects/#packaging-your-project
+
+do the shishikura example!
+
+1. 
+
+
+
+
+- set a minimal separation angle between the vertexes of a potato
+
+- pseudo parabolas, hyperbola arcs
+
+- lemniscates, etc.
+
+- labels, incl. latex formulas
+
+
+LONG TERM:
+
+- there seems to be some minor issue with parametric_curve, a way to make it look nicer?
+
+- arrow tips at both end
+
+- arrows at end of polylines, and interpolated open curve
+
+- draw_compact_surface (position, size, genus, nb_punctures = 0, tilt = 0) (for genus <= 2) or draw sphere and draw torus
+  maybe include the torus example in the class?
+
+
+WIP:
+
+- use of svg options
+
+(MAYBE:)
+
+- create a path_and_fill command to create filled shapes (need to understand how to build a path properly)
+
+- how to use path . push () ?
+
+- draw_halfline ?
+
+
+
+DONE:
+
+- modify example for new version and test all of them
+- create an example with multiple saving in different files - add a ref in the save documentation
+
+
+- DEBUGGING: draw_interpolated_closed_curve is not smoothly closed: because the points on the potato are not equistributed
+
+
+- in the doc: images to link to the code
+- write down how to generate the documentation
+- Put the doc on: https://readthedocs.org/
+- next version is 0.0.2
+
+
+create an email address for the project, put it in the code of conduct
+
+  Needed: arrows
+
+- draw_curved_arrow
+
+- How to display the variable?
+- how to generate the doc?
+- how to make the lib work?
+- docstring: variables, code, links to examples, images
+- sphinx style of the doc
+- include the examples in the doc
+- remove "welcome!" from doc
+
+- doc? the doc is the examples plus some explaining
+  - make a list of which example uses what
+  - explain a little random wavy line and any other non self explanatory functionalities
+
+Rename this file
+
+Test as a library
+
+Add to github and to the python library repository (PyPI)
+
+
+
+move the content of the README to the github README.md file
+
+same for CONTRIBUTING etc.
+
+note github might add the license automatically
+
+see "how to create a python lib"
+ there might be "requirements.txt" file to create and how to post it on PyPI etc.
+
+
+
+
+- make a proper package
+
+
+
+
+
+
+
+
