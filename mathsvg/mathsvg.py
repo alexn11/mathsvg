@@ -24,7 +24,6 @@ import svgwrite
 the_tau = 2 * math . pi
 
 
-
 # note: not checking any of the parameters
 
 class SvgImage:
