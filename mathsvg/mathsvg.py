@@ -814,14 +814,13 @@ class SvgImage:
  
 
 
-  def draw_parametric_graph (self, eval_x, eval_y, t_start, t_end, nb_t, curve_type = "polyline", is_closed = False):
+  def draw_parametric_graph (self, eval_point, t_start, t_end, nb_t, curve_type = "polyline", is_closed = False):
     """Draws a parametric graph given by the functions *x(t)* and *y(t)*, that is, an interpolation of a set of ``nb_t`` points *(x, y)* with *x = x(t)* and *y = y(t)* and with *t* between ``t_start`` and ``t_end``. The default interpolation is by straight lines. It is also possible to have some type of smooth interpolation. The ``nb_t`` parameters are regularly spaced starting from ``t_start`` and ending at ``t_end``.
 
 If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joined according to the choice of interpolation.
 
     Args:
-      * ``eval_x``: a function (or a lambda) that takes the parameter *t* as an argument and returns the coordinate *x* for the pameter *t*
-      * ``eval_y``: a function (or a lambda) that takes the parameter *t* as an argument and returns the coordinate *y* for the pameter *t*
+      * ``eval_point``: a function (or a lambda) that takes the parameter *t* as an argument and returns the tuple of coordinates *(x,y)* corresponding to the pameter *t*
       * ``t_start`` (``float``): start of the parameter domain
       * ``t_end`` (``float``): end of the parameter domain
       * ``nb_t`` (``int``): number of parameters *t* at which the functions *x* and *y* are computed
@@ -832,23 +831,22 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 
       import math
 
-      image = mathsvg . SvgImage ("example.svg", rescaling = 100, shift = [ 1.1, 1.5 ])
-      image . set_view_box ((400, 300))
+      image = mathsvg . SvgImage (rescaling = 100, shift = [ 1.1, 1.5 ], view_box = (400, 300))
 
-      x = lambda t : math . sin (10 * math . pi * t) + 0.1
-      y = lambda t : math . cos (6 * math . pi *  t)
+      eval_point = lambda t : (math . sin (10 * math . pi * t) + 0.1, math . cos (6 * math . pi *  t))
       image . set_svg_options (stroke_color = "blue")
-      image . draw_parametric_graph (x, y, 0, 1, 40, curve_type = "polyline", is_closed = False)
+      image . draw_parametric_graph (eval_point, 0, 1, 40, curve_type = "polyline", is_closed = False)
 
-      x = lambda t : math . sin (10 * math . pi * t) + 1.1
-      y = lambda t : math . cos (6 * math . pi * t)
+      eval_point = lambda t : (math . sin (10 * math . pi * t) + 1.1, math . cos (6 * math . pi * t))
       image . set_svg_options (stroke_color = "black")
       image . set_dash_mode ("dash")
-      image . draw_parametric_graph (x, y, 0, 1, 40, curve_type = "autosmooth", is_closed = True)
+      image . draw_parametric_graph (eval_point, 0, 1, 40, curve_type = "autosmooth", is_closed = True)
+
+      image . save ("param-graph-example.svg")
     """
 
     t_step = (t_end - t_start) / (nb_t - 1)
-    point_list = [ [ eval_x (t), eval_y (t) ] for t in [ t_start + ti * t_step for ti in range (nb_t) ] ]
+    point_list = [ eval_point (t) for t in [ t_start + ti * t_step for ti in range (nb_t) ] ]
     if (curve_type == "polyline"):
       self . draw_polyline (point_list)
       if (is_closed):
@@ -1008,8 +1006,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 
     Example (see also: :ref:`potato.py`, :ref:`potato-3v.py`, :ref:`dashes.py`, :ref:`wiggly-potato.py`, :ref:`wigglier-potato.py`, :ref:`potato-regions.py`)::
 
-      image = mathsvg . SvgImage (file_name = "example.svg", rescaling = 100, shift = [2, 2])
-      image . set_view_box ((400, 400))
+      image = mathsvg . SvgImage (file_name = "example.svg", rescaling = 100, shift = [2, 2], view_box = (400, 400))
       image . draw_planar_potato ([0, 0], 0.5, 1.5, 3)
       image . save ()
     """
@@ -1051,8 +1048,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 
     Example (see also :ref:`lines.py` and :ref:`scribble.py`)::
 
-      image = mathsvg . SvgImage (file_name = "example.svg", rescaling = 100, shift = [ 4, 4 ])
-      image . set_view_box ((800, 800))
+      image = mathsvg . SvgImage (rescaling = 100, shift = [ 4, 4 ], view_box = (800, 800))
 
       image . set_dash_mode ("dot")
       image . draw_line_segment ([-3., -2.9], [3., 3.1])
@@ -1060,7 +1056,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
       image . set_dash_mode ("none")
       image . draw_random_wavy_line ([-3., -2.8], [3., 3.2], 0.1, 0.1)
 
-      image . save ()
+      image . save ("example.svg")
     """
 
     z_start = start_point [0] + 1.j * start_point [1]
@@ -1114,8 +1110,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 
     Example::
 
-       image = mathsvg . SvgImage (rescaling = 100, shift = [ 4, 4 ])
-       image . set_view_box ((800, 800))
+       image = mathsvg . SvgImage (rescaling = 100, shift = [ 4, 4 ], view_box = (800, 800))
        image . insert_svg_path_command ("M 650, 650 C 650, 650 443, 693 275, 525 107, 357 150, 150 150, 150")
        image . save ("example.svg")
 
