@@ -895,6 +895,9 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
     complex_points = [ pt [0] + 1j * pt [1] for pt in points ]
 
     left_right_vectors = []
+    # initialization necesssary for the case when the first two points are identical
+    left_vector = 0.
+    right_vector = 0.
 
     prev_point = complex_points [0]
     current_point = complex_points [1]
@@ -905,7 +908,13 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
       next_point = complex_points [point_index + 1]
 
       direction = next_point - prev_point
-      direction_len_inverse = 1 / abs (direction)
+      try :
+        direction_len_inverse = 1. / abs (direction)
+      except (ZeroDivisionError):
+        # if points are too close to each other, use previous direction and continue to the next point
+        # not the best solution but at least it doesn't raise
+        left_right_vectors += [ left_vector, right_vector ]
+        continue
       normalized_direction = direction_len_inverse * direction
 
       left_dist = right_dist
