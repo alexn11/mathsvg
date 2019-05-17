@@ -14,7 +14,7 @@ def get_content_of_readme_file ():
     return content
 
 setuptools . setup (name = "mathsvg",
-                    version = "0.1.0",
+                    version = "0.2.0",
                     description = "Mathematics oriented SVG creation",
                     long_description = get_content_of_readme_file (),
                     long_description_content_type = "text/markdown",
