@@ -12,18 +12,18 @@ Once the mathsvg package and all its dependencies are installed it can be used a
 
 Here is an example for the creation of a very simple image:
 
-    import mathsvg
-    image = mathsvg . SvgImage (rescaling = 100, shift = [ 1, 1 ], view_box = (200, 200))
-    image . draw_circle ([0, 0], 1.1)
-    image . save ("simple-example.svg")
+   import mathsvg
+   image = mathsvg . SvgImage (pixel_density = 100, view_window = (( -1, -1 ), ( 1, 1 )))
+   image . draw_circle ([0, 0], 1.1)
+   image . save ("simple-example.svg")
 
 
 The above program does the following.
 
-After importing the package mathsvg, a SvgImage object is created. The parameters of the constructors are a rescaling factor, a shift vector and the view box. The rescaling factor and the shift vector are used to convert mathematical object coordinates into pixel coordinates in the SVG. The shift vector corresponds to a translation which is first applied to the coordinates. After this translation both coordinates are multiplied by the rescaling factor. Those are optional parameters and the respective default are 1 and [0, 0]. As for the view box, this means that only the points with x and y coordinates between -1 and 1 will be on the canvas (the y axis is automatically flipped over, ignore the content of this parenthesis if you don't know why this should be).
+After importing the package mathsvg, a SvgImage object is created. The parameters of the constructors are the pixel density (number of pixel per unit of length) and the view window which selects the part of the plane that will be rendered in the image. The coordinates of mathematical objects will be automatically be converted into coordinates on the SVG canvas.
 
 A circle with center (0, 0) and radius 1.1 is drawn using the default drawing options (black solid stroke). Some points of the circle won't appear in the image since they are outside the canvas.
 
-Finally the file is saved with the name "simple-example.svg". 
+Finally the image is saved in a file with the name "simple-example.svg". 
 
 

@@ -3,16 +3,9 @@
 # Copyright (C) 2018, Alexandre De Zotti
 # License: MIT License
 
-import math
-import cmath
-
 import mathsvg
 
-rescaling = 100
-
-image = mathsvg . SvgImage (rescaling = rescaling, shift = [ -2, 0 ])
-
-image . set_view_box ((800, 800))
+image = mathsvg . SvgImage (pixel_density = 100, view_window = ((2, 0), (10, 8)))
 
 image . set_dash_mode ("dash")
 image . draw_line_segment ([0, 0], [10, 10])

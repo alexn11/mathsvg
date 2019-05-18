@@ -19,7 +19,7 @@ The source code is hosted on `GitHub <https://github.com/alexn11/mathsvg>`_.
 Here is a simple example::
 
    import mathsvg
-   image = mathsvg . SvgImage (rescaling = 100, shift = [ 1, 1 ], view_box = (200, 200))
+   image = mathsvg . SvgImage (pixel_density = 100, view_window = (( -1, -1 ), ( 1, 1 )))
    image . draw_circle ([0, 0], 1.1)
    image . save ("simple-example.svg")
 

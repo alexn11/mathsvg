@@ -32,33 +32,25 @@ class SvgImage:
 
   In order to make SVG graphics using mathsvg, you need first to create an instance of SvgImage. Then do your drawings by calling a few members functions of this object. Finally call ``save ()`` to save the result.
 
-  The constructor requires a path or file name for the SVG.
+  The constructor has the following optional arguments:
+    * ``view_window`` (``tuple``): is the tuple of the two coordinates of the bottom left and top right corners of the drawing window.
+    * ``pixel_density`` (``float``): number of pixels per unit length. Coordinates in the SVG file are rescaled accordingly.
+  """
 
-  The optional parameters of the constructor are ``rescaling`` (nonzero floating point number), ``shift`` (list of two floating point numbers),d ``view_box`` (tuple of two integers) and ``image_file_name`` (string).
+  def __init__ (self, view_window = (( -1, -1 ), ( 1, 1 )), pixel_density = 100.):
 
-  The parameters ``rescaling`` and ``shift`` cannot be modified because they need to be consistent for all the drawings.
+    self . image_file_name = None
+    self . svgwrite_object = svgwrite . Drawing (filename = None, debug = True)
 
-  The parameters ``view_box`` can be modified with the method ``set_view_box`` and ``image_file_name`` can be passed as a parameter to the method ``save``."""
-
-  def __init__ (self, rescaling = 1., shift = [0, 0], file_name = None, view_box = (500, 500)):
-
-    self . image_file_name = file_name
-    self . svgwrite_object = svgwrite . Drawing (filename = "None" if (file_name is None) else file_name, debug = True) #, size = (u'1000%', u'1000%'))
+    self . rescaling = pixel_density
+    self . view_window = view_window
+    # shift the bottom left to (0, 0)
+    self . shift = [ - x for x in self . view_window [0] ]
+    view_box = [ int (self . rescaling * (self . view_window [1] [i] - self . view_window [0] [i])) + 1 for i in (0, 1) ]
 
     self . _set_view_box_no_reset (view_box)
     self . reset_svg_options ()
     self . point_size = 6 * self . stroke_width
-
-    # old temporary back compatiblity hack (to remove) ----------------------
-    if ((type (rescaling) is list) or (type (rescaling) is tuple)):
-      raise Exception ("obsolete rescaling parameter type")
-      if (rescaling [0] != rescaling [1]):
-        raise Exception ("Now is not compatible with nonconformal rescaling")
-      rescaling = rescaling [0]
-    # -----------------------------------------------------------------------
-
-    self . rescaling = rescaling
-    self . shift = shift
 
     self . reset_dash_and_dot_structures ()
     self . reset_arrow_options ()
@@ -75,7 +67,7 @@ class SvgImage:
 
     Example (see also :ref:`lines.py`, :ref:`dashes.py`, :ref:`more-curved-arrows.py`, :ref:`torus.py`, :ref:`points-crosses-circles-ellipses.py`, :ref:`arrows.py`, :ref:`curved-arrows.py`, :ref:`potato-regions.py`)::
 
-      image = mathsvg . SvgImage (file_name = "example.svg", rescaling = 20, shift = [ 4, 4 ])
+      image = mathsvg . SvgImage (pixel_density = 20, view_window = ((0, 0), (10, 10)))
 
       image . set_dash_mode ("dash")
       image . draw_line_segment ([0, 0], [10, 10])
@@ -87,7 +79,7 @@ class SvgImage:
       image . set_dash_mode ("dasharray")
       image . draw_planar_potato ([5, 5], 2, 4, 8)
 
-      image . save ()
+      image . save ("set-dash-mode-example.svg")
     """
 
     if (mode not in ("none", "dash", "dot", "dots", "dasharray")):
@@ -98,22 +90,6 @@ class SvgImage:
   def _set_view_box_no_reset (self, view_box):
     self . svgwrite_object . viewbox (width = view_box [0], height = view_box [1])
     self . view_box = view_box
-
-
-  def set_view_box (self, view_box):
-    """Sets the size of the SVG canvas
-
-    Args:
-      * ``view_box`` (``tuple``): tuple of integers corresponding to the size in pixels of the SVG in the x and y directions
-    """
-
-    self . svgwrite_object . viewbox (width = view_box [0], height = view_box [1])
-    self . view_box = view_box
-    # this will not be retroactive:
-    self . reset_dash_and_dot_structures ()
-    self . reset_arrow_options ()
-
-
 
   def set_dash_dash_structure (self, black_len, white_len):
     """Sets the size of the dashes and space for the dash mode
@@ -172,7 +148,7 @@ class SvgImage:
 
     Examples (see also :ref:`arrows.py`)::
       
-      image = mathsvg . SvgImage (file_name = "example.svg", rescaling = 20, shift = [ 4, 4 ])
+      image = mathsvg . SvgImage (pixel_density = 20, view_window = ((-4, -4), (4, 4)))
 
       image . set_arrow_options (curvature = 0.55)
       image . draw_arrow ([ -2, -2 ], [ 2, 1.7 ])
@@ -184,7 +160,7 @@ class SvgImage:
       image . set_arrow_options (curvature = 0)
       image . draw_arrow ([ -2, -2 ], [ 2, 0.6 ])
 
-      image . save ()
+      image . save ("set-arrow-options-example.svg")
     """
 
     if (width is not None):
@@ -223,13 +199,11 @@ class SvgImage:
 
 
 
-  def save (self, file_name = None):
+  def save (self, file_name):
     """Save the drawings into a SVG file. 
 
-        If no path/name is given, the file name given as a parameter to the constructor will be used.
-        Meanwhile if no name was given to the constructor an exception is raised.
-
-        If a path/name is given will use this as the path/name of the file to save the drawings.
+       Args:
+         * ``file_name`` (``str``): name of the file to save.
 
         See an example in :ref:`multiple-save.py`"""
 
@@ -251,11 +225,8 @@ class SvgImage:
     return [ vector [0], - vector [1] ]
 
 
-
   def _rescale_vector (self, vector):
     return [ self . rescaling * vector [0], self . rescaling * vector [1] ]
-    # previous nonconformal version:
-    #return [ self . rescaling [0] * vector [0], self . rescaling [1] * vector [1] ]
 
 
   def _rescale_length (self, length):
@@ -267,34 +238,26 @@ class SvgImage:
     return [ point [0] + self . shift [0], point [1] + self . shift [1] ]
 
 
-
   def project_point_to_canvas (self, point):
-    """Compute the coordinate of a point on the SVG canvas (first translates by ``shift`` then rescales by ``rescaling``)."""
+    """Compute the coordinate of a point on the SVG canvas."""
     return self . _flip_point ( self . _rescale_vector (self . _shift_point (point)))
-
 
 
   def project_complex_point_to_canvas (self, z):
     """Compute the coordinates of a complex number projected onto the SVG canvas (equivalent to ``project_point_to_canvas ([ z . real, z . imag ])``)."""
     return self . project_point_to_canvas ([ z . real, z . imag ])
 
-
-
   def project_vector_to_canvas (self, vector):
     """Compute the coordinates of a vector attached at 0 on the SVG canvas (rescaling without translation)."""
     return self . _flip_vector (self . _rescale_vector (vector))
-
-
 
   def project_complex_vector_to_canvas (self, dz):
     """Compute the coordinates of a complex vector attached at 0 on the SVG canvas (rescaling without translation)."""
     return self . project_vector_to_canvas ([ dz . real, dz . imag ])
 
-
   def _convert_point_to_svg_string (self, point):
     # control vectors are points too
     return str (point [0]) + ", " + str (point [1])
-
 
   def _make_svg_path_M_command (self, points):
     path_command = " M "
@@ -461,8 +424,7 @@ class SvgImage:
 
     Examples (see also: :ref:`curved-arrows.py` and :ref:`more-curved-arrows.py`)::
 
-      image = mathsvg . SvgImage (file_name = "curved-arrows.svg", rescaling = 100, shift = [ 4, 4 ])
-      image . set_view_box ((800, 800))
+      image = mathsvg . SvgImage (pixel_density = 20, view_window = (( -4, -4 ), ( 4, 4 )))
 
       image . draw_curved_arrow ([ -2, -1 ], [ 2, -1 ], curvedness = -.2)
       image . draw_curved_arrow ([ -2.7, 2 ], [ -0.3, 2 ], asymmetry = - 0.8)
@@ -471,7 +433,7 @@ class SvgImage:
       image . draw_curved_arrow ([ -2.7, -1 ], [ -0.3, -1 ], asymmetry = 0.5)
       image . draw_curved_arrow ([ -2.7, -2 ], [ -0.3, -2 ], curvedness = -0.2, asymmetry = 1.2)
 
-      image . save ()
+      image . save ("draw-curved-arrow-example.svg")
     """
 
     direction = [ end_point [i] - start_point [i] for i in range (2) ]
@@ -654,18 +616,17 @@ class SvgImage:
     Examples (see also :ref:`points-crosses-circles-ellipses.py` and :ref:`torus.py`)::
 
       import math
-      #the_tau = 2. * math . pi
+      two_pi = 2. * math . pi
 
       import mathsvg
 
-      image = mathsvg . SvgImage (file_name = "example.svg", rescaling = 100, shift = [ 4, 4 ])
-      image . set_view_box ((800, 800))
+      image = mathsvg . SvgImage (pixel_density = 20, view_window = (( -4, -4 ), ( 4, 4 )))
 
       focuses = [ [-1.33, 0.61], [1.33, -0.61] ]
 
-      image . draw_ellipse_arc (focuses, 0.412, the_tau * 0.1, the_tau * 0.8)
+      image . draw_ellipse_arc (focuses, 0.412, two_pi * 0.1, two_pi * 0.8)
     
-      image . save ()
+      image . save ("draw-ellipse-arc-example.svg")
     """
 
     # computing the ellipse parameters:
@@ -701,18 +662,17 @@ class SvgImage:
     Examples (see also :ref:`points-crosses-circles-ellipses.py` and :ref:`torus.py`)::
 
       import math
-      #the_tau = 2. * math . pi
+      two_pi = 2. * math . pi
 
       import mathsvg
 
-      image = mathsvg . SvgImage (file_name = "example.svg", rescaling = 100, shift = [ 4, 4 ])
-      image . set_view_box ((800, 800))
+      image = mathsvg . SvgImage (pixel_density = 20, view_window = (( -4, -4 ), ( 4, 4 )))
 
       focuses = [ [-1.33, 0.61], [1.33, -0.61] ]
 
       image . draw_ellipse (focuses, 0.68)
       
-      image . save ()
+      image . save ("draw-ellipse-example.svg")
     """
     complex_focuses = [ f [0] + 1j * f [1] for f in focuses ]
     major_axis_direction = complex_focuses [1] - complex_focuses [0]
@@ -763,10 +723,10 @@ class SvgImage:
 
     Example (see also :ref:`interpolated-curves.py`)::
 
-      image = mathsvg . SvgImage ("example.svg", rescaling = 100)
-      image . set_view_box ((1000, 1000))
-      point_list = [ [2.5,5], [4.5,7], [2.5,4], [0.5,3] ]
+      image = mathsvg . SvgImage (pixel_density = 20, view_window = ((0, 0), (8, 8)))
+      point_list = [ [2.5,5], [4.5,7], [2.5,4], [0.5,3], [6,2] ]
       image . draw_polyline (point_list)
+      image . save ("draw-polyline-example.svg")
     """
     
     points = [ self . project_point_to_canvas (point) for point in point_list ]
@@ -774,7 +734,6 @@ class SvgImage:
     polyline = svgwrite . shapes . Polyline (points = points,
                                              style = self . _make_svg_style_string ())
     self . svgwrite_object . add (polyline)
-
 
 
   def draw_function_graph (self, eval_function, x_start, x_end, nb_x, curve_type = "polyline"):
@@ -789,8 +748,7 @@ class SvgImage:
 
     Examples (see also :ref:`graphs.py`)::
 
-      image = mathsvg . SvgImage ("example.svg", rescaling = 100, shift = [ 0, 5 ])
-      image . set_view_box ((1000, 1000))
+      image = mathsvg . SvgImage (pixel_density = 20, view_window = ((0, -5), (10, 5)))
 
       function = lambda x : math . sin (5 * x)
 
@@ -798,6 +756,8 @@ class SvgImage:
       image . draw_function_graph (function, 0, 10, 33, curve_type = "polyline")
       image . set_svg_options (stroke_color = "black")
       image . draw_function_graph (function, 0, 10, 214, curve_type = "autosmooth")
+
+      image . save ("draw-function-graph-example.svg")
     """
 
     x_step = (x_end - x_start) / (nb_x - 1)
@@ -830,7 +790,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 
       import math
 
-      image = mathsvg . SvgImage (rescaling = 100, shift = [ 1.1, 1.5 ], view_box = (400, 300))
+      image = mathsvg . SvgImage (pixel_density = 20, view_window = ((-1.1, -1.5), (2.9, 1.5)))
 
       eval_point = lambda t : (math . sin (10 * math . pi * t) + 0.1, math . cos (6 * math . pi *  t))
       image . set_svg_options (stroke_color = "blue")
@@ -841,7 +801,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
       image . set_dash_mode ("dash")
       image . draw_parametric_graph (eval_point, 0, 1, 40, curve_type = "autosmooth", is_closed = True)
 
-      image . save ("param-graph-example.svg")
+      image . save ("draw-parametric-graph-example.svg")
     """
 
     t_step = (t_end - t_start) / (nb_t - 1)
@@ -953,11 +913,10 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 
     Example (see also :ref:`interpolated-curves.py`)::
 
-      image = mathsvg . SvgImage (file_name = "example.svg", rescaling = 100)
-      image . set_view_box ((1000, 1000))
+      image = mathsvg . SvgImage (pixel_density = 20, view_window = ((0, 0), (10, 10)))
       point_list = [ [7.4, 2], [5.6, 4], [7.3, 6], [ 4.3, 5.2], [ 8.3, 9.1 ] ]
       image . draw_smoothly_interpolated_open_curve (point_list)
-      image . save ()
+      image . save ("draw-smoothly-interpolated-open-curve-example.svg")
     """
 
     control_points = [ self . project_point_to_canvas (point) for point in points ]
@@ -974,11 +933,10 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 
     Example (see also :ref:`interpolated-curves.py`)::
 
-      image = mathsvg . SvgImage (file_name = "example.svg", rescaling = 100)
-      image . set_view_box ((1000, 1000))
+      image = mathsvg . SvgImage (pixel_density = 20, view_window = ((0, 0), (10, 10)))
       point_list = [ [7.4, 2], [5.6, 4], [7.3, 6], [ 4.3, 5.2], [ 8.3, 9.1 ] ]
       image . draw_smoothly_interpolated_closed_curve (point_list)
-      image . save ()
+      image . save ("draw-smoothly-interpolated-closed-curve-example.svg")
     """
 
     control_points = [ self . project_point_to_canvas (point) for point in points ]
@@ -1014,9 +972,9 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 
     Example (see also: :ref:`potato.py`, :ref:`potato-3v.py`, :ref:`dashes.py`, :ref:`wiggly-potato.py`, :ref:`wigglier-potato.py`, :ref:`potato-regions.py`)::
 
-      image = mathsvg . SvgImage (file_name = "example.svg", rescaling = 100, shift = [2, 2], view_box = (400, 400))
+      image = mathsvg . SvgImage (pixel_density = 20, view_window = (( -2, -2), (2, 2)))
       image . draw_planar_potato ([0, 0], 0.5, 1.5, 3)
-      image . save ()
+      image . save ("draw-planar-potato-example.svg")
     """
 
 
@@ -1056,7 +1014,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 
     Example (see also :ref:`lines.py` and :ref:`scribble.py`)::
 
-      image = mathsvg . SvgImage (rescaling = 100, shift = [ 4, 4 ], view_box = (800, 800))
+      image = mathsvg . SvgImage (pixel_density = 20, view_window = (( -4, -4 ), ( 4, 4 )))
 
       image . set_dash_mode ("dot")
       image . draw_line_segment ([-3., -2.9], [3., 3.1])
@@ -1064,7 +1022,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
       image . set_dash_mode ("none")
       image . draw_random_wavy_line ([-3., -2.8], [3., 3.2], 0.1, 0.1)
 
-      image . save ("example.svg")
+      image . save ("draw-random-wavy-line-example.svg")
     """
 
     z_start = start_point [0] + 1.j * start_point [1]
@@ -1118,9 +1076,9 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 
     Example::
 
-       image = mathsvg . SvgImage (rescaling = 100, shift = [ 4, 4 ], view_box = (800, 800))
+       image = mathsvg . SvgImage (pixel_density = 100, view_window = (( -4, -4 ), ( 4, 4 )))
        image . insert_svg_path_command ("M 650, 650 C 650, 650 443, 693 275, 525 107, 357 150, 150 150, 150")
-       image . save ("example.svg")
+       image . save ("svg-command-example.svg")
 
 
 

@@ -9,7 +9,7 @@ import cmath
 
 import mathsvg
 
-the_tau = 2 * math . pi
+two_pi = 2 * math . pi
 rescaling = 100
 
 
@@ -34,7 +34,7 @@ def draw_a_torus (image, torus_position, torus_size, thinness = 0.375):
 
   focuses = [ [- d, ellipse_shift], [d, ellipse_shift] ]
   focuses = [ [ f [0] + torus_position [0], f [1] + torus_position [1] ] for f in focuses ]
-  image . draw_ellipse_arc (focuses, b, math . pi, the_tau)
+  image . draw_ellipse_arc (focuses, b, math . pi, two_pi)
 
   focuses = [ [- d, - ellipse_shift], [d, - ellipse_shift] ]
   focuses = [ [ f [0] + torus_position [0], f [1] + torus_position [1] ] for f in focuses ]
@@ -45,9 +45,7 @@ def draw_a_torus (image, torus_position, torus_size, thinness = 0.375):
 
 
 
-image = mathsvg . SvgImage (file_name = "torus.svg", rescaling = rescaling, shift = [ 4, 4 ])
-
-image . set_view_box ((800, 800))
+image = mathsvg . SvgImage (pixel_density = rescaling, view_window = ((-4, -4), (4, 4)))
 
 draw_a_torus (image, [0, 0], 6.2)
 
@@ -61,4 +59,4 @@ draw_a_torus (image, [-2.5, 2.5], 1.3, thinness = 0.2)
 image . set_dash_mode ("dash")
 draw_a_torus (image, [-2.9,-2.2], 1.78, thinness = 0.35)
 
-image . save ()
+image . save ("torus.svg")

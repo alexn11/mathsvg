@@ -9,9 +9,7 @@ import cmath
 
 import mathsvg
 
-rescaling = 1
-
-image = mathsvg . SvgImage (rescaling = rescaling, shift = [0, 0], view_box = [400, 150])
+image = mathsvg . SvgImage (pixel_density = 1, view_window = ((0, 0), (400, 150)))
 
 image . draw_random_wavy_line ([20, 75], [380, 75], 2, 55)
 

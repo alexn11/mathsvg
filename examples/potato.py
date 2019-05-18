@@ -15,15 +15,10 @@ bottom = - 1.5 * general_size
 left = - 1.5 * general_size
 top = - bottom
 right = - left
-rescaling = 42
 
-
-image = mathsvg . SvgImage (rescaling = rescaling, shift = [- left, - bottom])
-image . set_view_box ((rescaling * (right - left), rescaling * (top - bottom)))
-
+image = mathsvg . SvgImage (pixel_density = 42, view_window = ((left, bottom), (right, top)))
 
 image . draw_planar_potato ([0.25 * general_size, 0], 0.5 * general_size, general_size, 5)
-
 
 image . save ("potato.svg")
 

@@ -3,21 +3,9 @@
 # Copyright (C) 2018, Alexandre De Zotti
 # License: MIT License
 
-
-import math
-import cmath
-
 import mathsvg
 
-the_tau = 2 * math . pi
-rescaling = 100
-
-
-
-image = mathsvg . SvgImage (rescaling = rescaling, shift = [ 4, 4 ])
-
-image . set_view_box ((800, 800))
-
+image = mathsvg . SvgImage (pixel_density = 100, view_window = ((-4, -4), (4, 4)))
 
 image . draw_line_segment ([-3.5, 3.5], [-3, 3.2])
 

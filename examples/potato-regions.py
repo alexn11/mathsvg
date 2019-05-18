@@ -12,10 +12,7 @@ import cmath
 import mathsvg
 
 
-
-
-image = mathsvg . SvgImage (rescaling = 100, shift = [2, 2])
-image . set_view_box ((400, 400))
+image = mathsvg . SvgImage (pixel_density = 100, view_window = ((-2, -2), (2, 2)))
 
 center = [0, 0]
 inner_radius = 0.5

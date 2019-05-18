@@ -8,17 +8,7 @@ import cmath
 
 import mathsvg
 
-the_tau = 2 * math . pi
-rescaling = 100
-
-
-
-
-image = mathsvg . SvgImage (rescaling = rescaling, shift = [ 4, 4 ])
-
-image . set_view_box ((800, 800))
-
-
+image = mathsvg . SvgImage (pixel_density = 100, view_window = ( (-4, -4), (4, 4) )) 
 
 image . draw_arrow ([ -2, -2 ], [ 2, 2 ])
 

@@ -3,15 +3,10 @@
 # Copyright (C) 2018, Alexandre De Zotti
 # License: MIT License
 
-import math
-import cmath
-
 import mathsvg
 
-rescaling = 100
 
-image = mathsvg . SvgImage (rescaling = rescaling)
-image . set_view_box ((1000, 1000))
+image = mathsvg . SvgImage (pixel_density = 100, view_window = ((0, 0), (10, 10)))
 
 open_curve_point_list = [ [2.5,5], [4.5,7], [2.5,4], [0.5,3] ]
 closed_curve_point_list = [ [7.4, 2], [5.6, 4], [7.3, 6], [ 4.3, 5.2], [ 8.3, 9.1 ] ]

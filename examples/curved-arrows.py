@@ -3,23 +3,9 @@
 # Copyright (C) 2018, Alexandre De Zotti
 # License: MIT License
 
-
-import math
-import cmath
-
 import mathsvg
 
-the_tau = 2 * math . pi
-rescaling = 100
-
-
-
-
-image = mathsvg . SvgImage (rescaling = rescaling, shift = [ 4, 4 ])
-
-image . set_view_box ((800, 800))
-
-
+image = mathsvg . SvgImage (pixel_density = 100, view_window = ((-4, -4), (4, 4)))
 
 image . draw_curved_arrow ([ -2, 2 ], [ 2, 2 ])
 
@@ -30,8 +16,6 @@ image . draw_curved_arrow ([ -2, 0 ], [ 2, 0 ], curvedness = 0.5)
 image . draw_curved_arrow ([ -2, -1 ], [ 2, -1 ], curvedness = -.2)
 
 image . draw_curved_arrow ([ -2, -2 ], [ 2, -2 ], curvedness = 0.)
-
-
 
 
 image . set_dash_mode ("dash")

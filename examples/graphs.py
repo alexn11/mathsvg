@@ -5,14 +5,10 @@
 
 
 import math
-import cmath
 
 import mathsvg
 
-rescaling = 100
-
-image = mathsvg . SvgImage (rescaling = rescaling, shift = [ 0, 5 ])
-image . set_view_box ((1000, 1000))
+image = mathsvg . SvgImage (pixel_density = 100, view_window = ((0, -5), (10, 5)))
 
 function = lambda x : math . sin (5 * x)
 

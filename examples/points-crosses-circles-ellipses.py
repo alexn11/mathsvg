@@ -8,13 +8,9 @@ import cmath
 
 import mathsvg
 
-the_tau = 2 * math . pi
+two_pi = 2 * math . pi
 
-rescaling = 100
-
-image = mathsvg . SvgImage (rescaling = rescaling, shift = [ 4, 4 ])
-
-image . set_view_box ((800, 800))
+image = mathsvg . SvgImage (pixel_density = 100, view_window = ((-4, -4), (4, 4)))
 
 image . draw_point ([0, 0])
 image . draw_point ([1, 0])
@@ -33,7 +29,7 @@ image . draw_plus (focuses [0])
 image . draw_plus (focuses [1])
 
 image . set_dash_mode ("dash")
-image . draw_ellipse_arc (focuses, 0.412, the_tau * 0.1, the_tau * 0.8)
+image . draw_ellipse_arc (focuses, 0.412, two_pi * 0.1, two_pi * 0.8)
 
 image . set_dash_mode ("dot")
 image . draw_ellipse (focuses, 0.68)

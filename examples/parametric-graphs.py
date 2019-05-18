@@ -4,7 +4,7 @@ import mathsvg
 
 import math
 
-image = mathsvg . SvgImage (rescaling = 100, shift = [ 1.1, 1.5 ], view_box = (360, 360))
+image = mathsvg . SvgImage (pixel_density = 100, view_window = ((-1.1, -1.5), (2.5, 2.1)))
 
 graph_function = lambda t : (math . sin (10 * math . pi * t) + 0.1, math . cos (6 * math . pi *  t))
 image . set_svg_options (stroke_color = "black")

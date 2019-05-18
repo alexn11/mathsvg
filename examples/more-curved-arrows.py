@@ -3,20 +3,10 @@
 # Copyright (C) 2018, Alexandre De Zotti
 # License: MIT License
 
-import math
-import cmath
-
 import mathsvg
 
-the_tau = 2 * math . pi
-rescaling = 100
 
-
-
-
-image = mathsvg . SvgImage (rescaling = rescaling, shift = [ 4, 4 ])
-
-image . set_view_box ((800, 800))
+image = mathsvg . SvgImage (pixel_density = 100, view_window = ((-4, -4), (4, 4)))
 
 image . draw_point ([ 0.2, -0.2 ])
 
@@ -35,7 +25,6 @@ image . draw_curved_arrow ([ -2.7, 0 ], [ -0.3, 0 ], asymmetry = 0.2)
 image . draw_curved_arrow ([ -2.7, -1 ], [ -0.3, -1 ], asymmetry = 0.5)
 
 image . draw_curved_arrow ([ -2.7, -2 ], [ -0.3, -2 ], curvedness = -0.2, asymmetry = 1.2)
-
 
 
 image . save ("more-curved-arrows.svg")
