@@ -160,22 +160,19 @@ lengths = compute_lengths (max_length, smallest_interval, density)
 #print (lengths)
 
 if (object_type == "disconnected-straight-brush"):
-  image = mathsvg . SvgImage (rescaling = image_main_scale, shift = [ padding, padding ])
-  image_size = (1. + 2. * padding) * image_main_scale
-  image . set_view_box ((image_size, image_size))
+  view_window = ((-padding, -padding), (1 + padding, 1 + padding))
+  image = mathsvg . SvgImage (pixel_density = image_main_scale, view_window = view_window)
   for element in lengths:
     image . draw_line_segment ( [ element [0], 0 ], [ element [0], element [1] ] )
 elif (object_type == "compact-cantor-bouquet"):
-  image = mathsvg . SvgImage (rescaling = image_main_scale, shift = [ 1 + padding, 1 + padding ])
-  image_size = (2. + 2. * padding) * image_main_scale
-  image . set_view_box ((image_size, image_size))
+  view_window = ((-1 - padding, -1 - padding), (1 + padding, 1 + padding))
+  image = mathsvg . SvgImage (pixel_density = image_main_scale, view_window = view_window)
   for element in lengths:
     endpoint = element [1] * cmath . exp (2. * math . pi * element [0] * 1.j)
     image . draw_line_segment ( [ 0, 0 ], [ endpoint. real, endpoint . imag ] )
 elif (object_type == "one-sided-hairy-circle"):
-  image = mathsvg . SvgImage (rescaling = image_main_scale, shift = [ 1 + padding, 1 + padding ])
-  image_size = (2. + 2. * padding) * image_main_scale
-  image . set_view_box ((image_size, image_size))
+  view_window = ((-1 - padding, -1 - padding), (1 + padding, 1 + padding))
+  image = mathsvg . SvgImage (pixel_density = image_main_scale, view_window = view_window)
   image . draw_circle ( (0, 0), 0.5)
   for element in lengths:
     direction = cmath . exp (2. * math . pi * element [0] * 1.j)

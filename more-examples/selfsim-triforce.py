@@ -8,7 +8,7 @@ import math
 import cmath
 import mathsvg
 
-the_tau = 2. * math . pi
+two_pi = 2. * math . pi
 
 # ------ parameters ----------------------------------------------------------------------------------------------------
 
@@ -26,7 +26,9 @@ do_draw_centers = False
 
 # --- below are treated as global variables, the angle (corner_turn) could theoretically be a parameter as well ---------
 
-
+bottom = -0.75
+left = -1.
+view_window = ((left, bottom), (left + 2, bottom + 2))
 
 drawings_fill_color = "lightgreen"
 drawings_stroke_color = "orangered"
@@ -38,8 +40,8 @@ drawings_stroke_color = "goldenrod"
 
 centers_relative_distance_to_center = 1 - rescaling_factor
 
-turn_direction = cmath . exp (the_tau * corner_turn * 1.j)
-#rotation_direction = cmath . exp (the_tau * triangle_rotation * 1.j)
+turn_direction = cmath . exp (two_pi * corner_turn * 1.j)
+#rotation_direction = cmath . exp (two_pi * triangle_rotation * 1.j)
 
 up_vector = [ 0., 1. ]
 right_vector = [ turn_direction . real, turn_direction . imag ]
@@ -120,13 +122,12 @@ def draw_triforce (image, start_size, rescaling_factor, nb_levels):
 
   return
 
-image = mathsvg . SvgImage (file_name = "selfsim-triforce.svg", rescaling = image_size / 2, shift = [ 1, 0.75 ])
-image . set_view_box (( image_size, image_size ))
+image = mathsvg . SvgImage (pixel_density = image_size / 2, view_window = view_window)
 
 image . set_svg_options (fill_color = drawings_fill_color, stroke_color = drawings_stroke_color)
 draw_triforce (image, start_size, rescaling_factor, nb_levels)
 
-image . save ()
+image . save ("selfsim-triforce.svg")
 
 
 

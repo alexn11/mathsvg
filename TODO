@@ -1,13 +1,5 @@
 
 
-
-
-NEW INCOMPATIBLE CONSTRUCTOR:
-modify all the examples and check them
-add the new pictures to the doc
-compile the doc
-modify the more-examples
-
 TODO LIST:
 
 0.0
@@ -79,7 +71,7 @@ WIP:
 
 
 DONE:
-
+- new incompatible, but simpler, constructor
 - modify the first sentence from pypi (how do you do that?)
 - modify example for new version and test all of them
 - create an example with multiple saving in different files - add a ref in the save documentation
