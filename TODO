@@ -3,16 +3,19 @@
 TODO LIST:
 
 0.0
+- draw_bezier_curve + example
+- parametric graph closed curve has wrong tangent at the extremities ?
+- simplify doc generation - merge scripts
+- labels/text + latex
 - add picture in github and pypi
 - add example selfsim-triforce.py
 - add circle arc with arrow heads
 - add example cantor bouquets
-- Python 2
 - improve doc
 - doc compilation complaining about some block quote i dont understand why
-
-
-
+- move torus into more-examples
+- do a more-example section in the doc
+- Python 2
 
 
 

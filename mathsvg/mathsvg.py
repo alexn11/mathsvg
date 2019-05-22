@@ -35,12 +35,13 @@ class SvgImage:
   The constructor has the following optional arguments:
     * ``view_window`` (``tuple``): is the tuple of the two coordinates of the bottom left and top right corners of the drawing window.
     * ``pixel_density`` (``float``): number of pixels per unit length. Coordinates in the SVG file are rescaled accordingly.
+    * ``_svgwrite_debug`` (``boolean``): to create the svgwrite object with a specific debug mode (default is ``False``).
   """
 
-  def __init__ (self, view_window = (( -1, -1 ), ( 1, 1 )), pixel_density = 100.):
+  def __init__ (self, view_window = (( -1, -1 ), ( 1, 1 )), pixel_density = 100., _svgwrite_debug = False):
 
     self . image_file_name = None
-    self . svgwrite_object = svgwrite . Drawing (filename = None, debug = True)
+    self . svgwrite_object = svgwrite . Drawing (filename = None, debug = _svgwrite_debug)
 
     self . rescaling = pixel_density
     self . view_window = view_window
@@ -178,7 +179,7 @@ class SvgImage:
       * ``stroke_color`` (``str`` or ``None``): stroke color (default is ``"black"``)
       * ``stroke_width`` (``float`` or ``None``): stroke width in pixels
       * ``fill_color`` (``str`` or ``None``): fill color (default is ``"none"``)
-      * ``dash_array`` (``list`` or ``None``): list of stroke/space lengths (in pixels) describing the customize dash stroke
+      * ``dash_array`` (``tuple`` or ``None``): list of stroke/space lengths (in pixels) describing the customize dash stroke
 
     Examples:
     To do some drawings in red, then restore back to the default options::
@@ -348,7 +349,7 @@ class SvgImage:
     """Draw the tip of an arrow.
 
     Args:
-      * ``tip`` (``list``): position of the tip
+      * ``tip`` (``tuple``): cooedinates of the position of the tip
       * ``arrow_direction_angle`` (``float``): angle where the arrow is pointing in radians
 
     Examples: see :ref:`arrows.py`
@@ -394,8 +395,8 @@ class SvgImage:
      Equivalent to ``self . draw_arrow (start_point, end_point)``.
 
     Args:
-      * ``start_point`` (``list``): coordinates of where the arrow starts
-      * ``end_point`` (``list``): coordinates of where the arrow ends
+      * ``start_point`` (``tuple``): coordinates of where the arrow starts
+      * ``end_point`` (``tuple``): coordinates of where the arrow ends
     """
 
     self . draw_line_segment (start_point, end_point)
@@ -417,8 +418,8 @@ class SvgImage:
     """Draws an arrow as a curved line joining two points with an arrow tip at the last point.
 
     Args:
-      * ``start_point`` (``list``): coordinates of where the arrow starts
-      * ``end_point`` (``list``): coordinates of where the arrow ends
+      * ``start_point`` (``tuple``): coordinates of where the arrow starts
+      * ``end_point`` (``tuple``): coordinates of where the arrow ends
       * ``curvedness`` (``float`` or ``None``): height of the bump making the arrow curve (0 for a straight arrow)
       * ``asymmetry`` (``float`` or ``None``): where the bump should be located: 0 is the middle, negative: towards the first point, positive: towards the last point. A value between -0.5 and 0.5 guarantees that the bump is between the two end points.
 
@@ -459,8 +460,8 @@ class SvgImage:
     """Draws either a straight or curved arrow.
 
     Args:
-      * ``start_point`` (``list``): coordinates of where the arrow starts
-      * ``end_point`` (``list``): coordinates of where the arrow ends
+      * ``start_point`` (``tuple``): coordinates of where the arrow starts
+      * ``end_point`` (``tuple``): coordinates of where the arrow ends
       * ``curvedness`` (``float`` or ``None``): height of the bump making the arrow curve, if is ``None`` then will draw a straight arrow (``asymmetry`` will be ignored)
       * ``asymmetry`` (``float`` or ``None``): where the bump should be located: ``0`` is the middle, negative: towards the first point, positive: towards the last point. A value between ``-0.5`` and ``0.5`` guarantees that the bump is between the two end points.
 
@@ -479,7 +480,7 @@ class SvgImage:
     """Draws a small circle.
 
     Args:
-      * ``position`` (``list``): position of the center of the circle
+      * ``position`` (``tuple``): position of the center of the circle
 
     Examples: see :ref:`points-crosses-circles-ellipses.py`
     """
@@ -494,7 +495,7 @@ class SvgImage:
     """Draws a small X cross.
 
     Args:
-      * ``position`` (``list``): position of the center of the cross
+      * ``position`` (``tuple``): position of the center of the cross
 
     Examples: see :ref:`points-crosses-circles-ellipses.py`
     """
@@ -515,7 +516,7 @@ class SvgImage:
     """Draws a small + cross.
 
     Args:
-      * ``position`` (``list``): position of the center of the cross
+      * ``position`` (``tuple``): position of the center of the cross
 
     Examples: see :ref:`points-crosses-circles-ellipses.py`
     """
@@ -537,8 +538,8 @@ class SvgImage:
     """Draws the line segment between two points.
 
     Args:
-      * ``start_point`` (``list``): coordinates of the first end point of the line segment
-      * ``end_point`` (``list``): coordinates of the second end point of the line segment
+      * ``start_point`` (``tuple``): coordinates of the first end point of the line segment
+      * ``end_point`` (``tuple``): coordinates of the second end point of the line segment
 
     Examples: see :ref:`lines.py`, :ref:`dashes.py`, :ref:`interpolated-curves.py`
     """
@@ -582,7 +583,7 @@ class SvgImage:
     """Draws an arc of a circle (in anticlockwise direction).
 
     Args:
-      * ``center`` (``list``): coordinates of the center of the circle
+      * ``center`` (``tuple``): coordinates of the center of the circle
       * ``radius`` (``float``): radius of the circle
       * ``start_angle`` (``float``): angle where the arc starts in radians
       * ``end_angle`` (``float``): angle where the arc ends in radians
@@ -608,7 +609,7 @@ class SvgImage:
     """Draws an arc of an ellipse (in anticlockwise direction) with axis parallel to the x and y axis. The ellipse is parametrised in the form *"c + (a cos t, b sin t)"* where *t* varies from ``start_angle`` to ``end_angle`` (*a*, *b* and *c* are the parameters of the ellipse computed from the coordinates of the focuses and the semi minor axis). 
 
     Args:
-      * ``focuses`` (``list``): list of two list of coordinates of the focuses of the ellipse
+      * ``focuses`` (``list``): list of two tuples of coordinates of the focuses of the ellipse
       * ``semi_minor_axis`` (``float``): semi minor axis
       * ``start_angle`` (``float``): angle where the arc starts in radians
       * ``end_angle`` (``float``): angle where the arc ends in radians
@@ -656,7 +657,7 @@ class SvgImage:
     """Draws an ellipse with axis parallel to the x and y axis.
 
     Args:
-      * ``focuses`` (``list``): list of two list of coordinates of the focuses of the ellipse
+      * ``focuses`` (``list``): list of two tuples of coordinates of the focuses of the ellipse
       * ``semi_minor_axis`` (``float``): semi minor axis
 
     Examples (see also :ref:`points-crosses-circles-ellipses.py` and :ref:`torus.py`)::
@@ -699,7 +700,7 @@ class SvgImage:
     """Draws an arc of a circle.
 
     Args:
-      * ``center`` (``list``): coordinates of the center of the circle
+      * ``center`` (``tuple``): coordinates of the center of the circle
       * ``radius`` (``float``): radius of the circle
 
     Examples: see :ref:`points-crosses-circles-ellipses.py`, :ref:`potato-regions.py`
@@ -719,12 +720,12 @@ class SvgImage:
     """Draw a sequence of connected lins segments.
 
     Args:
-      * ``point_list`` (``list``): ordered list of points (coordinates) to connect with line segments
+      * ``point_list`` (``list``): ordered list of points (coordinates) to connect with line segments (at least two points)
 
     Example (see also :ref:`interpolated-curves.py`)::
 
       image = mathsvg . SvgImage (pixel_density = 20, view_window = ((0, 0), (8, 8)))
-      point_list = [ [2.5,5], [4.5,7], [2.5,4], [0.5,3], [6,2] ]
+      point_list = [ (2.5,5), (4.5,7), (2.5,4), (0.5,3), (6,2) ]
       image . draw_polyline (point_list)
       image . save ("draw-polyline-example.svg")
     """
@@ -736,14 +737,15 @@ class SvgImage:
     self . svgwrite_object . add (polyline)
 
 
-  def draw_function_graph (self, eval_function, x_start, x_end, nb_x, curve_type = "polyline"):
+  def draw_function_graph (self, eval_function, x_start, x_end, nb_x, * function_params, curve_type = "polyline"):
     """Draws the graph of a function *f*, that is, an interpolation of a set of ``nb_x`` points *(x, y)* with *y = f (x)* and with *x* between ``x_start`` and ``x_end``. The default interpolation is by straight lines. It is also possible to have some type of smooth interpolation. The ``nb_x`` points have regularly spaced *x* coordinates starting from ``x_start`` and ending at ``x_end``.
 
     Args:
-      * ``eval_function``: a function (or a lambda) that takes *x* as an argument and returns *y = f (x)*
+      * ``eval_function``: a function (or lambda) that takes *x* as an argument and returns *y = f (x)*. The function will be called with ``eval_function (x, * function_params)`` allowing extra parameters to be passed.
       * ``x_start`` (``float``): start of the graph domain
       * ``x_end`` (``float``): end of the graph domain
       * ``nb_x`` (``int``): number of points *x* at which the function is computed
+      * ``function_params`` (variadic arguments): optionally, arguments to pass to ``eval_function`` in addition to the value for *x*
       * ``curve_type`` (``str`` or ``None``): if ``"polyline"`` then the point are interpolated by line segments, if ``"autosmooth"`` the interpolation is smoother
 
     Examples (see also :ref:`graphs.py`)::
@@ -761,7 +763,7 @@ class SvgImage:
     """
 
     x_step = (x_end - x_start) / (nb_x - 1)
-    point_list = [ [ x, eval_function (x) ] for x in [ x_start + xi * x_step for xi in range (nb_x) ] ]
+    point_list = [ [ x, eval_function (x, * function_params) ] for x in [ x_start + xi * x_step for xi in range (nb_x) ] ]
     if (curve_type == "polyline"):
       self . draw_polyline (point_list)
     elif (curve_type == "autosmooth"):
@@ -773,16 +775,17 @@ class SvgImage:
  
 
 
-  def draw_parametric_graph (self, eval_point, t_start, t_end, nb_t, curve_type = "polyline", is_closed = False):
+  def draw_parametric_graph (self, eval_point, t_start, t_end, nb_t, * function_params, curve_type = "polyline", is_closed = False):
     """Draws a parametric graph given by the functions *x(t)* and *y(t)*, that is, an interpolation of a set of ``nb_t`` points *(x, y)* with *x = x(t)* and *y = y(t)* and with *t* between ``t_start`` and ``t_end``. The default interpolation is by straight lines. It is also possible to have some type of smooth interpolation. The ``nb_t`` parameters are regularly spaced starting from ``t_start`` and ending at ``t_end``.
 
 If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joined according to the choice of interpolation.
 
     Args:
-      * ``eval_point``: a function (or a lambda) that takes the parameter *t* as an argument and returns the tuple of coordinates *(x,y)* corresponding to the pameter *t*
+      * ``eval_point``: a function (or a lambda) that takes the parameter *t* as an argument and returns the tuple of coordinates *(x,y)* corresponding to the pameter *t*. The function will be called with ``eval_point (t, * function_params)`` allowing extra parameters to be passed.
       * ``t_start`` (``float``): start of the parameter domain
       * ``t_end`` (``float``): end of the parameter domain
       * ``nb_t`` (``int``): number of parameters *t* at which the functions *x* and *y* are computed
+      * ``function_params`` (variadic arguments): optionally, arguments to pass to ``eval_point`` in addition to the value for the parameter *t*
       * ``curve_type`` (``str`` or ``None``): if ``"polyline"`` then the point are interpolated by line segments, if ``"autosmooth"`` the interpolation is smoother
       * ``is_closed`` (``str`` or ``None``): whether the parametric curve should be closed (``True``) or not (``False``)
 
@@ -805,7 +808,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
     """
 
     t_step = (t_end - t_start) / (nb_t - 1)
-    point_list = [ eval_point (t) for t in [ t_start + ti * t_step for ti in range (nb_t) ] ]
+    point_list = [ eval_point (t, * function_params) for t in [ t_start + ti * t_step for ti in range (nb_t) ] ]
     if (curve_type == "polyline"):
       self . draw_polyline (point_list)
       if (is_closed):
@@ -909,7 +912,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
     The coordinates of the endpoints of the curve are the first and last set of coordinates from the list given as argument.
 
     Args:
-      * ``points`` (``list``): list of point coordinates to interpolate
+      * ``points`` (``list``): list of point coordinates to interpolate (at least two points)
 
     Example (see also :ref:`interpolated-curves.py`)::
 
@@ -929,7 +932,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
     """Draws a smooth closed curve that interpolates the points given as parameter.
 
     Args:
-      * ``points`` (``list``): list of point coordinates to interpolate
+      * ``points`` (``list``): list of point coordinates to interpolate (at least two points)
 
     Example (see also :ref:`interpolated-curves.py`)::
 
@@ -965,7 +968,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
     A set of radomly generated set of ``nb_vertexes`` points is generated. Both angles and distances with respect to center are generated according to a uniform law. The distance from the center is chosen uniformly between the values of ``inner_radius`` and ``outer_radius``.
 
     Args:
-      * ``center`` (``list``): coordinates of the center of the potato
+      * ``center`` (``tuple``): coordinates of the center of the potato
       * ``inner_radius`` (``float``): roughly the closest the curve comes from the center
       * ``outer_radius`` (``float``): roughly the farthest the curve comes from the center
       * ``nb_vertexes`` (``int``): number of points to generate (more points means that it is more likely that the curve will have selfintersections)
@@ -1005,8 +1008,8 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
     This curve goes from the first end point to the last and passes along the randomly generated points.
 
     Args:
-      * ``start_point`` (``list``): coordinates of the first end point of the line
-      * ``end_point`` (``list``): coordinates of the second end point of the line
+      * ``start_point`` (``tuple``): coordinates of the first end point of the line
+      * ``end_point`` (``tuple``): coordinates of the second end point of the line
       * ``wave_len`` (``float``): distance between two consecutive disturbances (smaller values yield more bumps)
       * ``amplitude`` (``float``): size of the bumps
 
@@ -1061,8 +1064,19 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 
     return
 
-    """
-    """
+
+  #def draw_bezier_curve (self, path_points, control_vectors):
+  #"""HERE...
+  #"""
+  #projected_points = [ self . project_point_to_canvas (p) for p in path_points ]
+  #projected_vectors = [ self . project_vector_to_canvas (v) for v in control_vectors ]
+  ## HERE...
+  ## TODO: need to attach the vector to the points
+  #path_command = self . _make_svg_path_M_and_C_command (projected_points, projected_vectors)
+  #self . insert_svg_path_command (path_command)
+  #return
+
+
 
   def insert_svg_path_command (self, svg_path_command):
     """Insert a path command given in the form of a string into the SVG.
