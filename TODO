@@ -5,8 +5,8 @@ TODO LIST:
 0.0
 - draw_bezier_curve + example
 - parametric graph closed curve has wrong tangent at the extremities ?
-- simplify doc generation - merge scripts
 - labels/text + latex
+- investigate possible issues with generator vs list/tuples
 - add picture in github and pypi
 - add example selfsim-triforce.py
 - add circle arc with arrow heads

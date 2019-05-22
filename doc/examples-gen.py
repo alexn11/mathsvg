@@ -24,7 +24,7 @@ test_scripts = [
 
 
 
-
+# cwd should be project_path doc/
 project_path = "../../../"
 
 image_file_path = project_path + "examples/examples-images/"
@@ -46,5 +46,24 @@ for script in test_scripts:
   rst . write (".. literalinclude:: " + examples_source_path + script)
   rst . write ("\n")
   rst . close ()
+
+
+
+size = 250
+
+text = ""
+
+for script in test_scripts:
+  name = script [:-3]
+  text += (".. image:: ../../examples/examples-images/" + name + ".svg\n")
+  text += ("   :width: " + str (size) + "px\n")
+  text += ("   :height:  " + str (size) + "px\n")
+  text += ("   :target: examples/" + name + ".html\n")
+  text += ("\n")
+
+
+res_rst = open ("source/image-targets.rst", "w")
+res_rst . write (text)
+res_rst . close ()
 
 
