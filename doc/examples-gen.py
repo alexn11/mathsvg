@@ -26,6 +26,7 @@ test_scripts = [
 
 # cwd should be project_path doc/
 project_path = "../../../"
+# why so many parent directory?
 
 image_file_path = project_path + "examples/examples-images/"
 rst_dest_path = "source/examples/"
