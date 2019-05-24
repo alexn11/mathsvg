@@ -1,3 +1,8 @@
+# Author:  alexn11 (alexn11.gh@gmail.com)
+# Created: 2019-05-25
+# Copyright (C) 2019, Alexandre De Zotti
+# License: MIT License
+
 import mathsvg
 
 image = mathsvg . SvgImage (view_window = ((0., 0.), (4., 4.)), pixel_density = 100)
