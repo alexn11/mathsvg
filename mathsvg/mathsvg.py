@@ -534,6 +534,7 @@ class SvgImage:
 
 
 
+
   def draw_line_segment (self, start_point, end_point):
     """Draws the line segment between two points.
 
@@ -1076,6 +1077,36 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
   #self . insert_svg_path_command (path_command)
   #return
 
+  def put_text (self, text, text_position, font_size = 40):
+    """Insert text on the canvas at the given position
+
+    Args:
+      * ``text`` (``str``): text to insert
+      * ``text_position`` (``tuple``): coordinates of the bottom left of the text
+      * ``font_size (``int`` or ``None``): font size in pixels
+
+    Example::
+
+        import mathsvg
+
+        image = mathsvg . SvgImage (view_window = ((0., 0.), (4., 4.)), pixel_density = 100)
+        image . draw_circle ((1., 3.), 0.6)
+        image . draw_circle ((3., 3.), 0.6)
+        image . draw_circle ((1., 1.), 0.6)
+        image . draw_arrow ((1., 1.7), (1., 2.3))
+        image . draw_arrow ((1.5, 1.5), (2.5, 2.5))
+        image . draw_arrow ((1.7, 3.), (2.3, 3.))
+        image . put_text ("Z", (.9, .9), font_size = 30)
+        image . put_text ("A", (.9, 2.9), font_size = 30)
+        image . put_text ("B", (2.9, 2.9), font_size = 30)
+
+        image . save ("put-text-example.svg")
+
+    """
+    text_canvas_position = self . project_point_to_canvas (text_position)
+    t = self . svgwrite_object . text (text, insert = text_canvas_position, font_size = font_size)
+    self . svgwrite_object . add (t)
+    return
 
 
   def insert_svg_path_command (self, svg_path_command):
@@ -1108,5 +1139,8 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
     path = self . svgwrite_object . path (d = svg_path_command,
                                           style = self . _make_svg_style_string ())
     self . svgwrite_object . add (path)
+
+
+
 
 

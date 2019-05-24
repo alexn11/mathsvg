@@ -63,6 +63,11 @@
    :height:  250px
    :target: examples/potato-regions.html
 
+.. image:: ../../examples/examples-images/put-text-example.svg
+   :width: 250px
+   :height:  250px
+   :target: examples/put-text-example.html
+
 .. image:: ../../examples/examples-images/scribble.svg
    :width: 250px
    :height:  250px

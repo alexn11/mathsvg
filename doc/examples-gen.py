@@ -15,6 +15,7 @@ test_scripts = [
   "potato.py",
   "potato-3v.py",
   "potato-regions.py",
+  "put-text-example.py",
   "scribble.py",
   "torus.py",
   "wigglier-potato.py",
