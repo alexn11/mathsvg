@@ -15,7 +15,7 @@
 
 import os
 import sys
-import mathsvg
+#import mathsvg
 
 sys . path . insert (0, os . path . abspath("../../."))
 
@@ -29,7 +29,7 @@ author = 'Alexandre De Zotti'
 # The short X.Y version
 version = ''
 # The full version, including alpha/beta/rc tags
-release = mathsvg . __version__
+release = "0.3.2"
 
 
 # -- General configuration ---------------------------------------------------
