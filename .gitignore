@@ -5,6 +5,7 @@
 /build/
 /source/
 Makefile
+TODO
 *.sav
 /doc/build/
 /gitignored/

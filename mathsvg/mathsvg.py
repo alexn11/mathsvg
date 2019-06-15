@@ -581,7 +581,7 @@ class SvgImage:
 
 
   def draw_circle_arc (self, center, radius, start_angle, end_angle):
-    """Draws an arc of a circle (in anticlockwise direction).
+    """Draws an of a circle (in anticlockwise direction).
 
     Args:
       * ``center`` (``tuple``): coordinates of the center of the circle
@@ -698,7 +698,7 @@ class SvgImage:
  
 
   def draw_circle (self, center, radius):
-    """Draws an arc of a circle.
+    """Draws a circle.
 
     Args:
       * ``center`` (``tuple``): coordinates of the center of the circle
