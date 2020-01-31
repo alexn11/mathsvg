@@ -101,7 +101,7 @@ class SvgImage:
     """
 
     self . dash_dasharray = (black_len, white_len)
-    
+ 
 
   def set_dash_dot_structure (self, dot_sep):
     """Sets the separations between dots for dotted stroke
@@ -373,7 +373,7 @@ class SvgImage:
     tip_point = [ 0, 0 ]
     path_command = self . _make_svg_path_M_command ([ top_point, tip_point, bottom_point ] )
     path_command += self . _make_svg_path_C_command ([ middle_point, top_point ],
-                                                    [ bottom_point, control_vector_bottom, control_vector_top, top_point ])
+                                                     [ bottom_point, control_vector_bottom, control_vector_top, top_point ])
     path_command += self . _make_svg_path_Z_command ()
     path = self . svgwrite_object . path (d = path_command,
                                           style = self . _make_svg_style_string (fill_color = self . stroke_color, dash_mode = "none"))
@@ -894,7 +894,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
     # Conversion of coordinates: vector -> attached vector = point + vector
     control_vectors = [ complex_points [0] ]
     for point_index in range (1, nb_points - 1):
-      vector_index  = 2 * (point_index - 1)
+      vector_index = 2 * (point_index - 1)
       control_vectors . append (left_right_vectors [vector_index] + complex_points [point_index])
       control_vectors . append (left_right_vectors [vector_index + 1] + complex_points [point_index])
     control_vectors . append (complex_points [-1])
@@ -1054,13 +1054,12 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 
     points . append (self . project_complex_point_to_canvas (z_end))
 
-    
     nb_points = len (points) # = nb_points_to_compute + 2
-   
+
     control_vectors = self . _compute_autosmooth_control_vectors (points)
 
     path_command = self . _make_svg_path_M_and_C_command (points, control_vectors)
-	
+
     self . insert_svg_path_command (path_command)
 
     return
@@ -1076,6 +1075,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
   #path_command = self . _make_svg_path_M_and_C_command (projected_points, projected_vectors)
   #self . insert_svg_path_command (path_command)
   #return
+
 
   def put_text (self, text, text_position, font_size = 40):
     """Insert text on the canvas at the given position

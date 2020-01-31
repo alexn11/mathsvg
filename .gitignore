@@ -9,4 +9,5 @@ TODO
 *.sav
 /doc/build/
 /gitignored/
+/tests/test-models/*.png
 
