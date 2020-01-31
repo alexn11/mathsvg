@@ -404,7 +404,7 @@ class SvgImage:
 
 
   def _compute_curved_arrow_endpoint_tangent (self, arrow_body_point_list, control_vectors):
-    broken_line_tangent = self . _compute_line_angle (arrow_body_point_list [-2], arrow_body_point_list [-1])
+    #broken_line_tangent = self . _compute_line_angle (arrow_body_point_list [-2], arrow_body_point_list [-1])
     control_vector_line_tangent = self . _compute_line_angle (control_vectors [-2], arrow_body_point_list [-1])
     return - control_vector_line_tangent
 
@@ -639,8 +639,8 @@ class SvgImage:
     half_distance_between_the_focuses = 0.5 * distance_between_the_focuses
     semi_major_axis = math . sqrt (semi_minor_axis * semi_minor_axis + half_distance_between_the_focuses * half_distance_between_the_focuses)
     middle_point = 0.5 * (complex_focuses [0] + complex_focuses [1])
-    top_point = middle_point + semi_minor_axis * 1j * major_axis_direction
-    right_point = middle_point + semi_major_axis * major_axis_direction
+    #top_point = middle_point + semi_minor_axis * 1j * major_axis_direction
+    #right_point = middle_point + semi_major_axis * major_axis_direction
 
     start_point = middle_point + major_axis_direction * (semi_major_axis * math . cos (start_angle) + 1j * semi_minor_axis * math . sin (start_angle))
     end_point = middle_point + major_axis_direction * (semi_major_axis * math . cos (end_angle) + 1j * semi_minor_axis * math . sin (end_angle))
@@ -1054,7 +1054,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 
     points . append (self . project_complex_point_to_canvas (z_end))
 
-    nb_points = len (points) # = nb_points_to_compute + 2
+    #nb_points = len (points) # = nb_points_to_compute + 2
 
     control_vectors = self . _compute_autosmooth_control_vectors (points)
 

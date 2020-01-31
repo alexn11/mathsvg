@@ -18,7 +18,6 @@ import numpy
 import numpy . linalg
 
 
-files_to_remove_post_test = [ ]
 
 # TODO
 do_save_to_local_dir = True
@@ -195,19 +194,12 @@ class TestCollections (unittest . TestCase):
     test_simple_example (self, "torus", examples_path, "torus")
 
 
-def clean_post_tests ():
-
-  for f in files_to_remove_post_test:
-    os . remove (f)
 
 
 
 
 
 if (__name__ == "__main__"):
-  if (len (sys . argv) > 1):
-    if (sys . argv [1] == "--clean"):
-      clean_post_tests ()
   unittest . main ()
 
 
