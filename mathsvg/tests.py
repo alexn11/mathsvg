@@ -7,6 +7,7 @@ import unittest
 
 import os
 import subprocess
+import sys
 import tempfile
 
 import mathsvg
@@ -16,6 +17,8 @@ import matplotlib . pylab as pylab
 import numpy
 import numpy . linalg
 
+
+files_to_remove_post_test = [ ]
 
 # TODO
 do_save_to_local_dir = True
@@ -44,7 +47,7 @@ def check_actual_image (test_object, svg_file_name, image_model_file_name, fail_
   #try:
   test_object . assertGreater (max_dist, distance, fail_message)
   #else:
-  #  os . remove (converted_file_name)
+  os . remove (converted_file_name)
 
 
 
@@ -74,17 +77,20 @@ class TestMain (unittest . TestCase):
     image = mathsvg . SvgImage (pixel_density = 100, view_window = ( (-4, -4), (4, 4) )) 
     image . save ("test.svg")
     self . assertTrue (os . path . exists ("test.svg"), "file save failed")
+    os . remove ("test.svg")
 
   def test_saved_file_contains_svg (self):
     image = mathsvg . SvgImage (pixel_density = 100, view_window = ( (-4, -4), (4, 4) )) 
     image . save ("test.svg")
     check_file_content (self, "test.svg", "<svg.*</svg>$", "saved file doesnt contain svg")
+    os . remove ("test.svg")
 
   def test_default_drawing_options (self):
     image = mathsvg . SvgImage (pixel_density = 100, view_window = ( (-4, -4), (4, 4) )) 
     image . draw_arrow ([ -2, -2 ], [ 2, 2 ])
     image . save ("test.svg")
     check_file_content (self, "test.svg", default_drawing_options, "default drawing options not in use for line")
+    os . remove ("test.svg")
      
   def test_multiple_save (self):
     output_files = [ "save-1.svg", "save-2.svg" ]
@@ -99,7 +105,7 @@ class TestMain (unittest . TestCase):
     subprocess . call ([ "python", os . path . join (test_scripts_path, "multiple-save.py") ])
     check_actual_image (self, output_files [0] + ".svg", os . path . join (test_models_path, output_files [0] + ".png"), "multiple-save example: first saved image very different from model")
     check_actual_image (self, output_files [1] + ".svg", os . path . join (test_models_path, output_files [1] + ".png"), "multiple-save example: second saved image very different from model")
-
+    clean_files ([ f + ".svg" for f in output_files ])
 
 class TestArrows (unittest . TestCase):
 
@@ -189,11 +195,21 @@ class TestCollections (unittest . TestCase):
     test_simple_example (self, "torus", examples_path, "torus")
 
 
+def clean_post_tests ():
+
+  for f in files_to_remove_post_test:
+    os . remove (f)
+
+
 
 
 
 if (__name__ == "__main__"):
-    unittest . main ()
+  if (len (sys . argv) > 1):
+    if (sys . argv [1] == "--clean"):
+      clean_post_tests ()
+  unittest . main ()
+
 
 
 
