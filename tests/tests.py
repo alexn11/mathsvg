@@ -193,13 +193,12 @@ class TestPotato (unittest . TestCase):
 
 class TestPutText (unittest . TestCase):
 
-  def _check_text_attributes (self, xml, text, font_size, xmin, xmax, ymin, ymax) :
+  def _check_text_attributes (self, xml, text, font_size, x, y) :
     self . assertEqual (xml . tag, 'text')
     self . assertEqual (xml . text, text)
     self . assertAlmostEqual (float (xml . attrib ['font-size']), font_size, places = 2)
-    # a bit lenient there
-    self . assertTrue (xmin <= float (xml . attrib ['x']) <= xmax)
-    self . assertTrue (ymin <= float (xml . attrib ['y']) <= ymax)
+    self . assertAlmostEqual (float (xml . attrib ['x']), x, places = 2)
+    self . assertAlmostEqual (float (xml . attrib ['y']), y, places = 2)
 
   def test_font_pixel_size (self) :
     canvas = prepare_simple_canvas ()
@@ -211,20 +210,20 @@ class TestPutText (unittest . TestCase):
     canvas . put_text ('.', (0.5,0.5))
     # last added object should be a text with the right coords and font size
     xml = canvas . svgwrite_object . get_xml () [-1]
-    self . _check_text_attributes (xml, '.', 6., 49., 51., 49., 51.)
+    self . _check_text_attributes (xml, '.', 6., 50., 51.)
 
   def test_put_text_with_font_size (self) :
     canvas = prepare_simple_canvas (window_size = 1., pixel_density = 100)
     canvas . put_text ('test text', (0.5, 0.5), font_size = .505)
     xml = canvas . svgwrite_object . get_xml () [-1]
-    self . _check_text_attributes (xml, 'test text', 50.5, 49., 51., 49., 51.)
+    self . _check_text_attributes (xml, 'test text', 50.5, 50., 51.)
 
   def test_set_font_size (self) :
     canvas = prepare_simple_canvas (window_size = 1., pixel_density = 100)
     canvas . set_font_options (font_size = 1.)
     canvas . put_text ('test text', (0.5, 0.5))
     xml = canvas . svgwrite_object . get_xml () [-1]
-    self . _check_text_attributes (xml, 'test text', 100., 49., 51., 49., 51.)
+    self . _check_text_attributes (xml, 'test text', 100., 50., 51.)
     
 
   def test_put_text_examples (self):
@@ -250,8 +249,8 @@ class TestPoints (unittest . TestCase) :
     xml = canvas . svgwrite_object . get_xml () [-1]
     self . assertEqual (xml . tag, 'circle')
     attrib = xml . attrib
-    self . assertTrue (49. <= float (attrib ['cx']) <= 51.)
-    self . assertTrue (49. <= float (attrib ['cy']) <= 51.)
+    self . assertAlmostEqual (float (attrib ['cx']), 50, places = 2)
+    self . assertAlmostEqual (float (attrib ['cy']), 51, places = 2.)
     self . assertAlmostEqual (float (attrib ['r']), 6., places = 2)
     self . assertEqual (attrib ['style'], 'fill : black; stroke : black; stroke-width : 1; stroke-dasharray : none;')
 
@@ -261,17 +260,17 @@ class TestPoints (unittest . TestCase) :
     xml = canvas . svgwrite_object . get_xml () [-2:]
     self . assertEqual (xml [0] . tag, 'line')
     attrib = xml [0] . attrib
-    self . assertTrue (42.99 <= float (attrib ['x1']) <= 45.01)
-    self . assertTrue (54.99 <= float (attrib ['x2']) <= 57.01)
-    self . assertTrue (42.99 <= float (attrib ['y1']) <= 45.01)
-    self . assertTrue (54.99 <= float (attrib ['y2']) <= 57.01)
+    self . assertAlmostEqual (float (attrib ['x1']), 44, places = 2)
+    self . assertAlmostEqual (float (attrib ['x2']), 56, places = 2)
+    self . assertAlmostEqual (float (attrib ['y1']), 45, places = 2)
+    self . assertAlmostEqual (float (attrib ['y2']), 57, places = 2)
     self . assertEqual (attrib ['style'], 'fill : none; stroke : black; stroke-width : 1; stroke-dasharray : none;')
     self . assertEqual (xml [1] . tag, 'line')
     attrib = xml [1] . attrib
-    self . assertTrue (42.99 <= float (attrib ['x2']) <= 45.01)
-    self . assertTrue (54.99 <= float (attrib ['x1']) <= 57.01)
-    self . assertTrue (42.99 <= float (attrib ['y1']) <= 45.01)
-    self . assertTrue (54.99 <= float (attrib ['y2']) <= 57.01)
+    self . assertAlmostEqual (float (attrib ['x2']), 44, places = 2)
+    self . assertAlmostEqual (float (attrib ['x1']), 56, places = 2)
+    self . assertAlmostEqual (float (attrib ['y1']), 45, places = 2)
+    self . assertAlmostEqual (float (attrib ['y2']), 57, places = 2)
     self . assertEqual (attrib ['style'], 'fill : none; stroke : black; stroke-width : 1; stroke-dasharray : none;')
   
   def test_draw_plus (self) :
@@ -280,15 +279,15 @@ class TestPoints (unittest . TestCase) :
     xml = canvas . svgwrite_object . get_xml () [-2:]
     self . assertEqual (xml [0] . tag, 'line')
     attrib = xml [0] . attrib
-    self . assertTrue (42.99 <= float (attrib ['x1']) <= 45.01)
-    self . assertTrue (54.99 <= float (attrib ['x2']) <= 57.01)
-    self . assertTrue (48.99 <= float (attrib ['y1']) <= 51.01)
-    self . assertTrue (48.99 <= float (attrib ['y2']) <= 51.01)
+    self . assertAlmostEqual (float (attrib ['x1']), 44, places = 2)
+    self . assertAlmostEqual (float (attrib ['x2']), 56, places = 2)
+    self . assertAlmostEqual (float (attrib ['y1']), 51, places = 2)
+    self . assertAlmostEqual (float (attrib ['y2']), 51, places = 2)
     self . assertEqual (attrib ['style'], 'fill : none; stroke : black; stroke-width : 1; stroke-dasharray : none;')
     self . assertEqual (xml [1] . tag, 'line')
     attrib = xml [1] . attrib
-    self . assertTrue (42.99 <= float (attrib ['y1']) <= 45.01)
-    self . assertTrue (54.99 <= float (attrib ['y2']) <= 57.01)
+    self . assertAlmostEqual (float (attrib ['y1']), 45, places = 2)
+    self . assertAlmostEqual (float (attrib ['y2']), 57, places = 2)
     self . assertAlmostEqual (float (attrib ['x1']), 50, places = 2)
     self . assertAlmostEqual (float (attrib ['x2']), 50, places = 2)
     self . assertEqual (attrib ['style'], 'fill : none; stroke : black; stroke-width : 1; stroke-dasharray : none;')
@@ -320,14 +319,38 @@ class TestPoints (unittest . TestCase) :
     self . assertAlmostEqual (6., float (xml . attrib ['r']), places = 2)
     
 
-class TestCurrentBugs (unittest . TestCase) :
+class TestSvgOptions (unittest . TestCase) :
 
+  def test_default_stroke_width (self) :
+    canvas = prepare_simple_canvas (pixel_density = 100, window_size = 1.)
+    self . assertEqual (canvas . stroke_width, 1)
+    canvas = prepare_simple_canvas (pixel_density = 10, window_size = 1.)
+    self . assertEqual (canvas . stroke_width, 1)
+    canvas = prepare_simple_canvas (pixel_density = 100, window_size = 10.)
+    self . assertEqual (canvas . stroke_width, 1)
+  
+
+class TestInternals (unittest . TestCase) :
+
+  def project_point_to_canvas (self) :
+    canvas = prepare_simple_canvas (pixel_density = 100, window_size = 1.)
+    projected_point = canvas . project_point_to_canvas ((0.5, 0.5))
+    self . assertAlmostEqual (projected_point [0], 50, places = 2)
+    self . assertAlmostEqual (projected_point [1], 51, places = 2)
+    projected_point = canvas . project_point_to_canvas ((0.3, 0.41))
+    self . assertAlmostEqual (projected_point [0], 30, places = 2)
+    self . assertAlmostEqual (projected_point [1], 42, places = 2)
+    
   def test_y_pixel_shift (self) :
-    # the y coordinate seems to be shifted 1 by pixel for no clear reason, criticality = 0
+    # the y coordinate has to be shifted 1 by pixel upwards because the screen coordinates are flipped upside down
     canvas = prepare_simple_canvas (pixel_density = 100, window_size = 1.)
     canvas . draw_plus ((0.5, 0.5))
     xml = canvas . svgwrite_object . get_xml () [-2]
-    self . assertAlmostEqual (50, float (xml . attrib ['y1']), places = 2)
+    self . assertAlmostEqual (51, float (xml . attrib ['y1']), places = 2)
+  
+
+# class TestCurrentBugs (unittest . TestCase) :
+
 
 if (__name__ == "__main__"):
   unittest . main ()
