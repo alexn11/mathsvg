@@ -82,10 +82,6 @@ def prepare_simple_canvas (window_size = 1., pixel_density = 100) :
 
 class TestMain (unittest . TestCase):
 
-  def test_smallish_size (self) :
-    image = prepare_simple_canvas ()
-    self . assertEqual (image . _compute_a_smallish_size (), 0.02)
-
   def test_save_image (self):
     clean_files (["test.svg",])
     image = mathsvg . SvgImage (pixel_density = 100, view_window = ( (-4, -4), (4, 4) )) 
@@ -224,7 +220,6 @@ class TestPutText (unittest . TestCase):
     canvas . put_text ('test text', (0.5, 0.5))
     xml = canvas . svgwrite_object . get_xml () [-1]
     self . _check_text_attributes (xml, 'test text', 100., 50., 51.)
-    
 
   def test_put_text_examples (self):
     test_simple_example (self, "put-text-example", examples_path, "put_text")
@@ -331,6 +326,10 @@ class TestSvgOptions (unittest . TestCase) :
   
 
 class TestInternals (unittest . TestCase) :
+
+  def test_smallish_size (self) :
+    image = prepare_simple_canvas ()
+    self . assertEqual (image . _compute_a_smallish_size (), 0.02)
 
   def project_point_to_canvas (self) :
     canvas = prepare_simple_canvas (pixel_density = 100, window_size = 1.)
