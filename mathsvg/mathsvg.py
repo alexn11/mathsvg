@@ -50,12 +50,12 @@ class SvgImage:
     view_box = [ int (self . rescaling * (self . view_window [1] [i] - self . view_window [0] [i])) + 1 for i in (0, 1) ]
 
     self . _set_view_box_no_reset (view_box)
+    
     self . reset_svg_options ()
-    self . point_size = 6 * self . stroke_width
-
+    
+    self . reset_point_size ()
     self . reset_dash_and_dot_structures ()
     self . reset_arrow_options ()
-    
     self . reset_font_options ()
 
     self . set_dash_mode ("none")
@@ -83,6 +83,8 @@ class SvgImage:
     """
     self . point_size = self . _rescale_length (point_size)
 
+  def reset_point_size (self) :
+    self . point_size = 6 * self . stroke_width
 
   def set_dash_mode (self, mode):
     """Choose the type of stroke.

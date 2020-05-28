@@ -196,7 +196,7 @@ class TestPutText (unittest . TestCase):
   def _check_text_attributes (self, xml, text, font_size, xmin, xmax, ymin, ymax) :
     self . assertEqual (xml . tag, 'text')
     self . assertEqual (xml . text, text)
-    self . assertEqual (float (xml . attrib ['font-size']), font_size)
+    self . assertAlmostEqual (float (xml . attrib ['font-size']), font_size, places = 2)
     # a bit lenient there
     self . assertTrue (xmin <= float (xml . attrib ['x']) <= xmax)
     self . assertTrue (ymin <= float (xml . attrib ['y']) <= ymax)
@@ -204,7 +204,7 @@ class TestPutText (unittest . TestCase):
   def test_font_pixel_size (self) :
     canvas = prepare_simple_canvas ()
     self . assertEqual (canvas . rescaling, 100)
-    self . assertEqual (canvas . font_pixel_size, 6)
+    self . assertAlmostEqual (canvas . font_pixel_size, 6., places = 2)
   
   def test_put_text_no_font_size (self) :
     canvas = prepare_simple_canvas ()
@@ -219,10 +219,16 @@ class TestPutText (unittest . TestCase):
     xml = canvas . svgwrite_object . get_xml () [-1]
     self . _check_text_attributes (xml, 'test text', 50.5, 49., 51., 49., 51.)
 
+  def test_set_font_size (self) :
+    canvas = prepare_simple_canvas (window_size = 1., pixel_density = 100)
+    canvas . set_font_options (font_size = 1.)
+    canvas . put_text ('test text', (0.5, 0.5))
+    xml = canvas . svgwrite_object . get_xml () [-1]
+    self . _check_text_attributes (xml, 'test text', 100., 49., 51., 49., 51.)
+    
 
   def test_put_text_examples (self):
     test_simple_example (self, "put-text-example", examples_path, "put_text")
-  
 
 class TestRandomWavyLine (unittest . TestCase):
   def test_random_wavy_line_examples (self):
@@ -236,11 +242,92 @@ class TestCollections (unittest . TestCase):
   def test_torus_example (self):
     test_simple_example (self, "torus", examples_path, "torus")
 
+class TestPoints (unittest . TestCase) :
+
+  def test_draw_point (self) :
+    canvas = prepare_simple_canvas (pixel_density = 100, window_size = 1.)
+    canvas . draw_point ((0.5, 0.5))
+    xml = canvas . svgwrite_object . get_xml () [-1]
+    self . assertEqual (xml . tag, 'circle')
+    attrib = xml . attrib
+    self . assertTrue (49. <= float (attrib ['cx']) <= 51.)
+    self . assertTrue (49. <= float (attrib ['cy']) <= 51.)
+    self . assertAlmostEqual (float (attrib ['r']), 6., places = 2)
+    self . assertEqual (attrib ['style'], 'fill : black; stroke : black; stroke-width : 1; stroke-dasharray : none;')
+
+  def test_draw_cross (self) :
+    canvas = prepare_simple_canvas (pixel_density = 100, window_size = 1.)
+    canvas . draw_cross ((0.5, 0.5))
+    xml = canvas . svgwrite_object . get_xml () [-2:]
+    self . assertEqual (xml [0] . tag, 'line')
+    attrib = xml [0] . attrib
+    self . assertTrue (42.99 <= float (attrib ['x1']) <= 45.01)
+    self . assertTrue (54.99 <= float (attrib ['x2']) <= 57.01)
+    self . assertTrue (42.99 <= float (attrib ['y1']) <= 45.01)
+    self . assertTrue (54.99 <= float (attrib ['y2']) <= 57.01)
+    self . assertEqual (attrib ['style'], 'fill : none; stroke : black; stroke-width : 1; stroke-dasharray : none;')
+    self . assertEqual (xml [1] . tag, 'line')
+    attrib = xml [1] . attrib
+    self . assertTrue (42.99 <= float (attrib ['x2']) <= 45.01)
+    self . assertTrue (54.99 <= float (attrib ['x1']) <= 57.01)
+    self . assertTrue (42.99 <= float (attrib ['y1']) <= 45.01)
+    self . assertTrue (54.99 <= float (attrib ['y2']) <= 57.01)
+    self . assertEqual (attrib ['style'], 'fill : none; stroke : black; stroke-width : 1; stroke-dasharray : none;')
+  
+  def test_draw_plus (self) :
+    canvas = prepare_simple_canvas (pixel_density = 100, window_size = 1.)
+    canvas . draw_plus ((0.5, 0.5))
+    xml = canvas . svgwrite_object . get_xml () [-2:]
+    self . assertEqual (xml [0] . tag, 'line')
+    attrib = xml [0] . attrib
+    self . assertTrue (42.99 <= float (attrib ['x1']) <= 45.01)
+    self . assertTrue (54.99 <= float (attrib ['x2']) <= 57.01)
+    self . assertTrue (48.99 <= float (attrib ['y1']) <= 51.01)
+    self . assertTrue (48.99 <= float (attrib ['y2']) <= 51.01)
+    self . assertEqual (attrib ['style'], 'fill : none; stroke : black; stroke-width : 1; stroke-dasharray : none;')
+    self . assertEqual (xml [1] . tag, 'line')
+    attrib = xml [1] . attrib
+    self . assertTrue (42.99 <= float (attrib ['y1']) <= 45.01)
+    self . assertTrue (54.99 <= float (attrib ['y2']) <= 57.01)
+    self . assertAlmostEqual (float (attrib ['x1']), 50, places = 2)
+    self . assertAlmostEqual (float (attrib ['x2']), 50, places = 2)
+    self . assertEqual (attrib ['style'], 'fill : none; stroke : black; stroke-width : 1; stroke-dasharray : none;')
+
+  def test_set_point_size (self) :
+    canvas = prepare_simple_canvas (pixel_density = 100, window_size = 1.)
+    canvas . set_point_size (1.)
+    canvas . draw_point ((0.5, 0.5))
+    xml = canvas . svgwrite_object . get_xml () [-1]
+    self . assertAlmostEqual (float (xml . attrib ['r']), 100., places = 2)
 
 
+  def test_set_point_size_twice (self) :
+    canvas = prepare_simple_canvas (pixel_density = 100, window_size = 1.)
+    canvas . set_point_size (1.)
+    canvas . draw_point ((0.5, 0.5))
+    canvas . set_point_size (.3)
+    canvas . draw_point ((0.5, 0.5))
+    xml = canvas . svgwrite_object . get_xml () [-1]
+    self . assertAlmostEqual (float (xml . attrib ['r']), 30., places = 2)
+  
+  def test_reset_point_size (self) :
+    canvas = prepare_simple_canvas (pixel_density = 100, window_size = 1.)
+    canvas . set_point_size (1.)
+    canvas . draw_point ((0.5, 0.5))
+    canvas . reset_point_size ()
+    canvas . draw_point ((0.5, 0.5))
+    xml = canvas . svgwrite_object . get_xml () [-1]
+    self . assertAlmostEqual (6., float (xml . attrib ['r']), places = 2)
+    
 
+class TestCurrentBugs (unittest . TestCase) :
 
-
+  def test_y_pixel_shift (self) :
+    # the y coordinate seems to be shifted 1 by pixel for no clear reason, criticality = 0
+    canvas = prepare_simple_canvas (pixel_density = 100, window_size = 1.)
+    canvas . draw_plus ((0.5, 0.5))
+    xml = canvas . svgwrite_object . get_xml () [-2]
+    self . assertAlmostEqual (50, float (xml . attrib ['y1']), places = 2)
 
 if (__name__ == "__main__"):
   unittest . main ()
