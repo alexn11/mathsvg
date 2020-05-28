@@ -35,7 +35,9 @@ number_list_re_pattern = "[0-9\\. ,\\-]*"
 
 def check_actual_image (test_object, svg_file_name, image_model_file_name, fail_message, max_dist = 0.001):
   converted_file_name = "test.png"
-  cairosvg . svg2png (file_obj = open (svg_file_name, "rb"), write_to = converted_file_name)
+  f = open (svg_file_name, "rb")
+  cairosvg . svg2png (file_obj = f, write_to = converted_file_name)
+  f . close ()
 
   model_image = pylab . imread (image_model_file_name)
   converted_image = pylab . imread (converted_file_name)
@@ -74,7 +76,15 @@ def clean_files (file_list):
       os . remove (f)
 
 
+def prepare_simple_canvas (window_size = 1., pixel_density = 100) :
+  return mathsvg . SvgImage (view_window = ((0, window_size), (0, window_size)), pixel_density = pixel_density)
+
+
 class TestMain (unittest . TestCase):
+
+  def test_smallish_size (self) :
+    image = prepare_simple_canvas ()
+    self . assertEqual (image . _compute_a_smallish_size (), 0.02)
 
   def test_save_image (self):
     clean_files (["test.svg",])
@@ -182,9 +192,37 @@ class TestPotato (unittest . TestCase):
 
 
 class TestPutText (unittest . TestCase):
+
+  def _check_text_attributes (self, xml, text, font_size, xmin, xmax, ymin, ymax) :
+    self . assertEqual (xml . tag, 'text')
+    self . assertEqual (xml . text, text)
+    self . assertEqual (float (xml . attrib ['font-size']), font_size)
+    # a bit lenient there
+    self . assertTrue (xmin <= float (xml . attrib ['x']) <= xmax)
+    self . assertTrue (ymin <= float (xml . attrib ['y']) <= ymax)
+
+  def test_font_pixel_size (self) :
+    canvas = prepare_simple_canvas ()
+    self . assertEqual (canvas . rescaling, 100)
+    self . assertEqual (canvas . font_pixel_size, 6)
+  
+  def test_put_text_no_font_size (self) :
+    canvas = prepare_simple_canvas ()
+    canvas . put_text ('.', (0.5,0.5))
+    # last added object should be a text with the right coords and font size
+    xml = canvas . svgwrite_object . get_xml () [-1]
+    self . _check_text_attributes (xml, '.', 6., 49., 51., 49., 51.)
+
+  def test_put_text_with_font_size (self) :
+    canvas = prepare_simple_canvas (window_size = 1., pixel_density = 100)
+    canvas . put_text ('test text', (0.5, 0.5), font_size = .505)
+    xml = canvas . svgwrite_object . get_xml () [-1]
+    self . _check_text_attributes (xml, 'test text', 50.5, 49., 51., 49., 51.)
+
+
   def test_put_text_examples (self):
     test_simple_example (self, "put-text-example", examples_path, "put_text")
-
+  
 
 class TestRandomWavyLine (unittest . TestCase):
   def test_random_wavy_line_examples (self):

@@ -55,9 +55,33 @@ class SvgImage:
 
     self . reset_dash_and_dot_structures ()
     self . reset_arrow_options ()
+    
+    self . reset_font_options ()
 
     self . set_dash_mode ("none")
 
+
+  def reset_font_options (self) :
+    """Reset the font size to the default value (depends on the size of the window)
+    """
+    self . font_pixel_size = 3 * self . _rescale_length (self . _compute_a_smallish_size ())
+  
+  def set_font_options (self, font_size = None) :
+    """Set some font options, so far only the font size.
+    
+    Args:
+      * ``font_size`` (default:``None``): font size in length units.
+    """
+    if (font_size is not None) :
+      self . font_pixel_size = self . _rescale_length (font_size)
+
+  def set_point_size (self, point_size) :
+    """Set the size of points, pluses and crosses.
+    
+    Args:
+      * ``point_size``: half diameter of the points/pluses/crosses
+    """
+    self . point_size = self . _rescale_length (point_size)
 
 
   def set_dash_mode (self, mode):
@@ -1077,13 +1101,13 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
   #return
 
 
-  def put_text (self, text, text_position, font_size = 40):
+  def put_text (self, text, text_position, font_size = None):
     """Insert text on the canvas at the given position
 
     Args:
       * ``text`` (``str``): text to insert
       * ``text_position`` (``tuple``): coordinates of the bottom left of the text
-      * ``font_size (``int`` or ``None``): font size in pixels
+      * ``font_size (``int`` or ``None``): font size in units, if ``None`` use the default font size (see ``set_font_options`` and ``reset_font_options``).
 
     Example::
 
@@ -1096,14 +1120,18 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
         image . draw_arrow ((1., 1.7), (1., 2.3))
         image . draw_arrow ((1.5, 1.5), (2.5, 2.5))
         image . draw_arrow ((1.7, 3.), (2.3, 3.))
-        image . put_text ("Z", (.9, .9), font_size = 30)
-        image . put_text ("A", (.9, 2.9), font_size = 30)
-        image . put_text ("B", (2.9, 2.9), font_size = 30)
+        image . put_text ("Z", (.9, .9), font_size = .3)
+        image . put_text ("A", (.9, 2.9), font_size = .3)
+        image . put_text ("B", (2.9, 2.9), font_size = .3)
 
         image . save ("put-text-example.svg")
 
     """
     text_canvas_position = self . project_point_to_canvas (text_position)
+    if (font_size is None) :
+      font_size = self . font_pixel_size
+    else :
+      font_size = self . _rescale_length (font_size)
     t = self . svgwrite_object . text (text, insert = text_canvas_position, font_size = font_size)
     self . svgwrite_object . add (t)
     return
