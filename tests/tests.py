@@ -342,7 +342,7 @@ class TestInternals (unittest . TestCase) :
     self . assertAlmostEqual (projected_point [1], 42, places = 2)
     
   def test_y_pixel_shift (self) :
-    # the y coordinate has to be shifted 1 by pixel upwards because the screen coordinates are flipped upside down
+    # the y coordinate has to be shifted by 1 pixel because the screen coordinates are flipped upside down
     canvas = prepare_simple_canvas (pixel_density = 100, window_size = 1.)
     canvas . draw_plus ((0.5, 0.5))
     xml = canvas . svgwrite_object . get_xml () [-2]

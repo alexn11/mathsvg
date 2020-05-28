@@ -203,9 +203,11 @@ class SvgImage:
 
     Args:
       * ``stroke_color`` (``str`` or ``None``): stroke color (default is ``"black"``)
-      * ``stroke_width`` (``float`` or ``None``): stroke width in pixels
+      * ``stroke_width`` (``float`` or ``None``): stroke width in *pixels*
       * ``fill_color`` (``str`` or ``None``): fill color (default is ``"none"``)
-      * ``dash_array`` (``tuple`` or ``None``): list of stroke/space lengths (in pixels) describing the customize dash stroke
+      * ``dash_array`` (``tuple`` or ``None``): list of stroke/space lengths (in *pixels*) describing the customize dash stroke
+      
+    Note make sure that ``stroke_width`` is at least 1.
 
     Examples:
     To do some drawings in red, then restore back to the default options::
