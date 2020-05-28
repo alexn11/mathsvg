@@ -43,13 +43,6 @@ def check_actual_image (test_object, svg_file_name, image_model_file_name, fail_
   converted_image = pylab . imread (converted_file_name)
   test_object . assertEqual (converted_image . shape, model_image . shape, fail_message + " (image sizes mismatch)")
 
-
-  #distance = numpy . linalg . norm (model_image - converted_image)
-  #try:
-  #test_object . assertGreater (max_dist, distance, fail_message)
-  #else:
-  #os . remove (converted_file_name)
-
   #try :
   test_object . assertTrue (numpy . allclose (model_image, converted_image))  
   #else :
