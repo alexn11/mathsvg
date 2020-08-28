@@ -1,6 +1,6 @@
 # Author:  alexn11 (alexn11.gh@gmail.com)
 # Created: 2018-10-21
-# Copyright (C) 2018, Alexandre De Zotti
+# Copyright (C) 2018, 2019, 2020, Alexandre De Zotti
 # License: MIT License
 
 
@@ -46,8 +46,8 @@ class SvgImage:
     self.rescaling = pixel_density
     self.view_window = view_window
     # shift the bottom left to (0, 0)
-    self.shift = [ - x for x in self.view_window [0] ]
-    view_box = [ int(self.rescaling * (self.view_window [1] [i] - self.view_window [0] [i])) + 1 for i in (0, 1) ]
+    self.shift = [ - x for x in self.view_window[0] ]
+    view_box = [ int(self.rescaling * (self.view_window[1][i] - self.view_window[0][i])) + 1 for i in (0, 1) ]
 
     self._set_view_box_no_reset(view_box)
     
@@ -115,7 +115,7 @@ class SvgImage:
 
 
   def _set_view_box_no_reset(self, view_box):
-    self.svgwrite_object.viewbox(width = view_box [0], height = view_box [1])
+    self.svgwrite_object.viewbox(width = view_box[0], height = view_box[1])
     self.view_box = view_box
 
   def set_dash_dash_structure(self, black_len, white_len):
@@ -224,7 +224,7 @@ class SvgImage:
     if(fill_color is not None):
       self.fill_color = fill_color
     if(dash_array is not None):
-      self.dasharray_dasharray = dash_array [:]
+      self.dasharray_dasharray = dash_array[:]
 
 
 
@@ -246,16 +246,16 @@ class SvgImage:
 
 
   def _flip_point(self, point):
-    return [ point [0], self.view_box [1] - point [1] ]
+    return [ point[0], self.view_box[1] - point[1] ]
 
 
 
   def _flip_vector(self, vector):
-    return [ vector [0], - vector [1] ]
+    return [ vector[0], - vector[1] ]
 
 
   def _rescale_vector(self, vector):
-    return [ self.rescaling * vector [0], self.rescaling * vector [1] ]
+    return [ self.rescaling * vector[0], self.rescaling * vector[1] ]
 
 
   def _rescale_length(self, length):
@@ -264,7 +264,7 @@ class SvgImage:
 
 
   def _shift_point(self, point):
-    return [ point [0] + self.shift [0], point [1] + self.shift [1] ]
+    return [ point[0] + self.shift[0], point[1] + self.shift[1] ]
 
 
   def project_point_to_canvas(self, point):
@@ -286,7 +286,7 @@ class SvgImage:
 
   def _convert_point_to_svg_string(self, point):
     # control vectors are points too
-    return str(point [0]) + ", " + str(point [1])
+    return str(point[0]) + ", " + str(point[1])
 
   def _make_svg_path_M_command(self, points):
     path_command = " M "
@@ -309,19 +309,19 @@ class SvgImage:
 
     control_vector_index = 0
     for point_index in range(nb_points):
-      path_command += " " + self._convert_point_to_svg_string(control_vectors [control_vector_index])
+      path_command += " " + self._convert_point_to_svg_string(control_vectors[control_vector_index])
       control_vector_index += 1
-      path_command += " " + self._convert_point_to_svg_string(control_vectors [control_vector_index])
+      path_command += " " + self._convert_point_to_svg_string(control_vectors[control_vector_index])
       control_vector_index += 1
-      path_command += " " + self._convert_point_to_svg_string(points [point_index]) + "  "
+      path_command += " " + self._convert_point_to_svg_string(points[point_index]) + "  "
   
     return path_command
 
 
   def _make_svg_path_M_and_C_command(self, points, control_vectors):
 
-    path_command = self._make_svg_path_M_command(points [ 0 : 1 ])
-    path_command += self._make_svg_path_C_command(points [ 1 : ], control_vectors)
+    path_command = self._make_svg_path_M_command(points[ 0 : 1 ])
+    path_command += self._make_svg_path_C_command(points[ 1 : ], control_vectors)
 
     return path_command
 
@@ -339,13 +339,13 @@ class SvgImage:
     if(dash_mode == "none"):
       dash_array_string += "none"
     elif(dash_mode == "dash"):
-      dash_array_string += str(self.dash_dasharray [0]) + ", " + str(self.dash_dasharray [1])
+      dash_array_string += str(self.dash_dasharray[0]) + ", " + str(self.dash_dasharray[1])
     elif(dash_mode in [ "dot", "dots" ]):
-      dash_array_string += str(self.dot_dasharray [0]) + ", " + str(self.dot_dasharray [1])
+      dash_array_string += str(self.dot_dasharray[0]) + ", " + str(self.dot_dasharray[1])
     elif(dash_mode == "dasharray"):
       for length in self.dasharray_dasharray:
         dash_array_string += str(length) + ", "
-      dash_array_string = dash_array_string [ : -2 ]
+      dash_array_string = dash_array_string[ : -2 ]
     else:
       dash_array_string += "YOUFAILED"
     dash_array_string += ";"
@@ -353,10 +353,10 @@ class SvgImage:
   
 
   def _make_svg_style_string(self,
-                              fill_color = None,
-                              stroke_color = None,
-                              stroke_width = None,
-                              dash_mode = None):
+                             fill_color = None,
+                             stroke_color = None,
+                             stroke_width = None,
+                             dash_mode = None):
     if(fill_color is None):
       fill_color = self.fill_color
     if(stroke_color is None):
@@ -413,7 +413,7 @@ class SvgImage:
 
 
   def _compute_line_angle(self, start_point, end_point):
-    direction = end_point [0] - start_point [0] + 1j * (end_point [1] - start_point [1])
+    direction = end_point[0] - start_point[0] + 1j * (end_point[1] - start_point[1])
     return cmath.phase(direction)
 
 
@@ -432,8 +432,8 @@ class SvgImage:
 
 
   def _compute_curved_arrow_endpoint_tangent(self, arrow_body_point_list, control_vectors):
-    #broken_line_tangent = self._compute_line_angle(arrow_body_point_list [-2], arrow_body_point_list [-1])
-    control_vector_line_tangent = self._compute_line_angle(control_vectors [-2], arrow_body_point_list [-1])
+    #broken_line_tangent = self._compute_line_angle(arrow_body_point_list[-2], arrow_body_point_list[-1])
+    control_vector_line_tangent = self._compute_line_angle(control_vectors[-2], arrow_body_point_list[-1])
     return - control_vector_line_tangent
 
   def _compute_curved_arrow_control_vectors(self, arrow_body_point_list):
@@ -465,10 +465,10 @@ class SvgImage:
       image.save("draw-curved-arrow-example.svg")
     """
 
-    direction = [ end_point [i] - start_point [i] for i in range(2) ]
-    orthogonal_direction = [ - direction [1], direction [0] ]
-    middle_point = [ (0.5 - asymmetry) * start_point [i] + (0.5 + asymmetry) * end_point [i] for i in range(2) ]
-    intermediate_point = [ middle_point [i] + curvedness * orthogonal_direction [i] for i in range(2) ]
+    direction = [ end_point[i] - start_point[i] for i in range(2) ]
+    orthogonal_direction = [ - direction[1], direction[0] ]
+    middle_point = [ (0.5 - asymmetry) * start_point[i] + (0.5 + asymmetry) * end_point[i] for i in range(2) ]
+    intermediate_point = [ middle_point[i] + curvedness * orthogonal_direction[i] for i in range(2) ]
 
     arrow_body_point_list = [ self.project_point_to_canvas(p) for p in ( start_point, intermediate_point, end_point ) ] 
     control_vectors = self._compute_curved_arrow_control_vectors(arrow_body_point_list)
@@ -529,10 +529,10 @@ class SvgImage:
     """
 
     center = self.project_point_to_canvas(position)
-    x_min = center [0] - self.point_size
-    x_max = center [0] + self.point_size
-    y_min = center [1] - self.point_size
-    y_max = center [1] + self.point_size
+    x_min = center[0] - self.point_size
+    x_max = center[0] + self.point_size
+    y_min = center[1] - self.point_size
+    y_max = center[1] + self.point_size
     style_string = self._make_svg_style_string(dash_mode = "none")
     line = self.svgwrite_object.line  ([x_min, y_min], [x_max, y_max], style = style_string)
     self.svgwrite_object.add(line)
@@ -550,14 +550,14 @@ class SvgImage:
     """
 
     center = self.project_point_to_canvas(position)
-    x_min = center [0] - self.point_size
-    x_max = center [0] + self.point_size
-    y_min = center [1] - self.point_size
-    y_max = center [1] + self.point_size
+    x_min = center[0] - self.point_size
+    x_max = center[0] + self.point_size
+    y_min = center[1] - self.point_size
+    y_max = center[1] + self.point_size
     style_string = self._make_svg_style_string(dash_mode = "none")
-    line = self.svgwrite_object.line([x_min, center [1]], [x_max, center [1]], style = style_string)
+    line = self.svgwrite_object.line([x_min, center[1]], [x_max, center[1]], style = style_string)
     self.svgwrite_object.add(line)
-    line = self.svgwrite_object.line([center [0], y_min], [center [0], y_max], style = style_string)
+    line = self.svgwrite_object.line([center[0], y_min], [center[0], y_max], style = style_string)
     self.svgwrite_object.add(line)
 
 
@@ -620,10 +620,10 @@ class SvgImage:
     Examples: see :ref:`points-crosses-circles-ellipses.py`
     """
 
-    arc_start_point = self.project_point_to_canvas([ center [0] + radius * math.cos(start_angle),
-                                                     center [1] + radius * math.sin(start_angle) ])
-    arc_end_point = self.project_point_to_canvas([ center [0] + radius * math.cos(end_angle),
-                                                   center [1] + radius * math.sin(end_angle) ])
+    arc_start_point = self.project_point_to_canvas([ center[0] + radius * math.cos(start_angle),
+                                                     center[1] + radius * math.sin(start_angle) ])
+    arc_end_point = self.project_point_to_canvas([ center[0] + radius * math.cos(end_angle),
+                                                   center[1] + radius * math.sin(end_angle) ])
     radiuses_on_canvas = self._rescale_vector([ radius, radius ])
 
     self._draw_svg_arc(arc_start_point, arc_end_point, start_angle, end_angle, 0, radiuses_on_canvas)
@@ -660,13 +660,13 @@ class SvgImage:
     """
 
     # computing the ellipse parameters:
-    complex_focuses = [ f [0] + 1j * f [1] for f in focuses ]
-    major_axis_direction = complex_focuses [1] - complex_focuses [0]
+    complex_focuses = [ f[0] + 1j * f[1] for f in focuses ]
+    major_axis_direction = complex_focuses[1] - complex_focuses[0]
     distance_between_the_focuses = abs(major_axis_direction)
     major_axis_direction /= distance_between_the_focuses
     half_distance_between_the_focuses = 0.5 * distance_between_the_focuses
     semi_major_axis = math.sqrt(semi_minor_axis * semi_minor_axis + half_distance_between_the_focuses * half_distance_between_the_focuses)
-    middle_point = 0.5 * (complex_focuses [0] + complex_focuses [1])
+    middle_point = 0.5 * (complex_focuses[0] + complex_focuses[1])
     #top_point = middle_point + semi_minor_axis * 1j * major_axis_direction
     #right_point = middle_point + semi_major_axis * major_axis_direction
 
@@ -783,10 +783,10 @@ class SvgImage:
       *``side_length``: length of the side of the square
     """
     half_side_length = 0.5 * side_length
-    top = center [1] + half_side_length
-    left = center [0] - half_side_length
-    bottom = center [1] - half_side_length
-    right = center [0] + half_side_length
+    top = center[1] + half_side_length
+    left = center[0] - half_side_length
+    bottom = center[1] - half_side_length
+    right = center[0] + half_side_length
     self.draw_rectangle(top, left, bottom, right)
     
 
@@ -866,7 +866,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
     if(curve_type == "polyline"):
       self.draw_polyline(point_list)
       if(is_closed):
-        self.draw_line_segment(point_list [-1], point_list [0])
+        self.draw_line_segment(point_list[-1], point_list[0])
     elif(curve_type == "autosmooth"):
       if(is_closed):
         self.draw_smoothly_interpolated_closed_curve(point_list)
@@ -874,9 +874,8 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
         self.draw_smoothly_interpolated_open_curve(point_list)
     else:
       raise Exception("curve_type not in ('polyline', 'autosmooth')")
-    return      
+    return
 
- 
 
 
   def _compute_autosmooth_control_vectors(self, point_coordinates, is_path_closed = False, vectors_relative_size = 0.3):
@@ -900,28 +899,28 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
  
     # when the path is closed, the extremities are artifically replicated at both ends in order to pretend that we are autosmoothing an open path
     if(is_path_closed):
-      points = [ p [:] for p in point_coordinates ]
-      points.insert(0, point_coordinates [-1] [:])
-      points.append(point_coordinates [0] [:])
+      points = [ p[:] for p in point_coordinates ]
+      points.insert(0, point_coordinates[-1][:])
+      points.append(point_coordinates[0][:])
     else:
       points = point_coordinates
 
     nb_points = len(points)
 
-    complex_points = [ pt [0] + 1j * pt [1] for pt in points ]
+    complex_points = [ pt[0] + 1j * pt[1] for pt in points ]
 
     left_right_vectors = []
     # initialization necesssary for the case when the first two points are identical
     left_vector = 0.
     right_vector = 0.
 
-    prev_point = complex_points [0]
-    current_point = complex_points [1]
+    prev_point = complex_points[0]
+    current_point = complex_points[1]
     right_dist = abs(current_point - prev_point)
 
     for point_index in range(1, nb_points - 1):
 
-      next_point = complex_points [point_index + 1]
+      next_point = complex_points[point_index + 1]
 
       direction = next_point - prev_point
       try :
@@ -945,16 +944,16 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
       current_point = next_point
 
     # Conversion of coordinates: vector -> attached vector = point + vector
-    control_vectors = [ complex_points [0] ]
+    control_vectors = [ complex_points[0] ]
     for point_index in range(1, nb_points - 1):
       vector_index = 2 * (point_index - 1)
-      control_vectors.append(left_right_vectors [vector_index] + complex_points [point_index])
-      control_vectors.append(left_right_vectors [vector_index + 1] + complex_points [point_index])
-    control_vectors.append(complex_points [-1])
+      control_vectors.append(left_right_vectors[vector_index] + complex_points[point_index])
+      control_vectors.append(left_right_vectors[vector_index + 1] + complex_points[point_index])
+    control_vectors.append(complex_points[-1])
 
     if(is_path_closed):
-     last_left_vector = control_vectors [1]
-     control_vectors = control_vectors [ 2 : -1 ]
+     last_left_vector = control_vectors[1]
+     control_vectors = control_vectors[ 2 : -1 ]
      control_vectors.append(last_left_vector)
 
     return [ [ cv.real, cv.imag ] for cv in control_vectors ]
@@ -998,7 +997,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 
     control_points = [ self.project_point_to_canvas(point) for point in points ]
     control_vectors = self._compute_autosmooth_control_vectors(control_points, is_path_closed = True)
-    path_command = self._make_svg_path_M_and_C_command(control_points + [ control_points [0], ], control_vectors)
+    path_command = self._make_svg_path_M_and_C_command(control_points + [ control_points[0], ], control_vectors)
     path_command += self._make_svg_path_Z_command()
     self.insert_svg_path_command(path_command)
     return
@@ -1012,7 +1011,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
    
    lengths = [ random.uniform(inner_radius, outer_radius) for v in range(nb_vertexes) ]
 
-   return [ center + lengths [i] * cmath.exp(1j * angles [i]) for i in range(nb_vertexes) ] 
+   return [ center + lengths[i] * cmath.exp(1j * angles[i]) for i in range(nb_vertexes) ] 
  
 
 
@@ -1035,7 +1034,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
     """
 
 
-    z_center = center [0] + 1j * center [1]
+    z_center = center[0] + 1j * center[1]
 
     complex_vertexes = self._generate_potato_complex_vertexes(z_center, inner_radius, outer_radius, nb_vertexes)
 
@@ -1043,7 +1042,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 
     control_vectors = self._compute_autosmooth_control_vectors(vertexes, is_path_closed = True)
 
-    vertexes.append(vertexes [0])
+    vertexes.append(vertexes[0])
     path_command = self._make_svg_path_M_and_C_command(vertexes, control_vectors)
 
     path_command += self._make_svg_path_Z_command()
@@ -1082,8 +1081,8 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
       image.save("draw-random-wavy-line-example.svg")
     """
 
-    z_start = start_point [0] + 1.j * start_point [1]
-    z_end = end_point [0] + 1.j * end_point [1]
+    z_start = start_point[0] + 1.j * start_point[1]
+    z_end = end_point[0] + 1.j * end_point[1]
 
     line_direction = z_end - z_start
     distance_from_start_to_end = abs(line_direction)
