@@ -764,6 +764,32 @@ class SvgImage:
     polyline = svgwrite . shapes . Polyline (points = points,
                                              style = self . _make_svg_style_string ())
     self . svgwrite_object . add (polyline)
+    
+  def draw_rectangle (self, top, left, bottom, right) :
+    """Draw a rectangle.
+    
+    Args:
+      *``top`` (``float``): top coordinate of the rectangle
+      *``left`` (``float``): left coordinate of the rectangle
+      *``bottom`` (``float``): bottom coordinate of the rectangle
+      *``right`` (``float``): right coordinate of the rectangle
+    """
+    self . draw_polyline ([ (left, top), (left, bottom), (right, bottom), (right, top), (left, top) ])
+    
+  def draw_square (self, center, side_length) :
+    """Draw a square.
+    
+    Args:
+      *``center``: coordinates of the center
+      *``side_length``: length of the side of the square
+    """
+    half_side_length = 0.5 * side_length
+    top = center [1] + half_side_length
+    left = center [0] - half_side_length
+    bottom = center [1] - half_side_length
+    right = center [0] + half_side_length
+    self . draw_rectangle (top, left, bottom, right)
+    
 
 
   def draw_function_graph (self, eval_function, x_start, x_end, nb_x, * function_params, curve_type = "polyline"):
