@@ -17,19 +17,19 @@ import os
 import sys
 #import mathsvg
 
-sys . path . insert (0, os . path . abspath("../../."))
+sys.path.insert(0, os.path.abspath("../../."))
 
 
 # -- Project information -----------------------------------------------------
 
 project = 'mathsvg'
-copyright = '2018, Alexandre De Zotti'
+copyright = '2018, 2020, Alexandre De Zotti'
 author = 'Alexandre De Zotti'
 
 # The short X.Y version
 version = ''
 # The full version, including alpha/beta/rc tags
-release = "0.3.3"
+release = "0.3.4"
 
 
 # -- General configuration ---------------------------------------------------
