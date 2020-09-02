@@ -13,9 +13,9 @@ Once the mathsvg package and all its dependencies are installed it can be used a
 Here is an example for the creation of a very simple image:
 
     import mathsvg
-    image = mathsvg . SvgImage (pixel_density = 100, view_window = (( -1, -1 ), ( 1, 1 )))
-    image . draw_circle ([0, 0], 1.1)
-    image . save ("simple-example.svg")
+    image = mathsvg.SvgImage(pixel_density = 100, view_window = (( -1, -1 ), ( 1, 1 )))
+    image.draw_circle ([0, 0], 1.1)
+    image.save("simple-example.svg")
 
 
 The above program does the following.
