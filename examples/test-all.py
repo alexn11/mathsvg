@@ -1,6 +1,6 @@
 # Author:  alexn11 (alexn11.gh@gmail.com)
 # Created: 2018-10-21
-# Copyright (C) 2018, Alexandre De Zotti
+# Copyright (C) 2018, 2020, Alexandre De Zotti
 # License: MIT License
 
 
@@ -36,6 +36,6 @@ test_scripts = [
 
 
 for script in test_scripts:
-  subprocess . call (["python", script])
+  subprocess.call(["python", script])
 
 

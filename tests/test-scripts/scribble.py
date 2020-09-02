@@ -10,9 +10,9 @@ import random
 
 import mathsvg
 
-image = mathsvg . SvgImage (pixel_density = 1, view_window = ((0, 0), (400, 150)))
+image = mathsvg.SvgImage(pixel_density = 1, view_window = ((0, 0), (400, 150)))
 
-random . seed (1000000000000066600000000000001)
-image . draw_random_wavy_line ([20, 75], [380, 75], 2, 55)
+random.seed(1000000000000066600000000000001)
+image.draw_random_wavy_line([20, 75], [380, 75], 2, 55)
 
-image . save ("scribble.svg")
+image.save("scribble.svg")

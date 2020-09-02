@@ -50,9 +50,9 @@ class SvgImage:
     view_box = [ int(self.rescaling * (self.view_window[1][i] - self.view_window[0][i])) + 1 for i in (0, 1) ]
 
     self._set_view_box_no_reset(view_box)
-    
+
     self.reset_svg_options()
-    
+
     self.reset_point_size()
     self.reset_dash_and_dot_structures()
     self.reset_arrow_options()
@@ -65,10 +65,10 @@ class SvgImage:
     """Reset the font size to the default value (depends on the size of the window)
     """
     self.font_pixel_size = 3 * self._rescale_length(self._compute_a_smallish_size())
-  
+
   def set_font_options(self, font_size = None):
     """Set some font options, so far only the font size.
-    
+
     Args:
       * ``font_size`` (default:``None``): font size in length units.
     """
@@ -77,7 +77,7 @@ class SvgImage:
 
   def set_point_size(self, point_size):
     """Set the size of points, pluses and crosses.
-    
+
     Args:
       * ``point_size``: half diameter of the points/pluses/crosses
     """
@@ -127,7 +127,7 @@ class SvgImage:
     """
 
     self.dash_dasharray = (black_len, white_len)
- 
+
 
   def set_dash_dot_structure(self, dot_sep):
     """Sets the separations between dots for dotted stroke
@@ -138,7 +138,7 @@ class SvgImage:
 
     self.dot_dasharray = (self.stroke_width, dot_sep)
 
- 
+
   def reset_svg_options(self):
     """Sets the stroke color to ``"black"``, the stroke width to ``1`` pixel and the fill color to ``"none"``."""
 
@@ -174,7 +174,7 @@ class SvgImage:
       * ``curvature`` (``float`` or ``None``): curving for the back of the tip of the arrow, ``0`` for a straight arrow tip
 
     Examples (see also :ref:`arrows.py`)::
-      
+
       image = mathsvg.SvgImage(pixel_density = 20, view_window = ((-4, -4), (4, 4)))
 
       image.set_arrow_options(curvature = 0.55)
@@ -197,7 +197,7 @@ class SvgImage:
     if(curvature is not None):
       self.arrow_curvature = curvature
 
-  
+
   def set_svg_options(self, stroke_color = None, stroke_width = None, fill_color = None, dash_array = None):
     """Sets the stroke width, color, fill color and dash array options
 
@@ -206,7 +206,7 @@ class SvgImage:
       * ``stroke_width`` (``float`` or ``None``): stroke width in *pixels*
       * ``fill_color`` (``str`` or ``None``): fill color (default is ``"none"``)
       * ``dash_array`` (``tuple`` or ``None``): list of stroke/space lengths (in *pixels*) describing the customize dash stroke
-      
+
     Note make sure that ``stroke_width`` is at least 1.
 
     Examples:
@@ -229,7 +229,7 @@ class SvgImage:
 
 
   def save(self, file_name):
-    """Save the drawings into a SVG file. 
+    """Save the drawings into a SVG file.
 
        Args:
          * ``file_name`` (``str``): name of the file to save.
@@ -299,7 +299,7 @@ class SvgImage:
     for point in points:
       path_command += self._convert_point_to_svg_string(point) + "  "
     return path_command
- 
+
 
   def _make_svg_path_C_command(self, points, control_vectors):
 
@@ -314,7 +314,7 @@ class SvgImage:
       path_command += " " + self._convert_point_to_svg_string(control_vectors[control_vector_index])
       control_vector_index += 1
       path_command += " " + self._convert_point_to_svg_string(points[point_index]) + "  "
-  
+
     return path_command
 
 
@@ -326,9 +326,8 @@ class SvgImage:
     return path_command
 
 
-  
   def _make_svg_path_Z_command(self):
-    return " Z "   
+    return " Z "
 
 
   def _make_svg_dasharray_string(self, dash_mode = None):
@@ -350,7 +349,7 @@ class SvgImage:
       dash_array_string += "YOUFAILED"
     dash_array_string += ";"
     return dash_array_string
-  
+
 
   def _make_svg_style_string(self,
                              fill_color = None,
@@ -407,8 +406,8 @@ class SvgImage:
                                      style = self._make_svg_style_string(fill_color = self.stroke_color, dash_mode = "none"))
     # be wary of that featured bug that reverse the order of the transformations
     path.translate(tip_position)
-    path.rotate(math.degrees(math.pi - arrow_direction_angle), center = [ 0, 0 ]) # also: angles are negative
-    # 
+    path.rotate(math.degrees(math.pi - arrow_direction_angle), center = [ 0, 0 ])  # also: angles are negative
+    #
     self.svgwrite_object.add(path)
 
 
@@ -417,7 +416,7 @@ class SvgImage:
     return cmath.phase(direction)
 
 
-  def draw_straight_arrow  (self, start_point, end_point):
+  def draw_straight_arrow(self, start_point, end_point):
     """Draws an arrow as a straight line segment between two points and an arrow tip at the last point.
 
      Equivalent to ``self.draw_arrow(start_point, end_point)``.
@@ -439,10 +438,10 @@ class SvgImage:
   def _compute_curved_arrow_control_vectors(self, arrow_body_point_list):
     # this is general not assuming exactly three points in the body of the arrow
     return self._compute_autosmooth_control_vectors(arrow_body_point_list, vectors_relative_size = 0.6)
-    
 
 
-  def draw_curved_arrow  (self, start_point, end_point, curvedness = 0.25, asymmetry = 0.):
+
+  def draw_curved_arrow(self, start_point, end_point, curvedness = 0.25, asymmetry = 0.):
     """Draws an arrow as a curved line joining two points with an arrow tip at the last point.
 
     Args:
@@ -470,7 +469,7 @@ class SvgImage:
     middle_point = [ (0.5 - asymmetry) * start_point[i] + (0.5 + asymmetry) * end_point[i] for i in range(2) ]
     intermediate_point = [ middle_point[i] + curvedness * orthogonal_direction[i] for i in range(2) ]
 
-    arrow_body_point_list = [ self.project_point_to_canvas(p) for p in ( start_point, intermediate_point, end_point ) ] 
+    arrow_body_point_list = [ self.project_point_to_canvas(p) for p in ( start_point, intermediate_point, end_point ) ]
     control_vectors = self._compute_curved_arrow_control_vectors(arrow_body_point_list)
     path_command = self._make_svg_path_M_and_C_command(arrow_body_point_list, control_vectors)
     self.insert_svg_path_command(path_command)
@@ -478,10 +477,6 @@ class SvgImage:
     # note: here we need conformal projection
     self.draw_arrow_tip(end_point, arrow_direction_angle)
     return
-
-
- 
-
 
 
   def draw_arrow(self, start_point, end_point, curvedness = 0., asymmetry = 0.):
@@ -534,9 +529,9 @@ class SvgImage:
     y_min = center[1] - self.point_size
     y_max = center[1] + self.point_size
     style_string = self._make_svg_style_string(dash_mode = "none")
-    line = self.svgwrite_object.line  ([x_min, y_min], [x_max, y_max], style = style_string)
+    line = self.svgwrite_object.line([x_min, y_min], [x_max, y_max], style = style_string)
     self.svgwrite_object.add(line)
-    line = self.svgwrite_object.line  ([x_max, y_min], [x_min, y_max], style = style_string)
+    line = self.svgwrite_object.line([x_max, y_min], [x_min, y_max], style = style_string)
     self.svgwrite_object.add(line)
 
 
@@ -635,7 +630,7 @@ class SvgImage:
     return [ self._rescale_length(r) for r in ellipse_radiuses ]
 
   def draw_ellipse_arc(self, focuses, semi_minor_axis, start_angle, end_angle):
-    """Draws an arc of an ellipse (in anticlockwise direction) with axis parallel to the x and y axis. The ellipse is parametrised in the form *"c + (a cos t, b sin t)"* where *t* varies from ``start_angle`` to ``end_angle`` (*a*, *b* and *c* are the parameters of the ellipse computed from the coordinates of the focuses and the semi minor axis). 
+    """Draws an arc of an ellipse (in anticlockwise direction) with axis parallel to the x and y axis. The ellipse is parametrised in the form *"c + (a cos t, b sin t)"* where *t* varies from ``start_angle`` to ``end_angle`` (*a*, *b* and *c* are the parameters of the ellipse computed from the coordinates of the focuses and the semi minor axis).
 
     Args:
       * ``focuses`` (``list``): list of two tuples of coordinates of the focuses of the ellipse
@@ -655,7 +650,7 @@ class SvgImage:
       focuses = [ [-1.33, 0.61], [1.33, -0.61] ]
 
       image.draw_ellipse_arc(focuses, 0.412, two_pi * 0.1, two_pi * 0.8)
-    
+
       image.save("draw-ellipse-arc-example.svg")
     """
 
@@ -701,7 +696,7 @@ class SvgImage:
       focuses = [ [-1.33, 0.61], [1.33, -0.61] ]
 
       image.draw_ellipse(focuses, 0.68)
-      
+
       image.save("draw-ellipse-example.svg")
     """
     complex_focuses = [ f[0] + 1j * f[1] for f in focuses ]
@@ -723,7 +718,7 @@ class SvgImage:
 
     self.svgwrite_object.add(ellipse)
 
- 
+
 
   def draw_circle(self, center, radius):
     """Draws a circle.
@@ -757,16 +752,16 @@ class SvgImage:
       image.draw_polyline(point_list)
       image.save("draw-polyline-example.svg")
     """
-    
+
     points = [ self.project_point_to_canvas(point) for point in point_list ]
 
     polyline = svgwrite.shapes.Polyline(points = points,
                                         style = self._make_svg_style_string())
     self.svgwrite_object.add(polyline)
-    
+
   def draw_rectangle(self, top, left, bottom, right):
     """Draw a rectangle.
-    
+
     Args:
       *``top`` (``float``): top coordinate of the rectangle
       *``left`` (``float``): left coordinate of the rectangle
@@ -774,10 +769,10 @@ class SvgImage:
       *``right`` (``float``): right coordinate of the rectangle
     """
     self.draw_polyline([ (left, top), (left, bottom), (right, bottom), (right, top), (left, top) ])
-    
+
   def draw_square(self, center, side_length):
     """Draw a square.
-    
+
     Args:
       *``center``: coordinates of the center
       *``side_length``: length of the side of the square
@@ -788,7 +783,7 @@ class SvgImage:
     bottom = center[1] - half_side_length
     right = center[0] + half_side_length
     self.draw_rectangle(top, left, bottom, right)
-    
+
 
 
   def draw_function_graph(self, eval_function, x_start, x_end, nb_x, * function_params, curve_type = "polyline"):
@@ -824,9 +819,9 @@ class SvgImage:
       self.draw_smoothly_interpolated_open_curve(point_list)
     else:
       raise Exception("curve_type not in ('polyline', 'autosmooth')")
-    return      
+    return
 
- 
+
 
 
   def draw_parametric_graph(self, eval_point, t_start, t_end, nb_t, * function_params, curve_type = "polyline", is_closed = False):
@@ -896,7 +891,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
     # As a purely graphical routine: applies to points on the canvas (ie after projection)
     #
     # vectors_relative_size will be ignored forever
- 
+
     # when the path is closed, the extremities are artifically replicated at both ends in order to pretend that we are autosmoothing an open path
     if(is_path_closed):
       points = [ p[:] for p in point_coordinates ]
@@ -923,7 +918,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
       next_point = complex_points[point_index + 1]
 
       direction = next_point - prev_point
-      try :
+      try:
         direction_len_inverse = 1. / abs(direction)
       except(ZeroDivisionError):
         # if points are too close to each other, use previous direction and continue to the next point
@@ -958,7 +953,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 
     return [ [ cv.real, cv.imag ] for cv in control_vectors ]
 
-  
+
   def draw_smoothly_interpolated_open_curve(self, points):
     """Draws a smooth open curve that interpolates the points given as parameter.
 
@@ -1008,11 +1003,11 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 
    angles = [ random.uniform(0, the_tau) for v in range(nb_vertexes) ]
    angles.sort()
-   
+
    lengths = [ random.uniform(inner_radius, outer_radius) for v in range(nb_vertexes) ]
 
-   return [ center + lengths[i] * cmath.exp(1j * angles[i]) for i in range(nb_vertexes) ] 
- 
+   return [ center + lengths[i] * cmath.exp(1j * angles[i]) for i in range(nb_vertexes) ]
+
 
 
   def draw_planar_potato(self, center, inner_radius, outer_radius, nb_vertexes):
@@ -1117,16 +1112,16 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
     return
 
 
-  #def draw_bezier_curve(self, path_points, control_vectors):
-  #"""HERE...
-  #"""
-  #projected_points = [ self.project_point_to_canvas(p) for p in path_points ]
-  #projected_vectors = [ self.project_vector_to_canvas(v) for v in control_vectors ]
-  ## HERE...
-  ## TODO: need to attach the vector to the points
-  #path_command = self._make_svg_path_M_and_C_command(projected_points, projected_vectors)
-  #self.insert_svg_path_command(path_command)
-  #return
+#  #def draw_bezier_curve(self, path_points, control_vectors):
+#  #"""HERE...
+#  #"""
+#  #projected_points = [ self.project_point_to_canvas(p) for p in path_points ]
+#  #projected_vectors = [ self.project_vector_to_canvas(v) for v in control_vectors ]
+#  ## HERE...
+#  ## TODO: need to attach the vector to the points
+#  #path_command = self._make_svg_path_M_and_C_command(projected_points, projected_vectors)
+#  #self.insert_svg_path_command(path_command)
+#  #return
 
 
   def put_text(self, text, text_position, font_size = None):
@@ -1158,7 +1153,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
     text_canvas_position = self.project_point_to_canvas(text_position)
     if(font_size is None):
       font_size = self.font_pixel_size
-    else :
+    else:
       font_size = self._rescale_length(font_size)
     t = self.svgwrite_object.text(text, insert = text_canvas_position, font_size = font_size)
     self.svgwrite_object.add(t)
@@ -1193,7 +1188,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 
     # so that really anything can be added - no checking
     path = self.svgwrite_object.path(d = svg_path_command,
-                                     style = self._make_svg_style_string ())
+                                     style = self._make_svg_style_string())
     self.svgwrite_object.add(path)
 
 
