@@ -43,7 +43,7 @@ Example of how to use your SVG file
 
 The SVG file can then be edited using programs such as `Inkscape <https://inkscape.org/>`_. For example you can convert them into ``pdf_tex`` files using the command::
 
-  inkscape -D -z --file=your-svg-file.svg --export-pdf=exported-name.pdf --export-latex
+  inkscape -D math-svg-saved-image.svg  -o exported-name.pdf --export-latex
 
 Then include the file in the LaTeX document with:
 
