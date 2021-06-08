@@ -29,7 +29,7 @@ author = 'Alexandre De Zotti'
 # The short X.Y version
 version = ''
 # The full version, including alpha/beta/rc tags
-release = "0.3.5"
+release = "0.3.6"
 
 
 # -- General configuration ---------------------------------------------------

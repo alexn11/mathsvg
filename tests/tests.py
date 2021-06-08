@@ -341,7 +341,7 @@ class TestInternals(unittest.TestCase) :
     self.assertAlmostEqual(51, float(xml.attrib['y1']), places = 2)
   
 
-class TestShapes(unittest.Testcase):
+class TestShapes(unittest.TestCase):
 
   def test_rectangle_and_polygons(self):
     image = mathsvg.SvgImage(pixel_density = 20, view_window = ((0, 0), (8, 8)))
