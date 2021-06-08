@@ -341,6 +341,25 @@ class TestInternals(unittest.TestCase) :
     self.assertAlmostEqual(51, float(xml.attrib['y1']), places = 2)
   
 
+class TestShapes(unittest.Testcase):
+
+  def test_rectangle_and_polygons(self):
+    image = mathsvg.SvgImage(pixel_density = 20, view_window = ((0, 0), (8, 8)))
+    point_list = [ (2.5,5), (4.5,7), (2.5,4), (0.5,3), (6,2) ]
+    image.draw_polygon(point_list)
+    image.draw_rectangle(7,1,1,7)
+    xml_data = image.svgwrite_object.get_xml()
+    
+    self.assertEqual(xml_data[1].tag, 'polygon')
+    coords = [ round(float(c)) for c in xml_data[1].attrib['points'].replace(',', ' ').split() ]
+    self.assertSequenceEqual(coords, [ 50, 61, 90, 21, 50, 81, 10, 101, 120, 121 ])
+    
+    xml_rect_data = xml_data[2]
+    self.assertEqual(xml_rect_data.tag, 'polygon')
+    coords = [ round(float(c)) for c in xml_rect_data.attrib['points'].replace(',', ' ').split() ]
+    self.assertSequenceEqual(coords, [ 20, 21, 20, 141, 140, 141, 140, 21, 20, 21 ])
+    
+
 # class TestCurrentBugs(unittest.TestCase) :
 
 

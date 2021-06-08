@@ -374,7 +374,7 @@ class SvgImage:
 
 
   def draw_arrow_tip(self, tip, arrow_direction_angle):
-    """Draw the tip of an arrow.
+    """Draws the tip of an arrow.
 
     Args:
       * ``tip`` (``tuple``): cooedinates of the position of the tip
@@ -741,10 +741,10 @@ class SvgImage:
 
 
   def draw_polyline(self, point_list):
-    """Draw a sequence of connected lins segments.
+    """Draws a sequence of connected lins segments.
 
     Args:
-      * ``point_list`` (``list``): ordered list of points (coordinates) to connect with line segments (at least two points)
+      * ``point_list`` (``list``): ordered list of points (coordinates) to connect with line segments (at least two points required).
 
     Example (see also :ref:`interpolated-curves.py`)::
 
@@ -760,8 +760,29 @@ class SvgImage:
                                         style = self._make_svg_style_string())
     self.svgwrite_object.add(polyline)
 
+  def draw_polygon(self, point_list):
+    """Draws a polygon using straight lines.
+
+    Args:
+      * ``point_list`` (``list``): ordered list of points (coordinates) to connect with line segments (at least three points required).
+
+    Example::
+
+      image = mathsvg.SvgImage(pixel_density = 20, view_window = ((0, 0), (8, 8)))
+      point_list = [ (2.5,5), (4.5,7), (2.5,4), (0.5,3), (6,2) ]
+      image.draw_polygon(point_list)
+      image.save("draw-polygon-example.svg")
+    """
+
+    points = [ self.project_point_to_canvas(point) for point in point_list ]
+
+    polygon = svgwrite.shapes.Polygon(points = points,
+                                      style = self._make_svg_style_string())
+    self.svgwrite_object.add(polygon)
+
+
   def draw_rectangle(self, top, left, bottom, right):
-    """Draw a rectangle.
+    """Draws a rectangle.
 
     Args:
       *``top`` (``float``): top coordinate of the rectangle
@@ -769,10 +790,10 @@ class SvgImage:
       *``bottom`` (``float``): bottom coordinate of the rectangle
       *``right`` (``float``): right coordinate of the rectangle
     """
-    self.draw_polyline([ (left, top), (left, bottom), (right, bottom), (right, top), (left, top) ])
+    self.draw_polygon([ (left, top), (left, bottom), (right, bottom), (right, top), (left, top) ])
 
   def draw_square(self, center, side_length):
-    """Draw a square.
+    """Draws a square.
 
     Args:
       *``center``: coordinates of the center
