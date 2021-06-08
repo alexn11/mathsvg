@@ -41,7 +41,7 @@ You can install mathsvg with ``pip``::
 Example of how to use your SVG file
 -----------------------------------
 
-The SVG file can then be edited using programs such as `Inkscape <https://inkscape.org/>`_. For example you can convert them into ``pdf_tex`` files using the command::
+The SVG file can then be edited using programs such as `Inkscape <https://inkscape.org/>`_. *For example* you can convert them into ``pdf_tex`` files using the command::
 
   inkscape -D math-svg-saved-image.svg  -o exported-name.pdf --export-latex
 

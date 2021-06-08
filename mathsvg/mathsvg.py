@@ -33,7 +33,8 @@ class SvgImage:
   In order to make SVG graphics using mathsvg, you need first to create an instance of SvgImage. Then do your drawings by calling a few members functions of this object. Finally call ``save()`` to save the result.
 
   The constructor has the following optional arguments:
-    * ``view_window`` (``tuple``): is the tuple of the two coordinates of the bottom left and top right corners of the drawing window.
+    * ``view_window`` (``tuple``): is a tuple of tuple values characterizing the drawing area.
+                                   The first tuple contains the minima values for x and y and the last one the corresponding maxima.
     * ``pixel_density`` (``float``): number of pixels per unit length. Coordinates in the SVG file are rescaled accordingly.
     * ``_svgwrite_debug`` (``boolean``): to create the svgwrite object with a specific debug mode (default is ``False``).
   """
