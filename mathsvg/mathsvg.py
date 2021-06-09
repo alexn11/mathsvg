@@ -159,8 +159,15 @@ class SvgImage:
     self.set_svg_options(stroke_color = "black", stroke_width = 1, fill_color = "none", units='svg')
 
 
-  def _compute_a_smallish_size_in_svg_units(self):
-    return min(self.view_box) / 50
+  def _compute_a_smallish_size_in_svg_units(self, do_legacy=False, do_nonzero=False):
+    if(do_legacy):
+      smallish_size = min(self.view_box) / 50
+    else:
+      smallish_size = self._rescale_length(self._compute_a_smallish_size_in_math_units())
+    if(do_nonzero):
+      if(smallish_size < 1):
+        smallish_size = 1
+    return smallish_size
   
   def _compute_a_smallish_size_in_math_units(self):
     return min(self.window_size) / 50
@@ -179,18 +186,19 @@ class SvgImage:
   def reset_arrow_options(self):
     """Sets the width, opening angle and curvature of arrows to default values depending eventually on the size of the canvas."""
 
-    self.arrow_width = self._compute_a_smallish_size_in_math_units()
+    self.arrow_width_svgpx = self._compute_a_smallish_size_in_svg_units(do_nonzero=True)
     self.arrow_opening_angle = 0.12 * math.pi
     self.arrow_curvature = 0.14
 
-  def set_arrow_options(self, width = None, opening_angle = None, curvature = None):
+  def set_arrow_options(self, width = None, opening_angle = None, curvature = None, units = 'math'):
     """Sets some values governing the shape and geometry of the arrows.
 
     Args:
       * ``width`` (``float`` or ``None``): width of the arrow tip, in math units (not pixels)
       * ``opening_angle`` (``float`` or ``None``): opening angle of the arrow tip
       * ``curvature`` (``float`` or ``None``): curving for the back of the tip of the arrow, ``0`` for a straight arrow tip
-
+      * ``units`` (default:'math'): units for the size. The valid values are 'math' for math units and 'svg' for pixels
+      
     Examples (see also :ref:`arrows.py`)::
 
       image = mathsvg.SvgImage(pixel_density = 20, view_window = ((-4, -4), (4, 4)))
@@ -198,7 +206,7 @@ class SvgImage:
       image.set_arrow_options(curvature = 0.55)
       image.draw_arrow([ -2, -2 ], [ 2, 1.7 ])
 
-      image.set_arrow_options(width = 4 * image.arrow_width)
+      image.set_arrow_options(width = 4 * image.arrow_width_svgpx, units='svg')
       image.draw_arrow([ -2, -2 ], [ 2, 1.2 ])
 
       image.reset_arrow_options()
@@ -209,7 +217,7 @@ class SvgImage:
     """
 
     if(width is not None):
-      self.arrow_width = width
+      self.arrow_width_svgpx = self._convert_length_to_svg(units, width)
     if(opening_angle is not None):
       self.opening_angle = opening_angle
     if(curvature is not None):
@@ -415,7 +423,7 @@ class SvgImage:
 
     tip_position = self.project_point_to_canvas(tip)
 
-    size = self._rescale_length(self.arrow_width)
+    size = self.arrow_width_svgpx
     opening_angle = self.arrow_opening_angle
     curvature = self.arrow_curvature
 

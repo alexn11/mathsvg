@@ -6,6 +6,7 @@
 import unittest
 
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -379,12 +380,19 @@ class TestSvgOptions(unittest.TestCase) :
     self.assertAlmostEqual(canvas.stroke_width, 7, places=2)
     self.assertAlmostEqual(canvas.dasharray_dasharray_svgpx[0], 8, places=2)
     self.assertAlmostEqual(canvas.dasharray_dasharray_svgpx[1], 900, places=2)
+    
+    canvas.set_arrow_options(width = .2)
+    self.assertAlmostEqual(20, canvas.arrow_width_svgpx, places = 2)
+    canvas.set_arrow_options(width = 5, units='svg')
+    self.assertAlmostEqual(5, canvas.arrow_width_svgpx, places = 2)
+    canvas.set_arrow_options(width = 0.18, units='math')
+    self.assertAlmostEqual(18, canvas.arrow_width_svgpx, places = 2)
 
 class TestInternals(unittest.TestCase) :
 
   def test_smallish_size(self) :
     image = prepare_simple_canvas() # 0, 0 -> 100, 100 + 1px
-    self.assertEqual(image._compute_a_smallish_size_in_svg_units(), 2.02)
+    self.assertEqual(image._compute_a_smallish_size_in_svg_units(), 2.)
     self.assertEqual(image._compute_a_smallish_size_in_math_units(), 0.02)
 
   def project_point_to_canvas(self) :
@@ -421,6 +429,65 @@ class TestShapes(unittest.TestCase):
     self.assertEqual(xml_rect_data.tag, 'polygon')
     coords = [ round(float(c)) for c in xml_rect_data.attrib['points'].replace(',', ' ').split() ]
     self.assertSequenceEqual(coords, [ 20, 21, 20, 141, 140, 141, 140, 21, 20, 21 ])
+    
+
+class TestInlineExamples(unittest.TestCase):
+
+  def test_main_doc_example(self):
+    image = mathsvg.SvgImage(pixel_density = 100, view_window = (( -1, -1 ), ( 1, 1 )))
+    image.draw_circle([0, 0], 1.1)
+    xml_data = image.svgwrite_object.get_xml()[1]
+    self.assertEqual(xml_data.tag, 'ellipse')
+    self.assertEqual(int(xml_data.attrib['cx']), 100)
+    self.assertEqual(int(xml_data.attrib['cy']), 101)
+    self.assertEqual(round(float(xml_data.attrib['rx'])), 110)
+    self.assertEqual(round(float(xml_data.attrib['ry'])), 110)
+ 
+  def test_set_dash_mode_example(self):
+    image = mathsvg.SvgImage(pixel_density = 20, view_window = ((0, 0), (10, 10)))
+    image.set_dash_mode("dash")
+    image.draw_line_segment([0, 0], [10, 10])
+    image.set_dash_mode("dot")
+    image.draw_line_segment([0, 10], [10, 0])
+    image.set_svg_options(dash_array = [18, 3, 1, 3, 7, 3, 1, 3], units='svg')
+    image.set_dash_mode("dasharray")
+    image.draw_planar_potato([5, 5], 2, 4, 8)
+    xml_data = image.svgwrite_object.get_xml()
+    
+    line_data = xml_data[1]
+    self.assertEqual('line', line_data.tag)
+    line_data = line_data.attrib
+    self.assertEqual(0, round(float(line_data['x1'])))
+    self.assertEqual(200, round(float(line_data['x2'])))
+    self.assertEqual(201, round(float(line_data['y1'])))
+    self.assertEqual(1, round(float(line_data['y2'])))
+    style = line_data['style']
+    match = re.search(r'stroke-dasharray *: *([0-9\.]+), *([0-9\.]+);', style)
+    self.assertIsNotNone(match)
+    self.assertAlmostEqual(4., float(match.groups()[0]), places=3)
+    self.assertAlmostEqual(4., float(match.groups()[1]), places=3)
+    
+    line_data = xml_data[2]
+    self.assertEqual('line', line_data.tag)
+    line_data = line_data.attrib
+    self.assertEqual(0, round(float(line_data['x1'])))
+    self.assertEqual(200, round(float(line_data['x2'])))
+    self.assertEqual(1, round(float(line_data['y1'])))
+    self.assertEqual(201, round(float(line_data['y2'])))
+    style = line_data['style']
+    match = re.search(r'stroke-dasharray *: *([0-9\.]+), *([0-9\.]+);', style)
+    self.assertIsNotNone(match)
+    self.assertAlmostEqual(1., float(match.groups()[0]), places=3)
+    self.assertAlmostEqual(2., float(match.groups()[1]), places=3)
+    
+    line_data = xml_data[3]
+    self.assertEqual('path', line_data.tag)
+    style = line_data.attrib['style']
+    match = re.search(r'stroke-dasharray *: *([0-9\., ]+);', style)
+    self.assertIsNotNone(match)
+    values = [ round(float(v)) for v in match.groups()[0].split(', ') ]
+    self.assertEqual(len(values), 8)
+    self.assertSequenceEqual([ 18, 3, 1, 3, 7, 3, 1, 3 ], values)
     
 
 # class TestCurrentBugs(unittest.TestCase) :
