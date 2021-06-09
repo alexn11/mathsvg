@@ -1,6 +1,6 @@
 # Author:  alexn11 (alexn11.gh@gmail.com)
 # Created: 2020-01-31
-# Copyright (C) 2020, Alexandre De Zotti
+# Copyright (C) 2020, 2021 Alexandre De Zotti
 # License: MIT License
 
 import unittest
@@ -70,7 +70,7 @@ def clean_files(file_list):
 
 
 def prepare_simple_canvas(window_size = 1., pixel_density = 100) :
-  return mathsvg.SvgImage(view_window = ((0, window_size), (0, window_size)), pixel_density = pixel_density)
+  return mathsvg.SvgImage(view_window = ((0, 0), (window_size, window_size)), pixel_density = pixel_density)
 
 
 class TestMain(unittest.TestCase):
@@ -124,8 +124,8 @@ class TestArrows(unittest.TestCase):
   def test_default_arrow_images(self):
     image = mathsvg.SvgImage(pixel_density = 100, view_window = ( (-4, -4), (4, 4) )) 
     image.draw_arrow([ -2, -2 ], [ 2, 2 ])
-    image.save("test.svg")
-    check_actual_image(self, "test.svg", os.path.join(test_models_path, "default-arrow.png"), "default arrow image very different from model")
+    image.save("test-default-arrow.svg")
+    check_actual_image(self, "test-default-arrow.svg", os.path.join(test_models_path, "test-default-arrow.png"), "default arrow image very different from model")
 
   def test_arrow_examples(self):
     test_simple_example(self, "arrows", examples_path, "arrow")
@@ -321,8 +321,9 @@ class TestSvgOptions(unittest.TestCase) :
 class TestInternals(unittest.TestCase) :
 
   def test_smallish_size(self) :
-    image = prepare_simple_canvas()
-    self.assertEqual(image._compute_a_smallish_size(), 0.02)
+    image = prepare_simple_canvas() # 0, 0 -> 100, 100 + 1px
+    self.assertEqual(image._compute_a_smallish_size_in_svg_units(), 2.02)
+    self.assertEqual(image._compute_a_smallish_size_in_math_units(), 0.02)
 
   def project_point_to_canvas(self) :
     canvas = prepare_simple_canvas(pixel_density = 100, window_size = 1.)

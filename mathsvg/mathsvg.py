@@ -1,6 +1,6 @@
 # Author:  alexn11 (alexn11.gh@gmail.com)
 # Created: 2018-10-21
-# Copyright (C) 2018, 2019, 2020, Alexandre De Zotti
+# Copyright (C) 2018, 2021 Alexandre De Zotti
 # License: MIT License
 
 
@@ -46,9 +46,10 @@ class SvgImage:
 
     self.rescaling = pixel_density
     self.view_window = view_window
+    self.window_size = [ self.view_window[1][i] - self.view_window[0][i] for i in (0, 1) ]
     # shift the bottom left to (0, 0)
     self.shift = [ - x for x in self.view_window[0] ]
-    view_box = [ int(self.rescaling * (self.view_window[1][i] - self.view_window[0][i])) + 1 for i in (0, 1) ]
+    view_box = [ int(self.rescaling * self.window_size[i]) + 1 for i in (0, 1) ]
 
     self._set_view_box_no_reset(view_box)
 
@@ -65,7 +66,7 @@ class SvgImage:
   def reset_font_options(self):
     """Reset the font size to the default value (depends on the size of the window)
     """
-    self.font_pixel_size = 3 * self._rescale_length(self._compute_a_smallish_size())
+    self.font_pixel_size = 3 * self._rescale_length(self._compute_a_smallish_size_in_svg_units())
 
   def set_font_options(self, font_size = None):
     """Set some font options, so far only the font size.
@@ -146,13 +147,16 @@ class SvgImage:
     self.set_svg_options(stroke_color = "black", stroke_width = 1, fill_color = "none")
 
 
-  def _compute_a_smallish_size(self):
+  def _compute_a_smallish_size_in_svg_units(self):
     return min(self.view_box) / 50
+  
+  def _compute_a_smallish_size_in_math_units(self):
+    return min(self.window_size) / 50
 
   def reset_dash_and_dot_structures(self):
     """Sets the dash, dot and dasharray structures to default values depending on the size of the canvas."""
 
-    dash_len = self._compute_a_smallish_size()
+    dash_len = self._compute_a_smallish_size_in_svg_units()
     dot_sep = max((dash_len / 2, 2 * self.stroke_width))
     self.set_dash_dash_structure(dash_len, dash_len)
     self.set_dash_dot_structure(dot_sep)
@@ -162,7 +166,7 @@ class SvgImage:
   def reset_arrow_options(self):
     """Sets the width, opening angle and curvature of arrows to default values depending eventually on the size of the canvas."""
 
-    self.arrow_width = self._compute_a_smallish_size()
+    self.arrow_width = self._compute_a_smallish_size_in_math_units()
     self.arrow_opening_angle = 0.12 * math.pi
     self.arrow_curvature = 0.14
 
@@ -170,7 +174,7 @@ class SvgImage:
     """Sets some values governing the shape and geometry of the arrows.
 
     Args:
-      * ``width`` (``float`` or ``None``): width for the stroke of arrows
+      * ``width`` (``float`` or ``None``): width of the arrow tip, in math units (not pixels)
       * ``opening_angle`` (``float`` or ``None``): opening angle of the arrow tip
       * ``curvature`` (``float`` or ``None``): curving for the back of the tip of the arrow, ``0`` for a straight arrow tip
 
@@ -385,7 +389,7 @@ class SvgImage:
 
     tip_position = self.project_point_to_canvas(tip)
 
-    size = self.arrow_width
+    size = self._rescale_length(self.arrow_width)
     opening_angle = self.arrow_opening_angle
     curvature = self.arrow_curvature
 
