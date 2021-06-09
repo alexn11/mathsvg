@@ -60,7 +60,8 @@ def draw_iterations(g, eval_map_function, x0, n):
     mid_value = 0.5 * (x + x_next)
     if(x_next > x):
       arrow_direction_angles = (0.5*math.pi, 0)
-      mid_shift = - 0.5 * arrow_size
+      #mid_shift = - 0.5 * arrow_size
+      mid_shift = 0
     else:
       arrow_direction_angles = (-0.5*math.pi, math.pi)
       mid_shift = 0
