@@ -377,7 +377,7 @@ class SvgImage:
     """Draws the tip of an arrow.
 
     Args:
-      * ``tip`` (``tuple``): cooedinates of the position of the tip
+      * ``tip`` (``tuple``): coordinates of the position of the tip
       * ``arrow_direction_angle`` (``float``): angle where the arrow is pointing in radians
 
     Examples: see :ref:`arrows.py`
