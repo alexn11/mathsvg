@@ -12,6 +12,7 @@ test_scripts = [
   [ "cantor-bouquet.py", "compact-cantor-bouquet" ],
   [ "cantor-bouquet.py", "one-sided-hairy-circle" ],
   [ "selfsim-triforce.py", ],
+  [ "iteration-graph.py", ],
 ]
 
 
@@ -22,6 +23,6 @@ test_scripts = [
 
 
 for script_params in test_scripts:
-  subprocess.call (["python", ] + script_params)
+  subprocess.call(["python", ] + script_params)
 
 
