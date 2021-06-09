@@ -79,7 +79,7 @@ class SvgImage:
 
     Args:
       * ``font_size`` (default:``None``): font size
-      * ``units`` (default:'math'): units for the size. The valid values are 'math' for math units and 'svg' for pixels
+      * ``units`` (default:``'math'``): units for the size. The valid values are ``'math'`` for math units and ``'svg'`` for pixels
     """
     if(font_size is not None):
       self.font_size_svgpx = self._convert_length_to_svg(units, font_size)
@@ -89,7 +89,7 @@ class SvgImage:
 
     Args:
       * ``point_size``: half diameter of the points/pluses/crosses
-      * ``units`` (default:'math'): units for the size. The valid values are 'math' for math units and 'svg' for pixels
+      * ``units`` (default:``'math'``): units for the size. The valid values are ``'math'`` for math units and ``'svg'`` for pixels
     """
     self.point_size_svgpx = self._convert_length_to_svg(units, point_size)
 
@@ -134,7 +134,7 @@ class SvgImage:
     Args:
       * ``black_len`` (``int`` or ``float``): length of the dash
       * ``white_len`` (``int`` or ``float``): length of the space between dashes
-      * ``units`` (default:'math'): units for the size. The valid values are 'math' for math units and 'svg' for pixels
+      * ``units`` (default:``'math'``): units for the size. The valid values are ``'math'`` for math units and ``'svg'`` for pixels
     """
     
     black_len = self._convert_length_to_svg(units, black_len)
@@ -147,7 +147,7 @@ class SvgImage:
 
     Args:
       * ``dot_sep`` (``int`` or ``float``): separation between the dots in pixels
-      * ``units`` (default:'math'): units for the size. The valid values are 'math' for math units and 'svg' for pixels
+      * ``units`` (default:``'math'``): units for the size. The valid values are ``'math'`` for math units and ``'svg'`` for pixels
     """
 
     self.dot_dasharray_svgpx = (self.stroke_width, self._convert_length_to_svg(units, dot_sep))
@@ -197,7 +197,7 @@ class SvgImage:
       * ``width`` (``float`` or ``None``): width of the arrow tip, in math units (not pixels)
       * ``opening_angle`` (``float`` or ``None``): opening angle of the arrow tip
       * ``curvature`` (``float`` or ``None``): curving for the back of the tip of the arrow, ``0`` for a straight arrow tip
-      * ``units`` (default:'math'): units for the size. The valid values are 'math' for math units and 'svg' for pixels
+      * ``units`` (default:``'math'``): units for the size. The valid values are ``'math'`` for math units and ``'svg'`` for pixels
       
     Examples (see also :ref:`arrows.py`)::
 
@@ -237,7 +237,7 @@ class SvgImage:
       * ``stroke_width`` (``float`` or ``None``): stroke width
       * ``fill_color`` (``str`` or ``None``): fill color (default is ``"none"``)
       * ``dash_array`` (``tuple`` or ``None``): list of stroke/space lengths describing the customize dash stroke
-      * ``units`` (default:'math'): units for the sizes. The valid values are 'math' for math units and 'svg' for pixels
+      * ``units`` (default:``'math'``): units for the sizes. The valid values are ``'math'`` for math units and ``'svg'`` for pixels
 
     Note it might increase the value of ``stroke_width`` to make sure that it is at least 1.
 
@@ -1191,7 +1191,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
       * ``text`` (``str``): text to insert
       * ``text_position`` (``tuple``): coordinates of the bottom left of the text
       * ``font_size (``int`` or ``None``): font size, if ``None`` use the default font size (see ``set_font_options`` and ``reset_font_options``)
-      * ``units`` (default: 'math'): units for the size. The valid values are 'math' for math units, 'svg' for pixels
+      * ``units`` (default: ``'math'``): units for the size. The valid values are ``'math'`` for math units, ``'svg'`` for pixels
 
     Example::
 
