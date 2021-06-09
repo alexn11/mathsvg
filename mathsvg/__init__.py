@@ -17,7 +17,7 @@ Type::
 for more details.
 """
 
-__version__ = "0.3.6"
+__version__ = "0.4.0"
 
 from mathsvg.mathsvg import SvgImage
 

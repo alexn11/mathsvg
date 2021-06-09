@@ -73,11 +73,6 @@
    :height:  250px
    :target: examples/scribble.html
 
-.. image:: ../../examples/examples-images/torus.svg
-   :width: 250px
-   :height:  250px
-   :target: examples/torus.html
-
 .. image:: ../../examples/examples-images/wigglier-potato.svg
    :width: 250px
    :height:  250px
@@ -87,4 +82,7 @@
    :width: 250px
    :height:  250px
    :target: examples/wiggly-potato.html
+
+
+
 

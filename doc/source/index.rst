@@ -84,6 +84,19 @@ Click on the image to see the sources.
 .. include:: image-targets.rst
 
 
+More examples
+-------------
+
+.. toctree::
+   :glob:
+
+   more-examples/*
+
+
+Click on the image to see the sources.
+
+.. include:: more-image-targets.rst
+
 
 Indices and tables
 ==================
