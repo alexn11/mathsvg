@@ -193,7 +193,7 @@ class TestPutText(unittest.TestCase):
   def test_font_pixel_size(self) :
     canvas = prepare_simple_canvas()
     self.assertEqual(canvas.rescaling, 100)
-    self.assertAlmostEqual(canvas.font_pixel_size, 6., places = 2)
+    self.assertAlmostEqual(canvas.font_size_svgpx, 6., places = 2)
   
   def test_put_text_no_font_size(self) :
     canvas = prepare_simple_canvas()
@@ -349,18 +349,18 @@ class TestSvgOptions(unittest.TestCase) :
     self.assertAlmostEqual(canvas.dash_dasharray_svgpx[1], 3, places=2)
     
     canvas.set_font_options(font_size=0.1)
-    self.assertAlmostEqual(canvas.font_pixel_size, 10., places=2)
+    self.assertAlmostEqual(canvas.font_size_svgpx, 10., places=2)
     canvas.set_font_options(font_size=10, units='svg')
-    self.assertAlmostEqual(canvas.font_pixel_size, 10., places=2)
+    self.assertAlmostEqual(canvas.font_size_svgpx, 10., places=2)
     canvas.set_font_options(font_size=0.2, units='math')
-    self.assertAlmostEqual(canvas.font_pixel_size, 20., places=2)
+    self.assertAlmostEqual(canvas.font_size_svgpx, 20., places=2)
     
     canvas.set_point_size(0.01)
-    self.assertAlmostEqual(canvas.point_size, 1, places=2)
+    self.assertAlmostEqual(canvas.point_size_svgpx, 1, places=2)
     canvas.set_point_size(1, units='svg')
-    self.assertAlmostEqual(canvas.point_size, 1, places=2)
+    self.assertAlmostEqual(canvas.point_size_svgpx, 1, places=2)
     canvas.set_point_size(0.03, units='math')
-    self.assertAlmostEqual(canvas.point_size, 3, places=2)
+    self.assertAlmostEqual(canvas.point_size_svgpx, 3, places=2)
     
     # check for minimal width of stroke
     canvas.set_svg_options(stroke_width=0.001)

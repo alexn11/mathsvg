@@ -72,7 +72,7 @@ class SvgImage:
   def reset_font_options(self):
     """Reset the font size to the default value (depends on the size of the window)
     """
-    self.font_pixel_size = 3 * self._rescale_length(self._compute_a_smallish_size_in_math_units())
+    self.font_size_svgpx = 3 * self._rescale_length(self._compute_a_smallish_size_in_math_units())
 
   def set_font_options(self, font_size = None, units = 'math'):
     """Set some font options, so far only the font size.
@@ -82,7 +82,7 @@ class SvgImage:
       * ``units`` (default:'math'): units for the size. The valid values are 'math' for math units and 'svg' for pixels
     """
     if(font_size is not None):
-      self.font_pixel_size = self._convert_length_to_svg(units, font_size)
+      self.font_size_svgpx = self._convert_length_to_svg(units, font_size)
 
   def set_point_size(self, point_size, units = 'math'):
     """Set the size of points, pluses and crosses.
@@ -91,10 +91,10 @@ class SvgImage:
       * ``point_size``: half diameter of the points/pluses/crosses
       * ``units`` (default:'math'): units for the size. The valid values are 'math' for math units and 'svg' for pixels
     """
-    self.point_size = self._convert_length_to_svg(units, point_size)
+    self.point_size_svgpx = self._convert_length_to_svg(units, point_size)
 
   def reset_point_size(self):
-    self.point_size = 6 * self.stroke_width
+    self.point_size_svgpx = 6 * self.stroke_width
 
   def set_dash_mode(self, mode):
     """Choose the type of stroke.
@@ -548,7 +548,7 @@ class SvgImage:
     """
 
     point = svgwrite.shapes.Circle(self.project_point_to_canvas(position),
-                                   r = self.point_size,
+                                   r = self.point_size_svgpx,
                                    style = self._make_svg_style_string(fill_color = self.stroke_color, dash_mode = "none"))
     self.svgwrite_object.add(point)
 
@@ -563,10 +563,10 @@ class SvgImage:
     """
 
     center = self.project_point_to_canvas(position)
-    x_min = center[0] - self.point_size
-    x_max = center[0] + self.point_size
-    y_min = center[1] - self.point_size
-    y_max = center[1] + self.point_size
+    x_min = center[0] - self.point_size_svgpx
+    x_max = center[0] + self.point_size_svgpx
+    y_min = center[1] - self.point_size_svgpx
+    y_max = center[1] + self.point_size_svgpx
     style_string = self._make_svg_style_string(dash_mode = "none")
     line = self.svgwrite_object.line([x_min, y_min], [x_max, y_max], style = style_string)
     self.svgwrite_object.add(line)
@@ -584,10 +584,10 @@ class SvgImage:
     """
 
     center = self.project_point_to_canvas(position)
-    x_min = center[0] - self.point_size
-    x_max = center[0] + self.point_size
-    y_min = center[1] - self.point_size
-    y_max = center[1] + self.point_size
+    x_min = center[0] - self.point_size_svgpx
+    x_max = center[0] + self.point_size_svgpx
+    y_min = center[1] - self.point_size_svgpx
+    y_max = center[1] + self.point_size_svgpx
     style_string = self._make_svg_style_string(dash_mode = "none")
     line = self.svgwrite_object.line([x_min, center[1]], [x_max, center[1]], style = style_string)
     self.svgwrite_object.add(line)
@@ -1213,7 +1213,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
     """
     text_canvas_position = self.project_point_to_canvas(text_position)
     if(font_size is None):
-      font_size = self.font_pixel_size
+      font_size = self.font_size_svgpx
     else:
       font_size = self._convert_length_to_svg(units, font_size)
     t = self.svgwrite_object.text(text, insert = text_canvas_position, font_size = font_size)
