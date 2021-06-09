@@ -156,7 +156,7 @@ class SvgImage:
   def reset_svg_options(self):
     """Sets the stroke color to ``"black"``, the stroke width to ``1`` pixel and the fill color to ``"none"``."""
 
-    self.set_svg_options(stroke_color = "black", stroke_width = 1, fill_color = "none", units='svg')
+    self.set_svg_options(stroke_color = 'black', stroke_width = 1, fill_color = 'none', units='svg')
 
 
   def _compute_a_smallish_size_in_svg_units(self, do_legacy=False, do_nonzero=False):

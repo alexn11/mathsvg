@@ -433,6 +433,12 @@ class TestShapes(unittest.TestCase):
 
 class TestInlineExamples(unittest.TestCase):
 
+  def _check_line_coords(self, attribs, x1, x2, y1, y2, places=2):
+    self.assertAlmostEqual(x1, float(attribs['x1']), places=places)
+    self.assertAlmostEqual(x2, float(attribs['x2']), places=places)
+    self.assertAlmostEqual(y1, float(attribs['y1']), places=places)
+    self.assertAlmostEqual(y2, float(attribs['y2']), places=places)
+
   def test_main_doc_example(self):
     image = mathsvg.SvgImage(pixel_density = 100, view_window = (( -1, -1 ), ( 1, 1 )))
     image.draw_circle([0, 0], 1.1)
@@ -488,9 +494,41 @@ class TestInlineExamples(unittest.TestCase):
     values = [ round(float(v)) for v in match.groups()[0].split(', ') ]
     self.assertEqual(len(values), 8)
     self.assertSequenceEqual([ 18, 3, 1, 3, 7, 3, 1, 3 ], values)
-    
 
-# class TestCurrentBugs(unittest.TestCase) :
+  def test_set_arrow_options_example(self):
+    image = mathsvg.SvgImage(pixel_density = 20, view_window = ((-4, -4), (4, 4)))
+    image.set_arrow_options(curvature = 0.55)
+    image.draw_arrow([ -2, -2 ], [ 2, 1.7 ])
+    image.set_arrow_options(width = 4 * image.arrow_width_svgpx, units='svg')
+    image.draw_arrow([ -2, -2 ], [ 2, 1.2 ])
+    image.reset_arrow_options()
+    image.set_arrow_options(curvature = 0)
+    image.draw_arrow([ -2, -2 ], [ 2, 0.6 ])
+    xml_data = image.svgwrite_object.get_xml()
+    tags = [ d.tag for d in xml_data[1:7] ]
+    self.assertSequenceEqual([ 'line', 'path', 'line', 'path', 'line', 'path' ], tags)
+    self._check_line_coords(xml_data[1].attrib, 40, 120, 121, 47)
+    self._check_line_coords(xml_data[3].attrib, 40, 120, 121, 57)
+    self._check_line_coords(xml_data[5].attrib, 40, 120, 121, 69)
+    path = xml_data[2].attrib['d'].strip().split()
+    self.assertEqual(21, len(path))
+    self.assertEqual('M', path[0])
+    self.assertEqual('C', path[7])
+    self.assertEqual('Z', path[-1])
+    path = xml_data[4].attrib['d'].strip().split()
+    self.assertEqual(21, len(path))
+    self.assertEqual('M', path[0])
+    self.assertEqual('C', path[7])
+    self.assertEqual('Z', path[-1])
+    path = xml_data[6].attrib['d'].strip().split()
+    self.assertEqual(21, len(path))
+    self.assertEqual('M', path[0])
+    self.assertEqual('C', path[7])
+    self.assertEqual('Z', path[-1])
+
+
+
+# class TestCurrentBugs(unittest.TestCase):
 
 
 if(__name__ == "__main__"):
