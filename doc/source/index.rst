@@ -61,6 +61,20 @@ Don't forget to include the package ``graphicx``.
 See the documentations of the relevant programs for more details.
 
 
+Examples
+--------
+
+.. toctree::
+   :glob:
+
+   more-examples/*
+
+
+Click on the image to see the sources.
+
+.. include:: more-image-targets.rst
+
+
 The SvgImage class
 ------------------
 
@@ -68,8 +82,8 @@ The SvgImage class
    :members:
 
 
-Examples
---------
+Feature examples
+----------------
 
 
 
@@ -83,19 +97,6 @@ Click on the image to see the sources.
 
 .. include:: image-targets.rst
 
-
-More examples
--------------
-
-.. toctree::
-   :glob:
-
-   more-examples/*
-
-
-Click on the image to see the sources.
-
-.. include:: more-image-targets.rst
 
 
 Indices and tables
