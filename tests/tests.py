@@ -41,7 +41,7 @@ def check_actual_image(test_object, svg_file_name, image_model_file_name, fail_m
 
   model_image = pylab.imread(image_model_file_name)
   converted_image = pylab.imread(converted_file_name)
-  test_object.assertEqual(converted_image.shape, model_image.shape, fail_message + " (image sizes mismatch)")
+  test_object.assertEqual(converted_image.shape, model_image.shape, f'{fail_message} (image sizes mismatch)')
 
   #try :
   test_object.assertTrue(numpy.allclose(model_image, converted_image))  
@@ -60,7 +60,7 @@ def check_file_content(test_object, file_name, regex, fail_message):
 
 def test_simple_example(test_object, example_name, example_dir, error_message_example_name):
   subprocess.call([ "python", os.path.join(example_dir, example_name + ".py") ])
-  check_actual_image(test_object, example_name + ".svg", os.path.join(test_models_path, example_name + ".png"), error_message_example_name + " example image very different from model")
+  check_actual_image(test_object, example_name + ".svg", os.path.join(test_models_path, example_name + ".png"), f'{error_message_example_name} example image very different from model')
   os.remove(example_name + ".svg")
 
 def clean_files(file_list):
@@ -198,20 +198,21 @@ class TestPutText(unittest.TestCase):
     canvas = prepare_simple_canvas()
     canvas.put_text('.', (0.5,0.5))
     # last added object should be a text with the right coords and font size
-    xml = canvas.svgwrite_object.get_xml() [-1]
+    xml = canvas.svgwrite_object.get_xml()[-1]
     self._check_text_attributes(xml, '.', 6., 50., 51.)
 
   def test_put_text_with_font_size(self) :
     canvas = prepare_simple_canvas(window_size = 1., pixel_density = 100)
     canvas.put_text('test text', (0.5, 0.5), font_size = .505)
-    xml = canvas.svgwrite_object.get_xml() [-1]
+    xml = canvas.svgwrite_object.get_xml()[-1]
     self._check_text_attributes(xml, 'test text', 50.5, 50., 51.)
 
   def test_set_font_size(self) :
+    # TODO check font size, in svg and math units
     canvas = prepare_simple_canvas(window_size = 1., pixel_density = 100)
-    canvas.set_font_options(font_size = 1.)
+    canvas.set_font_options(font_size = 1., units = 'math')
     canvas.put_text('test text', (0.5, 0.5))
-    xml = canvas.svgwrite_object.get_xml() [-1]
+    xml = canvas.svgwrite_object.get_xml()[-1]
     self._check_text_attributes(xml, 'test text', 100., 50., 51.)
 
   def test_put_text_examples(self):
@@ -282,7 +283,7 @@ class TestPoints(unittest.TestCase) :
 
   def test_set_point_size(self) :
     canvas = prepare_simple_canvas(pixel_density = 100, window_size = 1.)
-    canvas.set_point_size(1.)
+    canvas.set_point_size(1., units = 'math')
     canvas.draw_point((0.5, 0.5))
     xml = canvas.svgwrite_object.get_xml() [-1]
     self.assertAlmostEqual(float(xml.attrib['r']), 100., places = 2)
@@ -290,16 +291,16 @@ class TestPoints(unittest.TestCase) :
 
   def test_set_point_size_twice(self) :
     canvas = prepare_simple_canvas(pixel_density = 100, window_size = 1.)
-    canvas.set_point_size(1.)
+    canvas.set_point_size(1., units = 'math')
     canvas.draw_point((0.5, 0.5))
-    canvas.set_point_size(.3)
+    canvas.set_point_size(.3, units = 'math')
     canvas.draw_point((0.5, 0.5))
     xml = canvas.svgwrite_object.get_xml() [-1]
     self.assertAlmostEqual(float(xml.attrib['r']), 30., places = 2)
   
   def test_reset_point_size(self) :
     canvas = prepare_simple_canvas(pixel_density = 100, window_size = 1.)
-    canvas.set_point_size(1.)
+    canvas.set_point_size(1., units = 'svg')
     canvas.draw_point((0.5, 0.5))
     canvas.reset_point_size()
     canvas.draw_point((0.5, 0.5))
@@ -317,6 +318,61 @@ class TestSvgOptions(unittest.TestCase) :
     canvas = prepare_simple_canvas(pixel_density = 100, window_size = 10.)
     self.assertEqual(canvas.stroke_width, 1)
   
+  def test_svg_vs_math_units(self):
+    canvas = prepare_simple_canvas(pixel_density = 100, window_size = 1.)
+    
+    canvas.set_dash_dot_structure(0.01)
+    self.assertAlmostEqual(canvas.dot_dasharray_svgpx[0], canvas.stroke_width, places=2)
+    self.assertAlmostEqual(canvas.dot_dasharray_svgpx[1], 1, places=2)
+    canvas.set_dash_dot_structure(2, units='svg')
+    self.assertAlmostEqual(canvas.dot_dasharray_svgpx[0], canvas.stroke_width, places=2)
+    self.assertAlmostEqual(canvas.dot_dasharray_svgpx[1], 2, places=2)
+    canvas.set_dash_dot_structure(0.1, units='math')
+    self.assertAlmostEqual(canvas.dot_dasharray_svgpx[0], canvas.stroke_width, places=2)
+    self.assertAlmostEqual(canvas.dot_dasharray_svgpx[1], 10, places=2)
+    
+    canvas.set_dash_dash_structure(0.1, 0.2)
+    self.assertAlmostEqual(canvas.dash_dasharray_svgpx[0], 10, places=2)
+    self.assertAlmostEqual(canvas.dash_dasharray_svgpx[1], 20, places=2)
+    canvas.set_dash_dash_structure(3, 1, units='svg')
+    self.assertAlmostEqual(canvas.dash_dasharray_svgpx[0], 3, places=2)
+    self.assertAlmostEqual(canvas.dash_dasharray_svgpx[1], 1, places=2)
+    canvas.set_dash_dash_structure(0.02, 0.03, units='math')
+    self.assertAlmostEqual(canvas.dash_dasharray_svgpx[0], 2, places=2)
+    self.assertAlmostEqual(canvas.dash_dasharray_svgpx[1], 3, places=2)
+    
+    canvas.set_font_options(font_size=0.1)
+    self.assertAlmostEqual(canvas.font_pixel_size, 10., places=2)
+    canvas.set_font_options(font_size=10, units='svg')
+    self.assertAlmostEqual(canvas.font_pixel_size, 10., places=2)
+    canvas.set_font_options(font_size=0.2, units='math')
+    self.assertAlmostEqual(canvas.font_pixel_size, 20., places=2)
+    
+    canvas.set_point_size(0.01)
+    self.assertAlmostEqual(canvas.point_size, 1, places=2)
+    canvas.set_point_size(1, units='svg')
+    self.assertAlmostEqual(canvas.point_size, 1, places=2)
+    canvas.set_point_size(0.03, units='math')
+    self.assertAlmostEqual(canvas.point_size, 3, places=2)
+    
+    # check for minimal width of stroke
+    canvas.set_svg_options(stroke_width=0.001)
+    self.assertEqual(canvas.stroke_width, 1)
+
+    canvas.set_svg_options(stroke_width=.15, dash_array=[ 0.1, 0.01, 0.02 ])
+    self.assertAlmostEqual(canvas.stroke_width, 15, places=2)
+    self.assertAlmostEqual(canvas.dasharray_dasharray_svgpx[0], 10, places=2)
+    self.assertAlmostEqual(canvas.dasharray_dasharray_svgpx[1], 1, places=2)
+    self.assertAlmostEqual(canvas.dasharray_dasharray_svgpx[2], 2, places=2)
+    canvas.set_svg_options(stroke_width=2, dash_array=[ 3, 4, 5 ], units='svg')
+    self.assertAlmostEqual(canvas.stroke_width, 2, places=2)
+    self.assertAlmostEqual(canvas.dasharray_dasharray_svgpx[0], 3, places=2)
+    self.assertAlmostEqual(canvas.dasharray_dasharray_svgpx[1], 4, places=2)
+    self.assertAlmostEqual(canvas.dasharray_dasharray_svgpx[2], 5, places=2)
+    canvas.set_svg_options(stroke_width=0.07, dash_array=[ 0.08, 9 ], units='math')
+    self.assertAlmostEqual(canvas.stroke_width, 7, places=2)
+    self.assertAlmostEqual(canvas.dasharray_dasharray_svgpx[0], 8, places=2)
+    self.assertAlmostEqual(canvas.dasharray_dasharray_svgpx[1], 900, places=2)
 
 class TestInternals(unittest.TestCase) :
 

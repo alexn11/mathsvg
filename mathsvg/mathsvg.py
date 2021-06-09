@@ -62,28 +62,36 @@ class SvgImage:
 
     self.set_dash_mode("none")
 
+  def _convert_length_to_svg(self, unit_name, s):
+    if(unit_name == 'svg'):
+      return s
+    if(unit_name == 'math'):
+      return self._rescale_length(s)
+    raise Exception(f'Invalid unit name {unit_name}')
 
   def reset_font_options(self):
     """Reset the font size to the default value (depends on the size of the window)
     """
     self.font_pixel_size = 3 * self._rescale_length(self._compute_a_smallish_size_in_svg_units())
 
-  def set_font_options(self, font_size = None):
+  def set_font_options(self, font_size = None, units = 'math'):
     """Set some font options, so far only the font size.
 
     Args:
-      * ``font_size`` (default:``None``): font size in length units.
+      * ``font_size`` (default:``None``): font size
+      * ``units`` (default:'math'): units for the size. The valid values are 'math' for math units and 'svg' for pixels
     """
     if(font_size is not None):
-      self.font_pixel_size = self._rescale_length(font_size)
+      self.font_pixel_size = self._convert_length_to_svg(units, font_size)
 
-  def set_point_size(self, point_size):
+  def set_point_size(self, point_size, units = 'math'):
     """Set the size of points, pluses and crosses.
 
     Args:
       * ``point_size``: half diameter of the points/pluses/crosses
+      * ``units`` (default:'math'): units for the size. The valid values are 'math' for math units and 'svg' for pixels
     """
-    self.point_size = self._rescale_length(point_size)
+    self.point_size = self._convert_length_to_svg(units, point_size)
 
   def reset_point_size(self):
     self.point_size = 6 * self.stroke_width
@@ -104,7 +112,7 @@ class SvgImage:
       image.set_dash_mode("dot")
       image.draw_line_segment([0, 10], [10, 0])
 
-      image.set_svg_options(dash_array = [18, 3, 1, 3, 7, 3, 1, 3])
+      image.set_svg_options(dash_array = [18, 3, 1, 3, 7, 3, 1, 3], units='svg')
       image.set_dash_mode("dasharray")
       image.draw_planar_potato([5, 5], 2, 4, 8)
 
@@ -120,31 +128,35 @@ class SvgImage:
     self.svgwrite_object.viewbox(width = view_box[0], height = view_box[1])
     self.view_box = view_box
 
-  def set_dash_dash_structure(self, black_len, white_len):
+  def set_dash_dash_structure(self, black_len, white_len, units = 'math'):
     """Sets the size of the dashes and space for the dash mode
 
     Args:
-      * ``black_len`` (``int`` or ``float``): length of the dash in pixels
-      * ``white_len`` (``int`` or ``float``): length of the space between dashes in pixels
+      * ``black_len`` (``int`` or ``float``): length of the dash
+      * ``white_len`` (``int`` or ``float``): length of the space between dashes
+      * ``units`` (default:'math'): units for the size. The valid values are 'math' for math units and 'svg' for pixels
     """
+    
+    black_len = self._convert_length_to_svg(units, black_len)
+    white_len = self._convert_length_to_svg(units, white_len)
+    self.dash_dasharray_svgpx = (black_len, white_len)
 
-    self.dash_dasharray = (black_len, white_len)
 
-
-  def set_dash_dot_structure(self, dot_sep):
+  def set_dash_dot_structure(self, dot_sep, units = 'math'):
     """Sets the separations between dots for dotted stroke
 
     Args:
       * ``dot_sep`` (``int`` or ``float``): separation between the dots in pixels
+      * ``units`` (default:'math'): units for the size. The valid values are 'math' for math units and 'svg' for pixels
     """
 
-    self.dot_dasharray = (self.stroke_width, dot_sep)
+    self.dot_dasharray_svgpx = (self.stroke_width, self._convert_length_to_svg(units, dot_sep))
 
 
   def reset_svg_options(self):
     """Sets the stroke color to ``"black"``, the stroke width to ``1`` pixel and the fill color to ``"none"``."""
 
-    self.set_svg_options(stroke_color = "black", stroke_width = 1, fill_color = "none")
+    self.set_svg_options(stroke_color = "black", stroke_width = 1, fill_color = "none", units='svg')
 
 
   def _compute_a_smallish_size_in_svg_units(self):
@@ -156,11 +168,12 @@ class SvgImage:
   def reset_dash_and_dot_structures(self):
     """Sets the dash, dot and dasharray structures to default values depending on the size of the canvas."""
 
-    dash_len = self._compute_a_smallish_size_in_svg_units()
-    dot_sep = max((dash_len / 2, 2 * self.stroke_width))
-    self.set_dash_dash_structure(dash_len, dash_len)
-    self.set_dash_dot_structure(dot_sep)
-    self.dasharray_dasharray = [ dash_len, 1 ]
+    dash_len = self._compute_a_smallish_size_in_math_units()
+    dash_len_px = self._rescale_length(dash_len)
+    dot_sep = max((dash_len_px / 2, 2 * self.stroke_width))
+    self.set_dash_dash_structure(dash_len_px, dash_len_px, units='svg')
+    self.set_dash_dot_structure(dot_sep, units='svg')
+    self.dasharray_dasharray_svgpx = [ dash_len_px, 1 ]
 
 
   def reset_arrow_options(self):
@@ -203,16 +216,22 @@ class SvgImage:
       self.arrow_curvature = curvature
 
 
-  def set_svg_options(self, stroke_color = None, stroke_width = None, fill_color = None, dash_array = None):
+  def set_svg_options(self,
+                      stroke_color = None,
+                      stroke_width = None,
+                      fill_color = None,
+                      dash_array = None,
+                      units = 'math'):
     """Sets the stroke width, color, fill color and dash array options
 
     Args:
       * ``stroke_color`` (``str`` or ``None``): stroke color (default is ``"black"``)
-      * ``stroke_width`` (``float`` or ``None``): stroke width in *pixels*
+      * ``stroke_width`` (``float`` or ``None``): stroke width
       * ``fill_color`` (``str`` or ``None``): fill color (default is ``"none"``)
-      * ``dash_array`` (``tuple`` or ``None``): list of stroke/space lengths (in *pixels*) describing the customize dash stroke
+      * ``dash_array`` (``tuple`` or ``None``): list of stroke/space lengths describing the customize dash stroke
+      * ``units`` (default:'math'): units for the sizes. The valid values are 'math' for math units and 'svg' for pixels
 
-    Note make sure that ``stroke_width`` is at least 1.
+    Note it might increase the value of ``stroke_width`` to make sure that it is at least 1.
 
     Examples:
     To do some drawings in red, then restore back to the default options::
@@ -221,15 +240,21 @@ class SvgImage:
       (etc.)
       image.reset_svg_options()
     """
+    
+    # uWu : who uses this, used default svg units  
 
     if(stroke_color is not None):
       self.stroke_color = stroke_color
     if(stroke_width is not None):
+      stroke_width = self._convert_length_to_svg(units, stroke_width)
+      if(stroke_width < 1):
+        stroke_width = 1
       self.stroke_width = stroke_width
     if(fill_color is not None):
       self.fill_color = fill_color
     if(dash_array is not None):
-      self.dasharray_dasharray = dash_array[:]
+      dash_array = [ self._convert_length_to_svg(units, s) for s in dash_array ]
+      self.dasharray_dasharray_svgpx = dash_array[:]
 
 
 
@@ -343,15 +368,16 @@ class SvgImage:
     if(dash_mode == "none"):
       dash_array_string += "none"
     elif(dash_mode == "dash"):
-      dash_array_string += str(self.dash_dasharray[0]) + ", " + str(self.dash_dasharray[1])
+      dash_array_string += str(self.dash_dasharray_svgpx[0]) + ", " + str(self.dash_dasharray_svgpx[1])
     elif(dash_mode in [ "dot", "dots" ]):
-      dash_array_string += str(self.dot_dasharray[0]) + ", " + str(self.dot_dasharray[1])
+      dash_array_string += str(self.dot_dasharray_svgpx[0]) + ", " + str(self.dot_dasharray_svgpx[1])
     elif(dash_mode == "dasharray"):
-      for length in self.dasharray_dasharray:
+      for length in self.dasharray_dasharray_svgpx:
         dash_array_string += str(length) + ", "
       dash_array_string = dash_array_string[ : -2 ]
     else:
-      dash_array_string += "YOUFAILED"
+      #dash_array_string += "THIS_IS_A_FAIL"
+      raise Exception(f'Unknown dash mode: {dash_mode}')
     dash_array_string += ";"
     return dash_array_string
 
@@ -1150,13 +1176,14 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
 #  #return
 
 
-  def put_text(self, text, text_position, font_size = None):
+  def put_text(self, text, text_position, font_size = None, units = 'math'):
     """Insert text on the canvas at the given position
 
     Args:
       * ``text`` (``str``): text to insert
       * ``text_position`` (``tuple``): coordinates of the bottom left of the text
-      * ``font_size (``int`` or ``None``): font size in units, if ``None`` use the default font size (see ``set_font_options`` and ``reset_font_options``).
+      * ``font_size (``int`` or ``None``): font size, if ``None`` use the default font size (see ``set_font_options`` and ``reset_font_options``)
+      * ``units`` (default: 'math'): units for the size. The valid values are 'math' for math units, 'svg' for pixels
 
     Example::
 
@@ -1180,7 +1207,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
     if(font_size is None):
       font_size = self.font_pixel_size
     else:
-      font_size = self._rescale_length(font_size)
+      font_size = self._convert_length_to_svg(units, font_size)
     t = self.svgwrite_object.text(text, insert = text_canvas_position, font_size = font_size)
     self.svgwrite_object.add(t)
     return
