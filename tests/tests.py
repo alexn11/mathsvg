@@ -206,6 +206,12 @@ class TestPutText(unittest.TestCase):
     canvas.put_text('test text', (0.5, 0.5), font_size = .505)
     xml = canvas.svgwrite_object.get_xml()[-1]
     self._check_text_attributes(xml, 'test text', 50.5, 50., 51.)
+    canvas.put_text('test text', (0.5, 0.5), font_size = 18, units='svg')
+    xml = canvas.svgwrite_object.get_xml()[-1]
+    self._check_text_attributes(xml, 'test text', 18, 50., 51.)
+    canvas.put_text('test text', (0.5, 0.5), font_size = .35, units='math')
+    xml = canvas.svgwrite_object.get_xml()[-1]
+    self._check_text_attributes(xml, 'test text', 35, 50., 51.)
 
   def test_set_font_size(self) :
     # TODO check font size, in svg and math units

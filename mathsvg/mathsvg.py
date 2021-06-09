@@ -72,7 +72,7 @@ class SvgImage:
   def reset_font_options(self):
     """Reset the font size to the default value (depends on the size of the window)
     """
-    self.font_pixel_size = 3 * self._rescale_length(self._compute_a_smallish_size_in_svg_units())
+    self.font_pixel_size = 3 * self._rescale_length(self._compute_a_smallish_size_in_math_units())
 
   def set_font_options(self, font_size = None, units = 'math'):
     """Set some font options, so far only the font size.
