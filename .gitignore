@@ -10,4 +10,5 @@ TODO
 /doc/build/
 /gitignored/
 /tests/test-models/*.png
-
+/tests/old-models/
+/tmp/
