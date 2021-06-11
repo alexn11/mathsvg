@@ -31,7 +31,7 @@ examples_path = "../examples"
 
 
 default_drawing_options = "style *= *\"fill *: *.*; *stroke *: *black; *stroke-width *: *1; *stroke-dasharray *: *none; *\""
-number_list_re_pattern = "[0-9\\. ,\\-]*"
+number_list_re_pattern = r'[0-9\. ,\-]*'
 
 
 def check_actual_image(test_object, svg_file_name, image_model_file_name, fail_message, max_dist = 0.001):
@@ -61,7 +61,10 @@ def check_file_content(test_object, file_name, regex, fail_message):
 
 def test_simple_example(test_object, example_name, example_dir, error_message_example_name):
   subprocess.call([ "python", os.path.join(example_dir, example_name + ".py") ])
-  check_actual_image(test_object, example_name + ".svg", os.path.join(test_models_path, example_name + ".png"), f'{error_message_example_name} example image very different from model')
+  check_actual_image(test_object,
+                     example_name + ".svg",
+                     os.path.join(test_models_path, example_name + ".png"),
+                     f'{error_message_example_name} example image very different from model')
   os.remove(example_name + ".svg")
 
 def clean_files(file_list):
@@ -127,6 +130,7 @@ class TestArrows(unittest.TestCase):
     image.draw_arrow([ -2, -2 ], [ 2, 2 ])
     image.save("test-default-arrow.svg")
     check_actual_image(self, "test-default-arrow.svg", os.path.join(test_models_path, "test-default-arrow.png"), "default arrow image very different from model")
+    clean_files('test-default-arrow.svg')
 
   def test_arrow_examples(self):
     test_simple_example(self, "arrows", examples_path, "arrow")
@@ -526,10 +530,24 @@ class TestInlineExamples(unittest.TestCase):
     self.assertEqual('C', path[7])
     self.assertEqual('Z', path[-1])
 
+  def test_draw_polyline_and_polygon_examples(self):
+    image = mathsvg.SvgImage(pixel_density = 20, view_window = ((0, 0), (8, 8)))
+    point_list = [ (2.5,5), (4.5,7), (2.5,4), (0.5,3), (6,2) ]
+    image.draw_polyline(point_list)
 
+    xml_data = image.svgwrite_object.get_xml()[1]
+    self.assertEqual('polyline', xml_data.tag)
+    coords = [ round(float(c)) for c in xml_data.attrib['points'].replace(',', ' ').split() ]
+    self.assertSequenceEqual([ 50, 61, 90, 21, 50, 81, 10, 101, 120, 121 ], coords)
 
-# class TestCurrentBugs(unittest.TestCase):
+    image = mathsvg.SvgImage(pixel_density = 20, view_window = ((0, 0), (8, 8)))
+    point_list = [ (2.5,5), (4.5,7), (2.5,4), (0.5,3), (6,2) ]
+    image.draw_polygon(point_list)
 
+    xml_data = image.svgwrite_object.get_xml()[1]
+    self.assertEqual('polygon', xml_data.tag)
+    coords = [ round(float(c)) for c in xml_data.attrib['points'].replace(',', ' ').split() ]
+    self.assertSequenceEqual([ 50, 61, 90, 21, 50, 81, 10, 101, 120, 121 ], coords)
 
 if(__name__ == "__main__"):
   unittest.main()
