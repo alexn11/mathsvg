@@ -68,6 +68,8 @@ def test_simple_example(test_object, example_name, example_dir, error_message_ex
   os.remove(example_name + ".svg")
 
 def clean_files(file_list):
+  if(type(file_list) is str):
+    raise Exception(f'clean_files: file list expected (not single file name?) : {file_list}')
   for f in file_list:
     if(os.path.exists(f)):
       os.remove(f)
@@ -130,7 +132,7 @@ class TestArrows(unittest.TestCase):
     image.draw_arrow([ -2, -2 ], [ 2, 2 ])
     image.save("test-default-arrow.svg")
     check_actual_image(self, "test-default-arrow.svg", os.path.join(test_models_path, "test-default-arrow.png"), "default arrow image very different from model")
-    clean_files('test-default-arrow.svg')
+    clean_files([ 'test-default-arrow.svg' ])
 
   def test_arrow_examples(self):
     test_simple_example(self, "arrows", examples_path, "arrow")
@@ -548,6 +550,28 @@ class TestInlineExamples(unittest.TestCase):
     self.assertEqual('polygon', xml_data.tag)
     coords = [ round(float(c)) for c in xml_data.attrib['points'].replace(',', ' ').split() ]
     self.assertSequenceEqual([ 50, 61, 90, 21, 50, 81, 10, 101, 120, 121 ], coords)
+    
+  def test_set_svg_options_examples(self):
+    image = mathsvg.SvgImage(pixel_density = 200, view_window = ((0, 0), (12, 2)))
+    image.set_svg_options(stroke_color = "red")
+    self.assertEqual('red', image.stroke_color)
+    image.draw_point((1,1))
+    image.reset_svg_options()
+    self.assertEqual('black', image.stroke_color)
+    image.draw_point((4,1))
+    
+    xml_data = image.svgwrite_object.get_xml()[1]
+    self.assertEqual('circle', xml_data.tag)
+    style = xml_data.attrib['style']
+    match = re.search(r'; *stroke *: *([a-zA-Z]+) *;', style)
+    self.assertIsNotNone(match)
+    self.assertEqual('red', match.groups()[0])
+    xml_data = image.svgwrite_object.get_xml()[2]
+    self.assertEqual('circle', xml_data.tag)
+    style = xml_data.attrib['style']
+    match = re.search(r'; *stroke *: *([a-zA-Z]+) *;', style)
+    self.assertIsNotNone(match)
+    self.assertEqual('black', match.groups()[0])
 
 if(__name__ == "__main__"):
   unittest.main()
