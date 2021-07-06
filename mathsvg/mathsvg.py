@@ -266,20 +266,23 @@ class SvgImage:
 
 
 
-  def save(self, file_name):
+  def save(self, file_name, do_overwrite=False):
     """Save the drawings into a SVG file.
 
        Args:
          * ``file_name`` (``str``): name of the file to save.
+         * ``do_overwrite``: optional boolean to allow overwrite over already existing file (default value is ``False``), raise an exception if this is ``False`` and the file already exists.
 
         See an example in :ref:`multiple-save.py`"""
 
     if(file_name is None):
       if(self.image_file_name is None):
         raise Exception("Save: no file name given!")
-      self.svgwrite_object.save()
-    else:
-      self.svgwrite_object.saveas(file_name)
+      file_name = self.image_file_name
+
+    if((not do_overwrite) and os.path.exists(file_name)):
+      raise Exception(f'File {file_name} already exists (set do_overwrite to True to allow overwrite).')
+    self.svgwrite_object.saveas(file_name)
 
 
 
@@ -884,7 +887,7 @@ class SvgImage:
 
 
 
-  def draw_parametric_graph(self, eval_point, t_start, t_end, nb_t, * function_params, curve_type = "polyline", is_closed = False):
+  def draw_parametric_graph(self, eval_point, t_start, t_end, nb_t, *function_params, curve_type = 'polyline', is_closed = False):
     """Draws a parametric graph given by the functions *x(t)* and *y(t)*, that is, an interpolation of a set of ``nb_t`` points *(x, y)* with *x = x(t)* and *y = y(t)* and with *t* between ``t_start`` and ``t_end``. The default interpolation is by straight lines. It is also possible to have some type of smooth interpolation. The ``nb_t`` parameters are regularly spaced starting from ``t_start`` and ending at ``t_end``.
 
 If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joined according to the choice of interpolation.
@@ -895,7 +898,7 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
       * ``t_end`` (``float``): end of the parameter domain
       * ``nb_t`` (``int``): number of parameters *t* at which the functions *x* and *y* are computed
       * ``function_params`` (variadic arguments): optionally, arguments to pass to ``eval_point`` in addition to the value for the parameter *t*
-      * ``curve_type`` (``str`` or ``None``): if ``"polyline"`` then the point are interpolated by line segments, if ``"autosmooth"`` the interpolation is smoother
+      * ``curve_type`` (``str`` or ``None``): if ``'polyline'`` then the point are interpolated by line segments, if ``'autosmooth'`` the interpolation is smoother
       * ``is_closed`` (``str`` or ``None``): whether the parametric curve should be closed (``True``) or not (``False``)
 
     Examples (see also :ref:`parametric-graphs.py`)::
@@ -905,19 +908,19 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
       image = mathsvg.SvgImage(pixel_density = 20, view_window = ((-1.1, -1.5), (2.9, 1.5)))
 
       eval_point = lambda t : (math.sin(10 * math.pi * t) + 0.1, math.cos(6 * math.pi *  t))
-      image.set_svg_options(stroke_color = "blue")
-      image.draw_parametric_graph(eval_point, 0, 1, 40, curve_type = "polyline", is_closed = False)
+      image.set_svg_options(stroke_color = 'blue')
+      image.draw_parametric_graph(eval_point, 0, 1, 40, curve_type = 'polyline', is_closed = False)
 
       eval_point = lambda t : (math.sin(10 * math.pi * t) + 1.1, math.cos(6 * math.pi * t))
-      image.set_svg_options(stroke_color = "black")
+      image.set_svg_options(stroke_color = 'black')
       image.set_dash_mode("dash")
       image.draw_parametric_graph(eval_point, 0, 1, 40, curve_type = "autosmooth", is_closed = True)
 
-      image.save("draw-parametric-graph-example.svg")
+      image.save('draw-parametric-graph-example.svg')
     """
 
     t_step = (t_end - t_start) / (nb_t - 1)
-    point_list = [ eval_point(t, * function_params) for t in [ t_start + ti * t_step for ti in range(nb_t) ] ]
+    point_list = [ eval_point(t, *function_params) for t in [ t_start + ti * t_step for ti in range(nb_t) ] ]
     if(curve_type == "polyline"):
       self.draw_polyline(point_list)
       if(is_closed):
