@@ -15,6 +15,7 @@
 
 import math
 import cmath
+import os
 import random
 
 import svgwrite
@@ -282,6 +283,7 @@ class SvgImage:
 
     if((not do_overwrite) and os.path.exists(file_name)):
       raise Exception(f'File {file_name} already exists (set do_overwrite to True to allow overwrite).')
+    
     self.svgwrite_object.saveas(file_name)
 
 
