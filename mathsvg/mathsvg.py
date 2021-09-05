@@ -1251,6 +1251,8 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
    :align: center
    :alt: A portion of a Bezier curve
    """
+    # cleanup the string
+    d_string = svg_path_command.strip()
 
     # so that really anything can be added - no checking
     path = self.svgwrite_object.path(d = svg_path_command,
