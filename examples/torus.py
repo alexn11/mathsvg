@@ -59,5 +59,5 @@ draw_a_torus(image, [-2.5, 2.5], 1.3, thinness = 0.2)
 image.set_dash_mode("dash")
 draw_a_torus(image, [-2.9,-2.2], 1.78, thinness = 0.35)
 
-image.save("torus.svg")
+image.save("torus.svg", do_overwrite = True)
 

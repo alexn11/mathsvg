@@ -34,4 +34,4 @@ image.draw_ellipse_arc(focuses, 0.412, two_pi * 0.1, two_pi * 0.8)
 image.set_dash_mode("dot")
 image.draw_ellipse(focuses, 0.68)
 
-image.save("points-crosses-circles-ellipses.svg")
+image.save("points-crosses-circles-ellipses.svg", do_overwrite=True)

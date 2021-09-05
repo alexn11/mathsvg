@@ -329,18 +329,18 @@ class SvgImage:
 
   def _convert_point_to_svg_string(self, point):
     # control vectors are points too
-    return str(point[0]) + ", " + str(point[1])
+    return f'{point[0]}, {point[1]}'
 
   def _make_svg_path_M_command(self, points):
-    path_command = " M "
+    path_command = 'M'
     for point in points:
-      path_command += self._convert_point_to_svg_string(point) + "  "
+      path_command += ' ' + self._convert_point_to_svg_string(point)
     return path_command
 
   def _make_svg_path_L_command(self, points):
-    path_command = " L "
+    path_command = 'L'
     for point in points:
-      path_command += self._convert_point_to_svg_string(point) + "  "
+      path_command += ' ' + self._convert_point_to_svg_string(point)
     return path_command
 
 
@@ -348,15 +348,15 @@ class SvgImage:
 
     nb_points = len(points)
 
-    path_command = " C "
+    path_command = 'C'
 
     control_vector_index = 0
     for point_index in range(nb_points):
-      path_command += " " + self._convert_point_to_svg_string(control_vectors[control_vector_index])
+      path_command += ' ' + self._convert_point_to_svg_string(control_vectors[control_vector_index])
       control_vector_index += 1
-      path_command += " " + self._convert_point_to_svg_string(control_vectors[control_vector_index])
+      path_command += ' ' + self._convert_point_to_svg_string(control_vectors[control_vector_index])
       control_vector_index += 1
-      path_command += " " + self._convert_point_to_svg_string(points[point_index]) + "  "
+      path_command += ' ' + self._convert_point_to_svg_string(points[point_index])
 
     return path_command
 
@@ -364,13 +364,13 @@ class SvgImage:
   def _make_svg_path_M_and_C_command(self, points, control_vectors):
 
     path_command = self._make_svg_path_M_command(points[ 0 : 1 ])
-    path_command += self._make_svg_path_C_command(points[ 1 : ], control_vectors)
+    path_command += ' ' + self._make_svg_path_C_command(points[ 1 : ], control_vectors)
 
     return path_command
 
 
   def _make_svg_path_Z_command(self):
-    return " Z "
+    return 'Z'
 
 
   def _make_svg_dasharray_string(self, dash_mode = None):
@@ -443,9 +443,9 @@ class SvgImage:
     control_vector_bottom = [ inner_coordinate, - control_height ]
     tip_point = [ 0, 0 ]
     path_command = self._make_svg_path_M_command([ top_point, tip_point, bottom_point ] )
-    path_command += self._make_svg_path_C_command([ middle_point, top_point ],
+    path_command += ' ' + self._make_svg_path_C_command([ middle_point, top_point ],
                                                   [ bottom_point, control_vector_bottom, control_vector_top, top_point ])
-    path_command += self._make_svg_path_Z_command()
+    path_command += ' ' + self._make_svg_path_Z_command()
     path = self.svgwrite_object.path(d = path_command,
                                      style = self._make_svg_style_string(fill_color = self.stroke_color, dash_mode = "none"))
     # be wary of that featured bug that reverse the order of the transformations
@@ -1252,10 +1252,13 @@ If ``is_closed`` is set to ``True`` the two endpoints of the curve will be joine
    :alt: A portion of a Bezier curve
    """
     # cleanup the string
+    
     d_string = svg_path_command.strip()
+    if(len(d_string) == 0):
+      return
 
     # so that really anything can be added - no checking
-    path = self.svgwrite_object.path(d = svg_path_command,
+    path = self.svgwrite_object.path(d = d_string,
                                      style = self._make_svg_style_string())
     self.svgwrite_object.add(path)
 
