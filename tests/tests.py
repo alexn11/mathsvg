@@ -97,7 +97,7 @@ class TestMain(unittest.TestCase):
   def test_default_drawing_options(self):
     image = mathsvg.SvgImage(pixel_density = 100, view_window = ( (-4, -4), (4, 4) )) 
     image.draw_arrow([ -2, -2 ], [ 2, 2 ])
-    image.save("test.svg")
+    image.save("test.svg", do_overwrite=True)
     check_file_content(self, "test.svg", default_drawing_options, "default drawing options not in use for line")
     os.remove("test.svg")
      
@@ -121,7 +121,7 @@ class TestArrows(unittest.TestCase):
   def test_default_arrow_svg(self):
     image = mathsvg.SvgImage(pixel_density = 100, view_window = ( (-4, -4), (4, 4) )) 
     image.draw_arrow([ -2, -2 ], [ 2, 2 ])
-    image.save("test.svg")
+    image.save("test.svg", do_overwrite=True)
     arrow_regex = "<line.*x1 *=.*x2 *=.*y1 *=.*y2 *=.*/><path *d *= *\""
     arrow_regex += " *M" + number_list_re_pattern + "C" + number_list_re_pattern + "Z *\" *"
     arrow_regex += default_drawing_options
