@@ -7,7 +7,10 @@
 import math
 import cmath
 import random
+import os
+import sys
 
+sys.path.insert(0, os.path.abspath(os.path.pardir))
 import mathsvg
 
 image = mathsvg.SvgImage(pixel_density = 1, view_window = ((0, 0), (400, 150)))

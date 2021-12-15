@@ -3,12 +3,14 @@
 # Copyright (C) 2020, Alexandre De Zotti
 # License: MIT License
 
+import os
+import sys
 
 import cmath
 import math
 import random
-import sys
 
+sys.path.insert(0, os.path.abspath(os.path.pardir))
 import mathsvg
 
 

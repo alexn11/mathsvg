@@ -1,10 +1,13 @@
 # Author:  alexn11(alexn11.gh@gmail.com)
 # Created: 2020-01-31
-# Copyright (C) 2020, Alexandre De Zotti
+# Copyright (C) 2020, 2021 Alexandre De Zotti
 # License: MIT License
 
 import random
+import os
+import sys
 
+sys.path.insert(0, os.path.abspath(os.path.pardir))
 import mathsvg
 
 image = mathsvg.SvgImage(pixel_density = 100, view_window = ((2, 0), (10, 8)))

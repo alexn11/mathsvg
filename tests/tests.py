@@ -11,23 +11,23 @@ import subprocess
 import sys
 import tempfile
 
-import mathsvg
-
 import cairosvg
 import matplotlib.pylab as pylab
 import numpy
 import numpy.linalg
 
+sys.path.insert(0, os.path.abspath(os.path.pardir))
+import mathsvg
 
 
 # TODO
 do_save_to_local_dir = True
 # if not use tmpfile
 
-test_data_path = "../tests/"
+test_data_path = os.path.abspath(os.path.curdir)
 test_models_path = os.path.join(test_data_path, "test-models")
 test_scripts_path = os.path.join(test_data_path, "test-scripts")
-examples_path = "../examples"
+examples_path = test_scripts_path
 
 
 default_drawing_options = "style *= *\"fill *: *.*; *stroke *: *black; *stroke-width *: *1; *stroke-dasharray *: *none; *\""
@@ -60,7 +60,7 @@ def check_file_content(test_object, file_name, regex, fail_message):
 
 
 def test_simple_example(test_object, example_name, example_dir, error_message_example_name):
-  subprocess.call([ "python", os.path.join(example_dir, example_name + ".py") ])
+  subprocess.check_call([ "python3", os.path.join(example_dir, example_name + ".py") ])
   check_actual_image(test_object,
                      example_name + ".svg",
                      os.path.join(test_models_path, example_name + ".png"),
@@ -104,14 +104,14 @@ class TestMain(unittest.TestCase):
   def test_multiple_save(self):
     output_files = [ "save-1.svg", "save-2.svg" ]
     clean_files(output_files)
-    subprocess.call([ "python", os.path.join(test_scripts_path, "multiple-save.py") ])
+    subprocess.check_call([ "python3", os.path.join(test_scripts_path, "multiple-save.py") ])
     self.assertTrue(os.path.exists(output_files[0]), "multiple-save failed at first save")
     self.assertTrue(os.path.exists(output_files[1]), "multiple-save failed at second save")
     clean_files(output_files)
     
   def test_multiple_save_example(self):
     output_files = [ "save-1", "save-2" ]
-    subprocess.call([ "python", os.path.join(test_scripts_path, "multiple-save.py") ])
+    subprocess.check_call([ "python3", os.path.join(test_scripts_path, "multiple-save.py") ])
     check_actual_image(self, output_files[0] + ".svg", os.path.join(test_models_path, output_files[0] + ".png"), "multiple-save example: first saved image very different from model")
     check_actual_image(self, output_files[1] + ".svg", os.path.join(test_models_path, output_files[1] + ".png"), "multiple-save example: second saved image very different from model")
     clean_files([ f + ".svg" for f in output_files ])
