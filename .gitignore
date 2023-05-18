@@ -12,3 +12,6 @@ TODO
 /tests/test-models/*.png
 /tests/old-models/
 /tmp/
+# temporarily "stashed" files
+test-default-arrow.svg
+more-examples/elementary-geometry.py
