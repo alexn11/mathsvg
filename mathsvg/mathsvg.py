@@ -332,24 +332,18 @@ class SvgImage:
     return f'{point[0]}, {point[1]}'
 
   def _make_svg_path_M_command(self, points):
-    path_command = 'M'
-    for point in points:
-      path_command += ' ' + self._convert_point_to_svg_string(point)
+    point_coordinate_strings = [ self._convert_point_to_svg_string(point) for point in points ]
+    path_command = ' '.join([ 'M', ] + point_coordinate_strings)
     return path_command
 
   def _make_svg_path_L_command(self, points):
-    path_command = 'L'
-    for point in points:
-      path_command += ' ' + self._convert_point_to_svg_string(point)
+    point_coordinate_strings = [ self._convert_point_to_svg_string(point) for point in points ]
+    path_command = ' '.join([ 'L', ] + point_coordinate_strings)
     return path_command
 
-
   def _make_svg_path_C_command(self, points, control_vectors):
-
     nb_points = len(points)
-
     path_command = 'C'
-
     control_vector_index = 0
     for point_index in range(nb_points):
       path_command += ' ' + self._convert_point_to_svg_string(control_vectors[control_vector_index])
@@ -357,21 +351,17 @@ class SvgImage:
       path_command += ' ' + self._convert_point_to_svg_string(control_vectors[control_vector_index])
       control_vector_index += 1
       path_command += ' ' + self._convert_point_to_svg_string(points[point_index])
-
     return path_command
-
 
   def _make_svg_path_M_and_C_command(self, points, control_vectors):
-
-    path_command = self._make_svg_path_M_command(points[ 0 : 1 ])
-    path_command += ' ' + self._make_svg_path_C_command(points[ 1 : ], control_vectors)
-
+    path_command = ' '.join([
+                              self._make_svg_path_M_command(points[ 0 : 1 ]),
+                              self._make_svg_path_C_command(points[ 1 : ], control_vectors)
+                            ])
     return path_command
-
 
   def _make_svg_path_Z_command(self):
     return 'Z'
-
 
   def _make_svg_dasharray_string(self, dash_mode = None):
     if(dash_mode is None):
